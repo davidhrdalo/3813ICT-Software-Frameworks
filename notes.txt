@@ -1,0 +1,6 @@
+// Installed
+npm i bootstrap --save
+npm i rxjs --save
+
+login -> account -> group -> channel -> chat
+
