@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [HttpClientModule, CommonModule],
+  imports: [CommonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   providers: [ActiveUserService] 
