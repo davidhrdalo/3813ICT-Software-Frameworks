@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
-const BACKEND_URL = 'http://localhost:3000/api/channel';
+const BACKEND_URL = 'http://localhost:3000/api/channels';
 
 @Injectable({
   providedIn: 'root',

@@ -9,7 +9,7 @@ import { ChannelService } from '../services/channel/channel.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './group.component.html',
-  styleUrl: './group.component.css'
+  styleUrls: ['./group.component.css'] // Fixed from styleUrl to styleUrls
 })
 export class GroupComponent implements OnInit {
   group: any = null;
@@ -33,16 +33,17 @@ export class GroupComponent implements OnInit {
       this.group = groups.find(group => group.id === id);
       if (this.group) {
         console.log('Group details:', this.group); // Debugging log
+        this.loadChannels(this.group.id); // Load channels after group is found
       } else {
         console.log('Group not found with ID:', id); // Debugging log
       }
     });
   }
 
-    loadChannels(groupId: number): void {
-      this.channelService.getChannelsByGroupId(groupId).subscribe(channels => {
-        this.channels = channels;
-        console.log('Channels for group:', this.channels);
-      });
-    }
+  loadChannels(groupId: number): void {
+    this.channelService.getChannelsByGroupId(groupId).subscribe(channels => {
+      this.channels = channels;
+      console.log('Channels for group:', this.channels); // Debugging log
+    });
   }
+}
