@@ -1,15 +1,5 @@
 <div *ngIf="group">
     <h2>{{ group.name }}</h2>
-    <p><strong>Admins:</strong></p>
-    <ul>
-      <li *ngFor="let admin of group.admins">{{ admin.name }}</li>
-    </ul>
-    
-    <p><strong>Members:</strong></p>
-    <ul>
-      <li *ngFor="let member of group.members">{{ member.name }}</li>
-    </ul>
-  </div>
   
   <div *ngIf="!group">
     <p>Loading group details...</p>

@@ -31,25 +31,24 @@
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
           <a href="#" class="nav-link active" aria-current="page">
-            <i class="bi-alarm"></i>
-            Profile
+            <i class="bi-house-fill"></i>
+            Home
           </a>
         </li>
-
 
         <ng-container *ngIf="memberOnlyGroups.length > 0">
           <hr />
 
           <li class="nav-item">
             <p class="nav-link link-dark">
-              <i class="bi-person-plus-fill"></i>
+              <i class="bi-people-fill"></i>
               Groups
             </p>
           </li>
 
           <li class="nav-item" *ngFor="let group of memberOnlyGroups">
             <a [routerLink]="['/group', group.id]" class="nav-link link-dark">
-              <i class="bi-person-plus-fill"></i>
+              <i class="bi-people"></i>
               {{ group.name }}
             </a>
           </li>
@@ -58,20 +57,63 @@
         <ng-container *ngIf="adminGroups.length > 0">
           <hr />
           <li class="nav-item">
+            <p style="margin: 0%" class="nav-link link-dark">
+              <i class="bi-person-fill-gear"></i>
+              Edit Groups
+            </p>
+          </li>
+
+          <li class="nav-item">
             <p class="nav-link link-dark">
               <i class="bi-person-plus-fill"></i>
-              Edit Groups
+              Add Group
             </p>
           </li>
 
           <li class="nav-item" *ngFor="let group of adminGroups">
             <a [routerLink]="['/group', group.id]" class="nav-link link-dark">
-              <i class="bi-person-plus-fill"></i>
+              <i class="bi-people"></i>
               {{ group.name }}
             </a>
           </li>
         </ng-container>
-        
+      </ul>
+    </div>
+
+    <!-- Group -->
+    <div *ngSwitchCase="'group'">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" aria-current="page">
+            <i class="bi-people-fill"></i>
+            Group Details
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link link-dark">
+            <i class="bi-arrow-left"></i>
+            Back
+          </a>
+        </li>
+
+        <ng-container *ngIf="memberOnlyGroups.length > 0">
+          <hr />
+
+          <li class="nav-item">
+            <p class="nav-link link-dark">
+              <i class="bi-chat-fill"></i>
+              Channels
+            </p>
+          </li>
+
+          <li class="nav-item" *ngFor="let group of memberOnlyGroups">
+            <a [routerLink]="['/group', group.id]" class="nav-link link-dark">
+              <i class="bi-chat"></i>
+              {{ group.name }}
+            </a>
+          </li>
+        </ng-container>
+
       </ul>
     </div>
 
