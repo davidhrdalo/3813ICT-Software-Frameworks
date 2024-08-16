@@ -1,53 +1,23 @@
 <div class="d-flex" [ngSwitch]="currentRoute">
-    <div style="width: 16em; height: 100vh" class="bg-light">
-      <br />
-      <div *ngSwitchCase="'chat'">
+  <div style="width: 16em; height: 100vh" class="bg-light">
+    <br />
+
+    <div *ngSwitchCase="'chat'">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
           <a href="#" class="nav-link active" aria-current="page">
-            <svg class="bi me-2" width="16" height="16">
-              <use xlink:href="#home"></use>
-            </svg>
+            <i class="bi-alarm"></i>
             Home
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16">
-              <use xlink:href="#speedometer2"></use>
-            </svg>
-            Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16">
-              <use xlink:href="#table"></use>
-            </svg>
-            Orders
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16">
-              <use xlink:href="#grid"></use>
-            </svg>
-            Products
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16">
-              <use xlink:href="#people-circle"></use>
-            </svg>
-            Customers
-          </a>
+          <a href="#" class="nav-link link-dark"> Dashboard </a>
         </li>
       </ul>
+
       <hr />
     </div>
-    <div *ngSwitchDefault>
 
-    </div>
+    <div *ngSwitchDefault></div>
   </div>
 </div>
