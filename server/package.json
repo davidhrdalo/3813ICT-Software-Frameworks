@@ -1,0 +1,23 @@
+{
+  "name": "3813-ict-software-frameworks-express-server",
+  "version": "1.0.0",
+  "description": "node express backend for 3813-ict-software-frameworks assignment",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidhrdalo/3813ICT-Software-Frameworks.git"
+  },
+  "author": "David Hrdalo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidhrdalo/3813ICT-Software-Frameworks/issues"
+  },
+  "homepage": "https://github.com/davidhrdalo/3813ICT-Software-Frameworks#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
