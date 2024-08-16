@@ -6,7 +6,9 @@
     <div *ngSwitchCase="'login'">
       <ul class="nav nav-pills flex-column mb-auto">
         <li>
-          <p style="padding-left: 1em;"><strong>Please login to continue.</strong></p>
+          <p style="padding-left: 1em">
+            <strong>Please login to continue.</strong>
+          </p>
         </li>
         <hr />
         <li class="nav-item">
@@ -36,6 +38,20 @@
         <li>
           <a href="#" class="nav-link link-dark"> Dashboard </a>
         </li>
+        <p>My Groups</p>
+        <ul>
+          <li *ngFor="let group of userGroups">{{ group.name }}</li>
+        </ul>
+
+        <p>Groups I Administer</p>
+        <ul>
+          <li *ngFor="let group of adminGroups">{{ group.name }}</li>
+        </ul>
+
+        <p>Groups I'm a Member Of (Not Admin)</p>
+        <ul>
+          <li *ngFor="let group of memberOnlyGroups">{{ group.name }}</li>
+        </ul>
       </ul>
       <hr />
     </div>
