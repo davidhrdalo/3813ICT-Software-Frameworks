@@ -1,7 +1,11 @@
 <div *ngIf="group">
-    <h2>{{ group.name }}</h2>
-  
+  <h2>{{ group.name }}</h2>
+
+  <p class="nav-item" *ngFor="let channel of channels">
+      {{ channel.name }}
+  </p>
+
   <div *ngIf="!group">
     <p>Loading group details...</p>
   </div>
-  
+</div>

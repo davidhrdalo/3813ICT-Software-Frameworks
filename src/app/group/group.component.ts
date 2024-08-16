@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GroupService } from '../services/group/group.service';
 import { CommonModule } from '@angular/common';
+import { ChannelService } from '../services/channel/channel.service';
 
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css'
 })
 export class GroupComponent implements OnInit {
   group: any = null;
+  channels: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private channelService: ChannelService
   ) {}
 
   ngOnInit(): void {
@@ -35,4 +38,11 @@ export class GroupComponent implements OnInit {
       }
     });
   }
-}
+
+    loadChannels(groupId: number): void {
+      this.channelService.getChannelsByGroupId(groupId).subscribe(channels => {
+        this.channels = channels;
+        console.log('Channels for group:', this.channels);
+      });
+    }
+  }
