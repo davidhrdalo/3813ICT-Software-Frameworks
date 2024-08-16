@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '../services/group/group.service'; // Adjust the import path as needed
@@ -7,7 +7,7 @@ import { GroupService } from '../services/group/group.service'; // Adjust the im
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
@@ -32,22 +32,10 @@ export class SidebarComponent implements OnInit {
       this.currentRoute = route.snapshot.url[0]?.path || '';
     });
   }
-  
+
   ngOnInit() {
-    this.getActiveUserGroups();
     this.getAdminGroups();
     this.getMemberOnlyGroups();
-  }
-
-  getActiveUserGroups() {
-    this.groupService.getGroupsActiveUserIsMemberOf().subscribe(
-      (groups) => {
-        this.userGroups = groups;
-      },
-      (error) => {
-        console.error('Error fetching user groups:', error);
-      }
-    );
   }
 
   getAdminGroups() {

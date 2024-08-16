@@ -9,7 +9,7 @@ import { authGuard } from './guard/auth.guard';
 export const routes: Routes = [
     {path: 'login', component:LoginComponent},
     {path: 'profile', component:ProfileComponent, canActivate: [authGuard]},
-    {path: 'group', component:GroupComponent, canActivate: [authGuard]},
+    {path: 'group/:id', component:GroupComponent, canActivate: [authGuard]},
     {path: 'channel', component:ChannelComponent, canActivate: [authGuard]},
     {path: 'chat', component:ChatComponent, canActivate: [authGuard]},
     { path: '', redirectTo: 'profile', pathMatch: 'full' }, // Redirect to profile if logged in
