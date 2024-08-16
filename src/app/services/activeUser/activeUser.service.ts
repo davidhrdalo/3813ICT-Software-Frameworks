@@ -64,4 +64,10 @@ export class ActiveUserService {
     }
     return null;
   }
+
+  checkRole(role: string): boolean {
+    const user = this.getUserData();
+    return user && user.roles.includes(role);
+  }
+  
 }

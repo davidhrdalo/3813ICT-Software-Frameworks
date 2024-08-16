@@ -4,7 +4,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { GroupComponent } from './group/group.component';
 import { ChannelComponent } from './channel/channel.component';
 import { ChatComponent } from './chat/chat.component';
-import { authGuard } from './auth.guard';
+import { authGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
     {path: 'login', component:LoginComponent},

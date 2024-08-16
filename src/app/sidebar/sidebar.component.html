@@ -2,7 +2,30 @@
   <div style="width: 16em; height: 100vh" class="bg-light">
     <br />
 
-    <div *ngSwitchCase="'chat'">
+    <!-- Login -->
+    <div *ngSwitchCase="'login'">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li>
+          <p style="padding-left: 1em;"><strong>Please login to continue.</strong></p>
+        </li>
+        <hr />
+        <li class="nav-item">
+          <a href="#" class="nav-link active" aria-current="page">
+            <i class="bi-box-arrow-in-right"></i>
+            Login
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link link-dark">
+            <i class="bi-person-plus-fill"></i>
+            Register
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Profile -->
+    <div *ngSwitchCase="'profile'">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
           <a href="#" class="nav-link active" aria-current="page">
@@ -14,7 +37,6 @@
           <a href="#" class="nav-link link-dark"> Dashboard </a>
         </li>
       </ul>
-
       <hr />
     </div>
 

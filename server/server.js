@@ -13,6 +13,7 @@ app.use(bodyParser.json()); // Parse JSON bodies
 
 // Routes
 require('./routes/api-auth.js')(app); // Route for user api
+require('./routes/api-group.js')(app); // Route for group api
 
 // Listen file
 const server = require('./listen.js');

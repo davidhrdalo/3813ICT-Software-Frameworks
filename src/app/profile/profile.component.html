@@ -1,7 +1,40 @@
-<p>profile works!</p>
-<div class="profile-container" *ngIf="userData">
-    <h2>{{ userData.username }}'s Profile</h2>
-    <p><strong>Email:</strong> {{ userData.email }}</p>
-    <p><strong>Roles:</strong> {{ userData.roles.join(', ') }}</p>
-    <p><strong>Groups:</strong> {{ userData.groups.join(', ') }}</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-4" *ngIf="userData">
+        <h2>{{ userData.username }}'s Profile</h2>
+        <p><strong>Email:</strong> {{ userData.email }}</p>
+        <p><strong>Roles:</strong> {{ userData.roles.join(', ') }}</p>
+        <p><strong>Groups:</strong> {{ userData.groups.join(', ') }}</p>
+      </div>
+      <div class="col-8">
+
+
+        <div class="d-flex" [ngSwitch]="currentRole">
+          <div *ngSwitchCase="'Super Admin'">
+
+            <p>Welcome, Super Admin!</p>
+
+
+          </div>
+          <div *ngSwitchCase="'Group Admin'">
+            <p>Welcome, Group Admin!</p>
+            <!-- Group Admin specific content here -->
+          </div>
+          <div *ngSwitchCase="'Chat User'">
+            <p>Welcome, Chat User!</p>
+            <!-- Chat User specific content here -->
+          </div>
+          <div *ngSwitchDefault>
+            <p>Welcome, User!</p>
+            <!-- Default content for other roles or no role -->
+          </div>
+        </div>
+       
+      </div>
+    </div>
   </div>
+
+
+
+
+  
