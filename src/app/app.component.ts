@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,15 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = '3813ICT-Software-Frameworks';
+  constructor(private router: Router) {}
+
+  title = 'Yapper';
+
+  logout() {
+    // Clear session storage
+    sessionStorage.clear();
+
+    // Redirect to login page
+    this.router.navigate(['/login']);
+  }
 }
