@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http'; // Ensure HttpClientModule is imported here
-import { UserService } from '../services/user.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, HttpClientModule], // Add HttpClientModule here
+  imports: [FormsModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [UserService] // Ensure UserService is provided here if not globally available
+  styleUrl: './login.component.css',
+  providers: [ActiveUserService]
 })
 export class LoginComponent {
   username = '';
   password = '';
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private activeUserService: ActiveUserService) {}
 
   loginSubmitted() {
-    this.userService.login(this.username, this.password)
+    this.activeUserService.login(this.username, this.password)
       .subscribe((data: any) => {
         if (data) {
           // Navigate to the account page after successful login

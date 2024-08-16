@@ -1,1 +1,7 @@
 <p>profile works!</p>
+<div class="profile-container" *ngIf="userData">
+    <h2>{{ userData.username }}'s Profile</h2>
+    <p><strong>Email:</strong> {{ userData.email }}</p>
+    <p><strong>Roles:</strong> {{ userData.roles.join(', ') }}</p>
+    <p><strong>Groups:</strong> {{ userData.groups.join(', ') }}</p>
+  </div>

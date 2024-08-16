@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 const httpOptions = {
@@ -11,7 +11,7 @@ const BACKEND_URL = 'http://localhost:3000/api/auth';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class ActiveUserService {
 
   constructor(private httpClient: HttpClient) {}
 
@@ -25,7 +25,10 @@ export class UserService {
             this.setSessionStorage(data);
           }
         }),
-        catchError(this.handleError<any>('login', null))
+        catchError((error) => {
+          console.error('Login failed:', error);
+          return (error);
+        })
       );
   }
 
@@ -60,13 +63,5 @@ export class UserService {
       };
     }
     return null;
-  }
-
-  // Error handling method
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
   }
 }
