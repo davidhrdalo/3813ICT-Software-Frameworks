@@ -40,6 +40,10 @@ export class ActiveUserService {
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('role', userData.role);
     sessionStorage.setItem('profileImg', userData.profileImg);
+    sessionStorage.setItem('firstName', userData.firstName);
+    sessionStorage.setItem('lastName', userData.lastName);
+    sessionStorage.setItem('dob', userData.dob);
+    sessionStorage.setItem('status', userData.status);
   }
 
   // Method to log out the user
@@ -60,16 +64,15 @@ export class ActiveUserService {
         id: sessionStorage.getItem('id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
+        role: sessionStorage.getItem('role'),
         profileImg: sessionStorage.getItem('profileImg'),
-        role: sessionStorage.getItem('role')
+        firstName: sessionStorage.getItem('firstName'),
+        lastName: sessionStorage.getItem('lastName'),
+        dob: sessionStorage.getItem('dob'),
+        status: sessionStorage.getItem('status')
       };
     }
     return null;
-  }
-
-  checkRole(role: string): boolean {
-    const user = this.getUserData();
-    return user && user.role;
   }
   
 }
