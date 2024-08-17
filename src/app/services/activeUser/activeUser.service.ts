@@ -37,8 +37,7 @@ export class ActiveUserService {
     sessionStorage.setItem('id', userData.id.toString());
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
-    sessionStorage.setItem('roles', JSON.stringify(userData.roles));
-    sessionStorage.setItem('groups', JSON.stringify(userData.groups));
+    sessionStorage.setItem('role', userData.role);
   }
 
   // Method to log out the user
@@ -58,8 +57,7 @@ export class ActiveUserService {
         id: sessionStorage.getItem('id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
-        roles: JSON.parse(sessionStorage.getItem('roles') || '[]'),
-        groups: JSON.parse(sessionStorage.getItem('groups') || '[]')
+        role: sessionStorage.getItem('role')
       };
     }
     return null;
@@ -67,7 +65,7 @@ export class ActiveUserService {
 
   checkRole(role: string): boolean {
     const user = this.getUserData();
-    return user && user.roles.includes(role);
+    return user && user.role;
   }
   
 }

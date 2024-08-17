@@ -3,8 +3,7 @@
       <div class="col-4" *ngIf="userData">
         <h2>{{ userData.username }}'s Profile</h2>
         <p><strong>Email:</strong> {{ userData.email }}</p>
-        <p><strong>Roles:</strong> {{ userData.roles.join(', ') }}</p>
-        <p><strong>Groups:</strong> {{ userData.groups.join(', ') }}</p>
+        <p><strong>Role:</strong> {{ userData.role }}</p>
       </div>
       <div class="col-8">
 

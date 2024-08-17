@@ -2,20 +2,19 @@
 
 module.exports = function (app) {
     class User {
-        constructor(id, username, email, password, roles = [], groups = []) {
+        constructor(id, username, email, password, role) {
             this.id = id;
             this.username = username;
             this.email = email;
             this.password = password;
-            this.roles = roles;
-            this.groups = groups;
+            this.role = role;
         }
     }
 
     const users = [
-        new User(1, 'john_doe', 'john@example.com', 'password123', ['Super Admin'], ['group1', 'group2']),
-        new User(2, 'jane_smith', 'jane@example.com', 'password456', ['Group Admin'], ['group1']),
-        new User(3, 'alice_jones', 'alice@example.com', 'password789', ['Chat User'], ['group2'])
+        new User(1, 'john_doe', 'john@example.com', 'password123', 'super'),
+        new User(2, 'jane_smith', 'jane@example.com', 'password456', 'group'),
+        new User(3, 'alice_jones', 'alice@example.com', 'password789', 'chat')
     ];
 
     app.post('/api/auth', (req, res) => {
@@ -28,8 +27,7 @@ module.exports = function (app) {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                roles: user.roles,
-                groups: user.groups
+                role: user.role
             });
         } else {
             res.status(401).json({ valid: false, message: 'Invalid credentials' });
