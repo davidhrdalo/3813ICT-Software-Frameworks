@@ -1,25 +1,30 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ActiveUserService } from './services/activeUser/activeUser.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule, RouterLink],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  constructor(private router: Router) {}
+  userData: any;
+
+  constructor(private router: Router, public activeUserService: ActiveUserService) {}
 
   title = 'Yapper';
 
-  logout() {
-    // Clear session storage
-    sessionStorage.clear();
-
-    // Redirect to login page
-    this.router.navigate(['/login']);
+  ngOnInit(): void {
+    this.getUserProfile();
   }
+
+  getUserProfile(): void {
+    this.userData = this.activeUserService.getUserData();
+  }
+
 }

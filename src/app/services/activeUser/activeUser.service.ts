@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,7 +14,7 @@ const BACKEND_URL = 'http://localhost:3000/api/auth';
 })
 export class ActiveUserService {
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private router: Router, private httpClient: HttpClient) {}
 
   // Method to log in a user
   login(username: string, password: string): Observable<any> {
@@ -38,11 +39,13 @@ export class ActiveUserService {
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('role', userData.role);
+    sessionStorage.setItem('profileImg', userData.profileImg);
   }
 
   // Method to log out the user
   logout(): void {
     sessionStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   // Method to check if a user is logged in
@@ -57,6 +60,7 @@ export class ActiveUserService {
         id: sessionStorage.getItem('id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
+        profileImg: sessionStorage.getItem('profileImg'),
         role: sessionStorage.getItem('role')
       };
     }
