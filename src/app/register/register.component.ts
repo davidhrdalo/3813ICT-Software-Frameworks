@@ -3,15 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
+
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [FormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
   providers: [ActiveUserService]
 })
-export class LoginComponent {
+export class RegisterComponent {
+
   username = '';
   password = '';
 

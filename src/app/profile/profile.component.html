@@ -1,4 +1,4 @@
-  <div style="margin-left: 2em;" class="container">
+  <div class="container">
     <!-- Start Grid -->
     <div class="row">
 
@@ -28,23 +28,47 @@
 
 
         <!-- Full row - Content for superuser -->
-        <div class="col-12" *ngIf="currentRole === 'super'">
+        <div class="row" *ngIf="currentRole === 'super'">
           <hr />
           <h3>User Management</h3>
+
+          <div class="col-8">
+            List
+          </div>
+
+          <div class="col-4">
+            form
+          </div>
 
         </div>
 
         <!-- Full row - Content for group admin -->
-        <div class="col-12" *ngIf="currentRole === 'super' || currentRole === 'group'">
+        <div class="row" *ngIf="currentRole === 'super' || currentRole === 'group'">
           <hr />
           <h3>Group Management</h3>
+
+          <div class="col-8">
+            List
+          </div>
+
+          <div class="col-4">
+            form
+          </div>
 
         </div>
 
         <!-- Full row - Default content for other roles or no role -->
-        <div class="col-12" *ngIf="currentRole === 'super' || currentRole === 'group' || currentRole === 'chat'">
+        <div class="row" *ngIf="currentRole === 'super' || currentRole === 'group' || currentRole === 'chat'">
           <hr />
           <h3>Groups</h3>
+
+          <div class="col-8">
+            List
+          </div>
+
+          <div class="col-4">
+            form
+          </div>
           
         </div>
        

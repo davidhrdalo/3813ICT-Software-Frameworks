@@ -1,0 +1,83 @@
+<div class="form-container">
+    <h1>Register</h1>
+    <hr />
+    <form (ngSubmit)="loginSubmitted()">
+
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label for="firstName"><strong>First Name</strong></label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            [(ngModel)]="username"
+            name="firstName"
+            placeholder="Enter first name"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="lastName"><strong>Last Name</strong></label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            [(ngModel)]="username"
+            name="lastName"
+            placeholder="Enter last name"
+            required
+          />
+        </div>
+      </div>
+      
+
+      <div class="form-group">
+        <label for="username"><strong>Username</strong></label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Enter username"
+          required
+        />
+      </div>
+  
+      <div class="form-group">
+        <label for="dob"><strong>Date of Birth</strong></label>
+        <input
+          type="date"
+          class="form-control"
+          id="dob"
+          [(ngModel)]="username"
+          name="dob"
+          placeholder="Enter date of birth"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password"><strong>Password</strong></label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+      </div>
+  
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe" />
+        <label class="form-check-label" for="rememberMe">Remember me</label>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  
+    <p>Already have an account? <a [routerLink]="['/login']">Login here</a></p>
+  </div>
+  
