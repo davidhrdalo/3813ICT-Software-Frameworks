@@ -26,12 +26,12 @@ export class ProfileComponent implements OnInit {
   }
 
   setCurrentRole(): void {
-    if (this.activeUserService.checkRole('Super Admin')) {
-      this.currentRole = 'Super Admin';
-    } else if (this.activeUserService.checkRole('Group Admin')) {
-      this.currentRole = 'Group Admin';
-    } else if (this.activeUserService.checkRole('Chat User')) {
-      this.currentRole = 'Chat User';
+    if (this.activeUserService.checkRole('super')) {
+      this.currentRole = 'super';
+    } else if (this.activeUserService.checkRole('group')) {
+      this.currentRole = 'group';
+    } else if (this.activeUserService.checkRole('chat')) {
+      this.currentRole = 'chat';
     }
   }
 }

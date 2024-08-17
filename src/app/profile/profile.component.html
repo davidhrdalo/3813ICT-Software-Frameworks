@@ -1,39 +1,52 @@
-  <div class="container">
+  <div style="margin-left: 2em;" class="container">
+    <!-- Start Grid -->
     <div class="row">
+
+      <!-- Full row -->
+      <div style="padding-top: 2em; padding-bottom: 2em;" class="col-12" *ngIf="userData">
+        <div class="jumbotron jumbotron-fluid">
+            <h1 class="display-4">Welcome {{ userData.username }}</h1>
+            <p class="lead" *ngIf="currentRole === 'super'">As a <strong>Super Admin</strong> you can edit users groups or chats from here!</p>
+            <p class="lead" *ngIf="currentRole === 'group'">As a <strong>Group Admin</strong> you can edit groups or chats from here!</p>
+            <p class="lead" *ngIf="currentRole === 'chat'">You can view your groups and chats from here!</p>
+        </div>
+        <hr />
+      </div>
+      
+      <!-- 1/3 row -->
       <div class="col-4" *ngIf="userData">
         <h2>{{ userData.username }}'s Profile</h2>
         <p><strong>Email:</strong> {{ userData.email }}</p>
         <p><strong>Role:</strong> {{ userData.role }}</p>
       </div>
+      
+      <!-- 2/3 row -->
       <div class="col-8">
+        <!-- User detail change here -->
+        <p>User detail change here</p>
+      </div>
 
 
-        <div class="d-flex" [ngSwitch]="currentRole">
-          <div *ngSwitchCase="'Super Admin'">
+        <!-- Full row - Content for superuser -->
+        <div class="col-12" *ngIf="currentRole === 'super'">
+          <hr />
+          <h3>User Management</h3>
 
-            <p>Welcome, Super Admin!</p>
+        </div>
 
+        <!-- Full row - Content for group admin -->
+        <div class="col-12" *ngIf="currentRole === 'super' || currentRole === 'group'">
+          <hr />
+          <h3>Group Management</h3>
 
-          </div>
-          <div *ngSwitchCase="'Group Admin'">
-            <p>Welcome, Group Admin!</p>
-            <!-- Group Admin specific content here -->
-          </div>
-          <div *ngSwitchCase="'Chat User'">
-            <p>Welcome, Chat User!</p>
-            <!-- Chat User specific content here -->
-          </div>
-          <div *ngSwitchDefault>
-            <p>Welcome, User!</p>
-            <!-- Default content for other roles or no role -->
-          </div>
+        </div>
+
+        <!-- Full row - Default content for other roles or no role -->
+        <div class="col-12" *ngIf="currentRole === 'super' || currentRole === 'group' || currentRole === 'chat'">
+          <hr />
+          <h3>Groups</h3>
+          
         </div>
        
       </div>
-    </div>
   </div>
-
-
-
-
-  
