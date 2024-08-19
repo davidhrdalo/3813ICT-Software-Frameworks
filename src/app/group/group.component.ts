@@ -3,28 +3,50 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GroupService } from '../services/group/group.service';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../services/channel/channel.service';
+import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
 @Component({
   selector: 'app-group',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './group.component.html',
-  styleUrls: ['./group.component.css'] // Fixed from styleUrl to styleUrls
+  styleUrl: './group.component.css',
+  providers: [ActiveUserService],
 })
 export class GroupComponent implements OnInit {
   group: any = null;
   channels: any[] = [];
+  userData: any;
+  currentRole: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private groupService: GroupService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private activeUserService: ActiveUserService,
   ) {}
 
   ngOnInit(): void {
+    this.getUserProfile();
+    this.setCurrentRole();
+
     const groupId = this.route.snapshot.paramMap.get('id');
     if (groupId) {
       this.loadGroupDetails(parseInt(groupId, 10));
+    }
+  }
+
+  getUserProfile(): void {
+    this.userData = this.activeUserService.getUserData();
+  }
+
+  setCurrentRole(): void {
+    if (this.userData.role==='super') {
+      this.currentRole = 'super';
+    } else if (this.userData.role==='group') {
+      this.currentRole = 'group';
+    } else if (this.userData.role==='chat') {
+      this.currentRole = 'chat';
     }
   }
 

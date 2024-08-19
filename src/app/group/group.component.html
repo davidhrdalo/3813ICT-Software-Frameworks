@@ -1,11 +1,37 @@
-<div *ngIf="group">
-  <h2>{{ group.name }}</h2>
+<div class="container">
+  <!-- Start Grid -->
+  <div class="row">
+    <!-- Full row -->
+    <div
+      style="padding-top: 2em; padding-bottom: 2em"
+      class="col-12"
+      *ngIf="group"
+    >
+      <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4">Welcome to {{ group.name }}</h1>
+        <p class="lead" *ngIf="currentRole === 'super'">
+          As a <strong>Super Admin</strong> you can edit users groups or chats
+          from here!
+        </p>
+        <p class="lead" *ngIf="currentRole === 'group'">
+          As a <strong>Group Admin</strong> you can edit groups or chats from
+          here!
+        </p>
+        <p class="lead" *ngIf="currentRole === 'chat'">
+          You can view your groups and chats from here!
+        </p>
+      </div>
+      <hr />
+    </div>
 
-  <p class="nav-item" *ngFor="let channel of channels">
-      {{ channel.name }}
-  </p>
+    <!-- Full row - Content for channel -->
+    <div class="row" *ngFor="let channel of channels">
+      <hr />
+      <h3>Channels</h3>
 
-  <div *ngIf="!group">
-    <p>Loading group details...</p>
+      <p class="nav-item">
+        {{ channel.name }}
+      </p>
+    </div>
   </div>
 </div>
