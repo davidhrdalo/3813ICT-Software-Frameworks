@@ -1,6 +1,7 @@
 <div class="container">
   <!-- Start Grid -->
   <div class="row">
+
     <!-- Full row -->
     <div
       style="padding-top: 2em; padding-bottom: 2em"
@@ -21,17 +22,40 @@
           You can view your groups and chats from here!
         </p>
       </div>
+    </div>
+
+    <!-- Full row - Content for group details -->
+    <div class="row">
       <hr />
+      <h3>Group Details</h3>
+      <div class="nav-item" *ngIf="group">
+        <p><strong>Group Name: </strong>{{ group.name }}</p>
+        <p><strong>Group Description: </strong>{{ group.description }}</p>
+      </div>
     </div>
 
     <!-- Full row - Content for channel -->
-    <div class="row" *ngFor="let channel of channels">
+    <div class="row">
       <hr />
       <h3>Channels</h3>
-
-      <p class="nav-item">
-        {{ channel.name }}
-      </p>
+      <div class="col-3" *ngFor="let channel of channels">
+        <p><strong>{{ channel.name }}</strong></p>
+        <p>{{ channel.name }}</p>
+        <button style="margin-right: 10px;" class="btn btn-primary">Visit</button>
+        <button style="margin-right: 10px;" class="btn btn-warning">Edit</button>
+        <button class="btn btn-danger">Remove</button>
+      </div>
     </div>
+
+    <!-- Full row - Content for group members -->
+    <div class="row">
+      <hr />
+      <h3>Members</h3>
+      <div class="col-3" *ngFor="let channel of channels">
+        <p><strong>Member Name: </strong>{{ channel.name }}</p>
+        <button class="btn btn-danger">Remove</button>
+      </div>
+    </div>
+  
   </div>
 </div>
