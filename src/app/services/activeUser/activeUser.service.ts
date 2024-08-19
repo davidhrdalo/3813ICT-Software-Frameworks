@@ -5,32 +5,30 @@ import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 const BACKEND_URL = 'http://localhost:3000/api/auth';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActiveUserService {
-
   constructor(private router: Router, private httpClient: HttpClient) {}
 
   // Method to log in a user
   login(username: string, password: string): Observable<any> {
     const user = { username, password };
-    return this.httpClient.post(BACKEND_URL, user, httpOptions)
-      .pipe(
-        tap((data: any) => {
-          if (data) {
-            this.setSessionStorage(data);
-          }
-        }),
-        catchError((error) => {
-          console.error('Login failed:', error);
-          return (error);
-        })
-      );
+    return this.httpClient.post(BACKEND_URL, user, httpOptions).pipe(
+      tap((data: any) => {
+        if (data) {
+          this.setSessionStorage(data);
+        }
+      }),
+      catchError((error) => {
+        console.error('Login failed:', error);
+        return error;
+      })
+    );
   }
 
   // Method to set user data in session storage
@@ -69,10 +67,22 @@ export class ActiveUserService {
         firstName: sessionStorage.getItem('firstName'),
         lastName: sessionStorage.getItem('lastName'),
         dob: sessionStorage.getItem('dob'),
-        status: sessionStorage.getItem('status')
+        status: sessionStorage.getItem('status'),
       };
     }
     return null;
   }
-  
+
+  // Method to update user data in session storage
+  updateUserData(userData: any): void {
+    sessionStorage.setItem('id', userData.id.toString());
+    sessionStorage.setItem('username', userData.username);
+    sessionStorage.setItem('email', userData.email);
+    sessionStorage.setItem('role', userData.role);
+    sessionStorage.setItem('profileImg', userData.profileImg);
+    sessionStorage.setItem('firstName', userData.firstName);
+    sessionStorage.setItem('lastName', userData.lastName);
+    sessionStorage.setItem('dob', userData.dob);
+    sessionStorage.setItem('status', userData.status);
+  }
 }

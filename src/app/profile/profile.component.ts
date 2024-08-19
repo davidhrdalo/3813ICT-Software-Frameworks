@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   providers: [ActiveUserService],
@@ -13,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class ProfileComponent implements OnInit {
   userData: any;
   currentRole: string = '';
+  isEditMode: boolean = false;
 
   constructor(private activeUserService: ActiveUserService) {}
 
@@ -33,5 +35,15 @@ export class ProfileComponent implements OnInit {
     } else if (this.userData.role==='chat') {
       this.currentRole = 'chat';
     }
+  }
+
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
+  }
+
+  saveDetails(): void {
+    this.activeUserService.updateUserData(this.userData);
+    this.toggleEditMode(); // Exit edit mode after saving
+    alert('Profile updated successfully!');
   }
 }

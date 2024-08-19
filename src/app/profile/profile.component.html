@@ -44,15 +44,52 @@
     <!-- 2/3 row -->
     <div class="col-8 d-flex flex-column" *ngIf="userData">
       <h3 style="margin-bottom: 20px;">Details</h3>
-      <p><strong>Name: </strong>{{ userData.firstName }} {{ userData.lastName }}</p>
-      <p><strong>Current Status:</strong> {{ userData.status }}</p>
-      <p><strong>Username:</strong> {{ userData.username }}</p>
-      <p><strong>Email:</strong> {{ userData.email }}</p>
-      <p><strong>Date of Birth:</strong> {{ userData.dob }}</p>
-      <button type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-primary">
+    
+      <!-- Name -->
+      <p><strong>Name: </strong>
+        <span *ngIf="!isEditMode">{{ userData.firstName }} {{ userData.lastName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.firstName" class="form-control" style="display: inline-block; width: auto;" />
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.lastName" class="form-control" style="display: inline-block; width: auto;" />
+      </p>
+    
+      <!-- Status -->
+      <p><strong>Current Status:</strong>
+        <span *ngIf="!isEditMode">{{ userData.status }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.status" class="form-control" />
+      </p>
+    
+      <!-- Username -->
+      <p><strong>Username:</strong>
+        <span *ngIf="!isEditMode">{{ userData.username }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.username" class="form-control" />
+      </p>
+    
+      <!-- Email -->
+      <p><strong>Email:</strong>
+        <span *ngIf="!isEditMode">{{ userData.email }}</span>
+        <input *ngIf="isEditMode" type="email" [(ngModel)]="userData.email" class="form-control" />
+      </p>
+    
+      <!-- Date of Birth -->
+      <p><strong>Date of Birth:</strong>
+        <span *ngIf="!isEditMode">{{ userData.dob }}</span>
+        <input *ngIf="isEditMode" type="date" [(ngModel)]="userData.dob" class="form-control" />
+      </p>
+    
+      <!-- Buttons -->
+      <button *ngIf="!isEditMode" type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-primary" (click)="toggleEditMode()">
         Edit Details
       </button>
-    </div>
+      
+      <div *ngIf="isEditMode">
+        <button type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-primary" (click)="saveDetails()">
+          Save Details
+        </button>
+        <button type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-secondary" (click)="toggleEditMode()">
+          Cancel
+        </button>
+      </div>
+    </div>    
 
     <!-- Full row - Content for superuser -->
     <div class="row" *ngIf="currentRole === 'super'">
