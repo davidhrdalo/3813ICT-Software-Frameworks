@@ -22,11 +22,11 @@
           You can view your groups and chats from here!
         </p>
       </div>
+      <hr />
     </div>
 
     <!-- Full row - Content for group details -->
     <div class="row">
-      <hr />
       <h3>Group Details</h3>
       <div class="nav-item" *ngIf="group">
         <p><strong>Group Name: </strong>{{ group.name }}</p>
@@ -53,7 +53,8 @@
       <h3>Members</h3>
       <div class="col-3" *ngFor="let channel of channels">
         <p><strong>Member Name: </strong>{{ channel.name }}</p>
-        <button class="btn btn-danger">Remove</button>
+        <button style="margin-right: 10px;" class="btn btn-warning">Remove</button>
+        <button class="btn btn-danger">Delete</button>
       </div>
     </div>
   

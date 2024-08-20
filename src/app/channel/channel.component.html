@@ -1,1 +1,21 @@
-<p>channel works!</p>
+<div class="container">
+  <!-- Start Grid -->
+  <div class="row">
+    <!-- Full row -->
+    <div
+      style="padding-top: 2em; padding-bottom: 2em"
+      class="col-12"
+      *ngIf="channel"
+    >
+      <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4">Welcome to {{ channel.name }}</h1>
+        <p class="lead">Start chatting!</p>
+      </div>
+      <hr />
+    </div>
+
+    <!-- Full row - Content for group details -->
+    <div class="row">
+    </div>
+  </div>
+</div>
