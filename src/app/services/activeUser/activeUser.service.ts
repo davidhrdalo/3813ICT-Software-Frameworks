@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,19 @@ const BACKEND_URL = 'http://localhost:3000/api/auth';
   providedIn: 'root',
 })
 export class ActiveUserService {
-  constructor(private router: Router, private httpClient: HttpClient) {}
+  private userDataSubject = new BehaviorSubject<any>(null);
+  userData$ = this.userDataSubject.asObservable();
+
+  constructor(private router: Router, private httpClient: HttpClient) {
+    this.initializeUserData();
+  }
+
+  private initializeUserData(): void {
+    const userData = this.getUserDataFromStorage();
+    if (userData) {
+      this.userDataSubject.next(userData);
+    }
+  }
 
   // Method to log in a user
   login(username: string, password: string): Observable<any> {
@@ -22,11 +34,12 @@ export class ActiveUserService {
       tap((data: any) => {
         if (data) {
           this.setSessionStorage(data);
+          this.userDataSubject.next(data); // Emit new user data immediately
         }
       }),
       catchError((error) => {
         console.error('Login failed:', error);
-        return error;
+        return throwError(error); // Use throwError to maintain observable chain
       })
     );
   }
@@ -42,11 +55,13 @@ export class ActiveUserService {
     sessionStorage.setItem('lastName', userData.lastName);
     sessionStorage.setItem('dob', userData.dob);
     sessionStorage.setItem('status', userData.status);
+    this.userDataSubject.next(userData);
   }
 
   // Method to log out the user
   logout(): void {
     sessionStorage.clear();
+    this.userDataSubject.next(null);
     this.router.navigate(['/login']);
   }
 
@@ -57,6 +72,10 @@ export class ActiveUserService {
 
   // Method to get the current user data from session storage
   getUserData(): any {
+    return this.userDataSubject.value;
+  }
+
+  private getUserDataFromStorage(): any {
     if (this.isLoggedIn()) {
       return {
         id: sessionStorage.getItem('id'),
@@ -84,5 +103,6 @@ export class ActiveUserService {
     sessionStorage.setItem('lastName', userData.lastName);
     sessionStorage.setItem('dob', userData.dob);
     sessionStorage.setItem('status', userData.status);
+    this.userDataSubject.next(userData);
   }
 }

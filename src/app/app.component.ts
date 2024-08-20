@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { Router, RouterLink } from '@angular/router';
@@ -10,21 +10,19 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, CommonModule, RouterLink],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   userData: any;
 
-  constructor(private router: Router, public activeUserService: ActiveUserService) {}
+  constructor(public activeUserService: ActiveUserService) {}
 
   title = 'Yapper';
 
   ngOnInit(): void {
-    this.getUserProfile();
+    this.activeUserService.userData$.subscribe((userData) => {
+      this.userData = userData;
+      console.log('User data updated:', userData);
+    });
   }
-
-  getUserProfile(): void {
-    this.userData = this.activeUserService.getUserData();
-  }
-
 }
