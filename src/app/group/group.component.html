@@ -1,7 +1,6 @@
 <div class="container">
   <!-- Start Grid -->
   <div class="row">
-
     <!-- Full row -->
     <div
       style="padding-top: 2em; padding-bottom: 2em"
@@ -38,12 +37,16 @@
     <div class="row">
       <hr />
       <h3>Channels</h3>
-      <div class="col-3" *ngFor="let channel of channels">
-        <p><strong>{{ channel.name }}</strong></p>
+      <div class="col-3 card" *ngFor="let channel of channels">
+        <p>
+          <strong>{{ channel.name }}</strong>
+        </p>
         <p>{{ channel.name }}</p>
-        <button style="margin-right: 10px;" class="btn btn-primary">Visit</button>
-        <button style="margin-right: 10px;" class="btn btn-warning">Edit</button>
-        <button class="btn btn-danger">Remove</button>
+        <div class="button-group">
+          <button class="btn btn-outline-primary">Visit</button>
+          <button *ngIf="currentRole === 'super'" class="btn btn-outline-warning">Edit</button>
+          <button *ngIf="currentRole === 'super'" class="btn btn-outline-danger">Remove</button>
+        </div>
       </div>
     </div>
 
@@ -51,12 +54,13 @@
     <div class="row">
       <hr />
       <h3>Members</h3>
-      <div class="col-3" *ngFor="let channel of channels">
+      <div class="col-3 card" *ngFor="let channel of channels">
         <p><strong>Member Name: </strong>{{ channel.name }}</p>
-        <button style="margin-right: 10px;" class="btn btn-warning">Remove</button>
-        <button class="btn btn-danger">Delete</button>
+        <div class="button-group">
+          <button *ngIf="currentRole === 'super'" class="btn btn-outline-warning">Remove</button>
+          <button *ngIf="currentRole === 'super'" class="btn btn-outline-danger">Delete</button>
+        </div>
       </div>
     </div>
-  
   </div>
 </div>
