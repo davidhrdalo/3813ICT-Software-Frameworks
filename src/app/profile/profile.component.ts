@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
-  providers: [ActiveUserService],
 })
 export class ProfileComponent implements OnInit {
   userData: any;

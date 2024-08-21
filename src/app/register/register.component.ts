@@ -10,7 +10,6 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   imports: [FormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
-  providers: [ActiveUserService]
 })
 export class RegisterComponent {
 

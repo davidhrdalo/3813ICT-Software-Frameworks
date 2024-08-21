@@ -8,8 +8,7 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   standalone: true,
   imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  providers: [ActiveUserService]
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
   username = '';

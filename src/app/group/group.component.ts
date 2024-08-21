@@ -11,7 +11,6 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   imports: [CommonModule, RouterLink],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css',
-  providers: [ActiveUserService],
 })
 export class GroupComponent implements OnInit {
   group: any = null;
