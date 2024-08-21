@@ -1,31 +1,4 @@
-<nav style="height: 3.1em;" class="navbar navbar-expand-lg navbar-light bg-light">
-  <a style="padding-left: 2em;" class="navbar-brand" href="/">
-    <img style="width: 25%;" src="assets/logo.png" alt="Logo">
-    Yapper
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <!-- Spacing -->
-  </div>
-
-  <div *ngIf="userData" style="padding-right: 5em;" class="dropdown">
-    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="{{ userData.profileImg }}" alt="" width="32" height="32" class="rounded-circle me-2">
-      <strong>{{ userData.username }}</strong>
-    </a>
-    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-      <li><a class="dropdown-item" [routerLink]="['/profile']"><strong>Status: </strong>{{ userData.status }}</a></li>
-      <li><hr class="dropdown-divider"></li>
-      <li><a class="dropdown-item" (click)="activeUserService.logout()">Logout</a></li>
-    </ul>
-  </div>
-
-</nav>
-<hr style="margin: 0%;">
-
+<app-navbar></app-navbar>
 <div class="d-flex">
   <app-sidebar></app-sidebar>
   <div class="container-fluid">
