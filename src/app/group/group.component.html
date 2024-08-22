@@ -9,15 +9,15 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group.name }}</h1>
-        <p class="lead" *ngIf="currentRole === 'super'">
+        <p class="lead" *ngIf="userData.role === 'super'">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
         </p>
-        <p class="lead" *ngIf="currentRole === 'group'">
+        <p class="lead" *ngIf="userData.role === 'group'">
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="currentRole === 'chat'">
+        <p class="lead" *ngIf="userData.role === 'chat'">
           You can view your groups and chats from here!
         </p>
       </div>
@@ -37,17 +37,18 @@
     <div class="row">
       <hr />
       <h3>Channels</h3>
-      <div class="col-3 card" *ngFor="let channel of channels">
+
+      <div class="col-3 card" *ngFor="let channel of channels" [routerLink]="['/group', group.id, 'channel', channel.id]">
         <p>
           <strong>{{ channel.name }}</strong>
         </p>
         <p>{{ channel.name }}</p>
         <div class="button-group">
-          <button class="btn btn-outline-primary">Visit</button>
-          <button *ngIf="currentRole === 'super'" class="btn btn-outline-warning">Edit</button>
-          <button *ngIf="currentRole === 'super'" class="btn btn-outline-danger">Remove</button>
+          <button *ngIf="userData.role === 'super'" class="btn btn-outline-warning">Edit</button>
+          <button *ngIf="userData.role === 'super'" class="btn btn-outline-danger">Remove</button>
         </div>
       </div>
+
     </div>
 
     <!-- Full row - Content for group members -->
@@ -57,8 +58,8 @@
       <div class="col-3 card" *ngFor="let channel of channels">
         <p><strong>Member Name: </strong>{{ channel.name }}</p>
         <div class="button-group">
-          <button *ngIf="currentRole === 'super'" class="btn btn-outline-warning">Remove</button>
-          <button *ngIf="currentRole === 'super'" class="btn btn-outline-danger">Delete</button>
+          <button *ngIf="userData.role === 'super'" class="btn btn-outline-warning">Remove</button>
+          <button *ngIf="userData.role === 'super'" class="btn btn-outline-danger">Delete</button>
         </div>
       </div>
     </div>

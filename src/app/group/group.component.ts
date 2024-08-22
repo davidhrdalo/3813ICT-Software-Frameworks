@@ -27,7 +27,6 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserProfile();
-    this.setCurrentRole();
 
     const groupId = this.route.snapshot.paramMap.get('id');
     if (groupId) {
@@ -37,16 +36,6 @@ export class GroupComponent implements OnInit {
 
   getUserProfile(): void {
     this.userData = this.activeUserService.getUserData();
-  }
-
-  setCurrentRole(): void {
-    if (this.userData.role==='super') {
-      this.currentRole = 'super';
-    } else if (this.userData.role==='group') {
-      this.currentRole = 'group';
-    } else if (this.userData.role==='chat') {
-      this.currentRole = 'chat';
-    }
   }
 
   loadGroupDetails(id: number): void {
