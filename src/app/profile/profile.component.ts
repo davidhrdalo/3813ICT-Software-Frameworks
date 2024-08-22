@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProfileComponent implements OnInit {
   userData: any;
+  userEditData: any;
   currentRole: string = '';
   isEditMode: boolean = false;
 
@@ -19,29 +20,24 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserProfile();
-    this.setCurrentRole();
   }
 
   getUserProfile(): void {
     this.userData = this.activeUserService.getUserData();
   }
 
-  setCurrentRole(): void {
-    if (this.userData.role==='super') {
-      this.currentRole = 'super';
-    } else if (this.userData.role==='group') {
-      this.currentRole = 'group';
-    } else if (this.userData.role==='chat') {
-      this.currentRole = 'chat';
-    }
-  }
-
   toggleEditMode(): void {
+    if (this.isEditMode) {
+      this.userEditData = null; // Clear edit data when exiting edit mode
+    } else {
+      this.userEditData = { ...this.userData }; // Create a copy of the user data for editing
+    }
     this.isEditMode = !this.isEditMode;
   }
 
   saveDetails(): void {
-    this.activeUserService.updateUserData(this.userData);
+    this.activeUserService.updateUserData(this.userEditData);
+    this.userData = { ...this.userEditData }; // Update the original data after saving
     this.toggleEditMode(); // Exit edit mode after saving
     alert('Profile updated successfully!');
   }

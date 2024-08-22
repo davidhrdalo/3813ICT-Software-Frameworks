@@ -9,15 +9,15 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome {{ userData.firstName }}</h1>
-        <p class="lead" *ngIf="currentRole === 'super'">
+        <p class="lead" *ngIf="userData.role === 'super'">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
         </p>
-        <p class="lead" *ngIf="currentRole === 'group'">
+        <p class="lead" *ngIf="userData.role === 'group'">
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="currentRole === 'chat'">
+        <p class="lead" *ngIf="userData.role === 'chat'">
           You can view your groups and chats from here!
         </p>
       </div>
@@ -48,32 +48,32 @@
       <!-- Name -->
       <p><strong>Name: </strong>
         <span *ngIf="!isEditMode">{{ userData.firstName }} {{ userData.lastName }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.firstName" class="form-control" style="display: inline-block; width: auto;" />
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.lastName" class="form-control" style="display: inline-block; width: auto;" />
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.firstName" class="form-control" style="display: inline-block; width: auto;" />
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.lastName" class="form-control" style="display: inline-block; width: auto;" />
       </p>
     
       <!-- Status -->
       <p><strong>Current Status:</strong>
         <span *ngIf="!isEditMode">{{ userData.status }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.status" class="form-control" />
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.status" class="form-control" />
       </p>
     
       <!-- Username -->
       <p><strong>Username:</strong>
         <span *ngIf="!isEditMode">{{ userData.username }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userData.username" class="form-control" />
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.username" class="form-control" />
       </p>
     
       <!-- Email -->
       <p><strong>Email:</strong>
         <span *ngIf="!isEditMode">{{ userData.email }}</span>
-        <input *ngIf="isEditMode" type="email" [(ngModel)]="userData.email" class="form-control" />
+        <input *ngIf="isEditMode" type="email" [(ngModel)]="userEditData.email" class="form-control" />
       </p>
     
       <!-- Date of Birth -->
       <p><strong>Date of Birth:</strong>
         <span *ngIf="!isEditMode">{{ userData.dob }}</span>
-        <input *ngIf="isEditMode" type="date" [(ngModel)]="userData.dob" class="form-control" />
+        <input *ngIf="isEditMode" type="date" [(ngModel)]="userEditData.dob" class="form-control" />
       </p>
     
       <!-- Buttons -->
@@ -92,7 +92,7 @@
     </div>    
 
     <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="currentRole === 'super'">
+    <div class="row" *ngIf="userData.role === 'super'">
       <hr />
       <h3>User Management</h3>
 
@@ -102,7 +102,7 @@
     </div>
 
     <!-- Full row - Content for group admin -->
-    <div class="row" *ngIf="currentRole === 'super' || currentRole === 'group'">
+    <div class="row" *ngIf="userData.role === 'super' || currentRole === 'group'">
       <hr />
       <h3>Group Management</h3>
 
@@ -115,9 +115,9 @@
     <div
       class="row"
       *ngIf="
-        currentRole === 'super' ||
-        currentRole === 'group' ||
-        currentRole === 'chat'
+        userData.role === 'super' ||
+        userData.role === 'group' ||
+        userData.role === 'chat'
       "
     >
       <hr />
