@@ -17,9 +17,9 @@ module.exports = function (app) {
     }
 
     const users = [
-        new User(1, 'john_doe', 'john@example.com', 'password123', 'super', 'https://picsum.photos/200/300', 'John', 'Doe', '2001-08-17', 'Busy'),
-        new User(2, 'jane_smith', 'jane@example.com', 'password456', 'group', 'https://picsum.photos/201/300', 'Jane', 'Smith', '2002-03-26', 'Available'),
-        new User(3, 'alice_jones', 'alice@example.com', 'password789', 'chat', 'https://picsum.photos/202/300', 'Alice', 'Jones', '2020-06-10', 'Away')
+        new User(1, 'john_doe', 'john@example.com', 'pw', 'super', 'https://picsum.photos/200/300', 'John', 'Doe', '2001-08-17', 'Busy'),
+        new User(2, 'jane_smith', 'jane@example.com', 'pw', 'group', 'https://picsum.photos/201/300', 'Jane', 'Smith', '2002-03-26', 'Available'),
+        new User(3, 'alice_jones', 'alice@example.com', 'pw', 'chat', 'https://picsum.photos/202/300', 'Alice', 'Jones', '2020-06-10', 'Away')
     ];
 
     app.post('/api/auth', (req, res) => {
@@ -42,5 +42,21 @@ module.exports = function (app) {
         } else {
             res.status(401).json({ valid: false, message: 'Invalid credentials' });
         }
+    });
+
+    // New GET route to retrieve all users
+    app.get('/api/users', (req, res) => {
+        const usersWithoutPassword = users.map(user => ({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            profileImg: user.profileImg,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            dob: user.dob,
+            status: user.status,
+        }));
+        res.json(usersWithoutPassword);
     });
 };

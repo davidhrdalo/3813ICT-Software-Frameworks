@@ -92,13 +92,15 @@
     </div>    
 
     <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super'">
+    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
       <hr />
       <h3>User Management</h3>
-
-      <div class="col-8">List</div>
-
-      <div class="col-4">form</div>
+      <div class="col-3 card" *ngFor="let user of allUsers">
+        <p><strong>Member Name: </strong>{{ user.firstName }}</p>
+        <div class="button-group">
+          <button *ngIf="userData.role === 'super'" class="btn btn-outline-danger">Delete</button>
+        </div>
+      </div>
     </div>
 
     <!-- Full row - Content for group admin -->
