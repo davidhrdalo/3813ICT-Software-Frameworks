@@ -53,4 +53,8 @@ export class ProfileComponent implements OnInit {
       this.allUsers = users;
     });
   }
+
+  deleteUser(userId: number): void {
+    this.userService.deleteUser(userId);
+  }
 }

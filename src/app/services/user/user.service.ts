@@ -54,4 +54,8 @@ export class UserService {
   getUsers(): any[] {
     return this.allUsersSubject.value;
   }
+
+  deleteUser(userId: number): void {
+    console.log('W')
+  }
 }
