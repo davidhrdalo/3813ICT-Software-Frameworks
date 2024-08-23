@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
-
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -12,23 +11,45 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-
+  firstName = '';
+  lastName = '';
   username = '';
+  email = '';
   password = '';
+  dob = '';
 
-  constructor(private router: Router, private activeUserService: ActiveUserService) {}
+  constructor(
+    private router: Router,
+    private activeUserService: ActiveUserService
+  ) {}
 
-  loginSubmitted() {
-    this.activeUserService.login(this.username, this.password)
-      .subscribe((data: any) => {
+  registerSubmitted() {
+    if (!this.firstName || !this.lastName || !this.username || !this.email || !this.password || !this.dob) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const user = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      dob: this.dob,
+    };
+
+    this.activeUserService.signup(user).subscribe(
+      (data: any) => {
         if (data) {
-          // Navigate to the account page after successful login
-          this.router.navigateByUrl("/profile");
+          // Navigate to the profile page after successful signup
+          this.router.navigateByUrl('/profile');
         } else {
-          alert("Invalid username or password");
+          alert('Signup failed. Please try again.');
         }
-      }, error => {
-        alert("An error occurred during login. Please try again.");
-      });
+      },
+      (error) => {
+        alert('An error occurred during signup. Please try again.');
+      }
+    );
   }
 }

@@ -27,6 +27,24 @@ export class ActiveUserService {
     }
   }
 
+  // Method to sign up a new user
+  signup(user: any): Observable<any> {
+    return this.httpClient
+      .post(`${BACKEND_URL}/signup`, user, httpOptions)
+      .pipe(
+        tap((data: any) => {
+          if (data) {
+            this.setSessionStorage(data);
+            this.userDataSubject.next(data); // Emit new user data immediately
+          }
+        }),
+        catchError((error) => {
+          console.error('Signup failed:', error);
+          return throwError(error); // Use throwError to maintain observable chain
+        })
+      );
+  }
+
   // Method to log in a user
   login(username: string, password: string): Observable<any> {
     const user = { username, password };

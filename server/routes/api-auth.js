@@ -22,6 +22,39 @@ module.exports = function (app) {
         new User(3, 'alice_jones', 'alice@example.com', 'pw', 'chat', 'https://picsum.photos/202/300', 'Alice', 'Jones', '2020-06-10', 'Away')
     ];
 
+    app.post('/api/auth/signup', (req, res) => {
+        const { firstName, lastName, username, email, password, dob } = req.body;
+        const newUser = {
+          id: Date.now(),
+          firstName,
+          lastName,
+          username,
+          email,
+          password,
+          dob,
+          role: 'chat',
+          profileImg: 'assets/images/defaultProfile.jpg',
+          status: 'Active',
+        };
+      
+        // Save the new user to your users array or database
+        users.push(newUser);
+      
+        // Send back the user data excluding the password
+        res.json({
+          id: newUser.id,
+          username: newUser.username,
+          email: newUser.email,
+          role: newUser.role,
+          profileImg: newUser.profileImg,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          dob: newUser.dob,
+          status: newUser.status,
+        });
+      });
+      
+
     app.post('/api/auth', (req, res) => {
         const { username, password } = req.body;
         const user = users.find(user => user.username === username && user.password === password);
