@@ -116,7 +116,7 @@
           <p>
             <strong>{{ channel.name }}</strong>
           </p>
-          <p>{{ channel.name }}</p>
+          <p>{{ channel.description }}</p>
           <div class="button-group">
             <button
               *ngIf="userData.role === 'super'"
@@ -141,6 +141,11 @@
       <div style="margin: 10px; margin-top: 20px">
         <p>
           <strong>Channel Name: </strong>
+          <input type="text" class="form-control" />
+        </p>
+
+        <p>
+          <strong>Channel Description: </strong>
           <input type="text" class="form-control" />
         </p>
 
@@ -210,12 +215,12 @@
             Allow
           </button>
           <button
-          *ngIf="userData.role === 'super'"
-          (click)="deleteUser(user.id)"
-          class="btn btn-outline-danger"
-        >
-          Remove
-        </button>
+            *ngIf="userData.role === 'super'"
+            (click)="deleteUser(user.id)"
+            class="btn btn-outline-danger"
+          >
+            Remove
+          </button>
         </div>
       </div>
     </div>
