@@ -1,5 +1,5 @@
 <div class="d-flex" [ngSwitch]="currentRoute">
-  <div style="width: 16em; height: 100vh" class="bg-light">
+  <div style="width: 16em; height: 93.5vh" class="bg-light">
     <br />
 
     <!-- Login -->
@@ -12,13 +12,45 @@
         </li>
         <hr />
         <li class="nav-item">
-          <a href="#" class="nav-link active" aria-current="page">
+          <a
+            [routerLink]="['login']"
+            class="nav-link active"
+            aria-current="page"
+          >
             <i class="bi-box-arrow-in-right"></i>
             Login
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link link-dark">
+          <a [routerLink]="['register']" class="nav-link link-dark">
+            <i class="bi-person-plus-fill"></i>
+            Register
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Register -->
+    <div *ngSwitchCase="'register'">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li>
+          <p style="padding-left: 1em">
+            <strong>Please login to continue.</strong>
+          </p>
+        </li>
+        <hr />
+        <li class="nav-item">
+          <a
+            [routerLink]="['login']"
+            class="nav-link link-dark"
+            aria-current="page"
+          >
+            <i class="bi-box-arrow-in-right"></i>
+            Login
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['register']" class="nav-link active">
             <i class="bi-person-plus-fill"></i>
             Register
           </a>
@@ -90,15 +122,14 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link link-dark">
+          <a (click)="goBack()" class="nav-link link-dark">
             <i class="bi-arrow-left"></i>
             Back
           </a>
         </li>
 
-        <ng-container *ngIf="memberOnlyGroups.length > 0">
+        <ng-container *ngIf="channels.length > 0">
           <hr />
-
           <li class="nav-item">
             <p class="nav-link link-dark">
               <i class="bi-chat-fill"></i>
@@ -106,14 +137,34 @@
             </p>
           </li>
 
-          <li class="nav-item" *ngFor="let group of memberOnlyGroups">
-            <a [routerLink]="['/group', group.id]" class="nav-link link-dark">
+          <li class="nav-item" *ngFor="let channel of channels">
+            <a
+              [routerLink]="['/group', groupId, 'channel', channel.id]"
+              class="nav-link link-dark"
+            >
               <i class="bi-chat"></i>
-              {{ group.name }}
+              {{ channel.name }}
             </a>
           </li>
         </ng-container>
+      </ul>
+    </div>
 
+    <!-- Channel -->
+    <div *ngSwitchCase="'channel'">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" aria-current="page">
+            <i class="bi-people-fill"></i>
+            Channel Details
+          </a>
+        </li>
+        <li class="nav-item">
+          <a (click)="goBack()" class="nav-link link-dark">
+            <i class="bi-arrow-left"></i>
+            Back
+          </a>
+        </li>
       </ul>
     </div>
 

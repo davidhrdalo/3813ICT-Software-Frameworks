@@ -1,20 +1,23 @@
 module.exports = function (app) {
-    class Group {
-        constructor(id, name, admins = [], members = []) {
+    class Channel {
+        constructor(id, name, groupId, description) {
             this.id = id;
             this.name = name;
-            this.admins = admins;
-            this.members = members;
+            this.groupId = groupId;
+            this.description = description;
         }
     }
 
-    const groups = [
-        new Group(1, 'group1', [1], [1, 2]), // Example group with Super Admin and Group Admin
-        new Group(2, 'group2', [2], [1, 3]),  // Example group with Group Admin and Chat User
-        new Group(3, 'group3', [2], [1, 2, 3])  // Example group with Group Admin and Chat User
+    const channels = [
+        new Channel(1, 'channel1', 1, 'Lets chat about cats!'),
+        new Channel(2, 'channel2', 1, 'Lets chat about dogs!'),
+        new Channel(3, 'channel3', 1, 'Lets chat about lions!'),
+        new Channel(4, 'channel3', 1, 'Lets chat about people!'),
+        new Channel(5, 'channel3', 1, 'Lets not chats!'),
+        new Channel(6, 'channel3', 1, 'Hi.'),
     ];
 
-    app.get('/api/groups', (req, res) => {
-        res.json(groups);
+    app.get('/api/channels', (req, res) => {
+        res.json(channels);
     });
 };

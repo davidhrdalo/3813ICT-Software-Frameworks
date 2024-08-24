@@ -6,6 +6,12 @@ const cors = require('cors');
 const http = require('http').Server(app);
 // const path = require('path');
 const bodyParser = require('body-parser');
+const io = require('socket.io')(http, {
+    cors: {
+        origin: ["http://localhost:4200"],
+        methods: ["GET", "POST"],
+    }
+});
 
 // Apply express middleware
 app.use(cors()); // Enable CORS for all origins by default
@@ -19,6 +25,10 @@ require('./routes/api-channel.js')(app); // Route for channel api
 // Listen file
 const server = require('./listen.js');
 const PORT = 3000;
+
+// Socket file
+const sockets = require('./socket.js');
+sockets.connect(io, PORT);
 
 // Start server listening for requests.
 server.listen(http, PORT);

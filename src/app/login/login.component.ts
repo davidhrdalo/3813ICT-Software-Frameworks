@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  providers: [ActiveUserService]
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
   username = '';
