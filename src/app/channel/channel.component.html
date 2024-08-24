@@ -9,27 +9,49 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ channel.name }}</h1>
-        <p class="lead">Start chatting!</p>
+        <p class="lead">{{ channel.description }}</p>
       </div>
       <hr />
     </div>
 
-    <!-- Full row - Content for group details -->
-    <div class="row">
-      <form>
-        <div class="form-group">
-          <label for="messagecontent">New Message</label>
-          <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messagecontent" class="form-control" />
-        </div>
-        <div class="form-group">
-          <button (click)="chat()" class="btn btn-primary">Send</button>
-        </div>
-      </form>
-    
-      <div>
-        <ul>
-          <li *ngFor="let m of messages">{{m}}</li>
-        </ul>
+    <div class="chat-container">
+      <div class="messages-container">
+        <ng-container *ngIf="messages.length > 0; else noMessages">
+          <ul>
+            <li *ngFor="let m of messages">
+              <div class="chat-bubble">{{ m }}</div>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-template #noMessages>
+          <div class="no-messages">No Messages, Say Something!</div>
+        </ng-template>
+      </div>
+
+      <div class="input-container">
+        <form>
+          <div class="form-group">
+            <label for="messagecontent">New Message</label>
+            <input
+              type="text"
+              [(ngModel)]="messagecontent"
+              name="messagecontent"
+              id="messagecontent"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group d-flex justify-content-between">
+            <button (click)="chat()" class="btn btn-primary flex-grow-2">
+              Send Message
+            </button>
+            <button (click)="chat()" class="btn btn-primary flex-grow-1 mx-2">
+              Send Picture
+            </button>
+            <button (click)="chat()" class="btn btn-primary flex-grow-1">
+              Video Chat
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
