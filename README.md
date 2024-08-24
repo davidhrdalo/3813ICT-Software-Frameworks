@@ -1,27 +1,63 @@
-# 3813ICTSoftwareFrameworks
+# 3813ICT-Software-Frameworks
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+Author: David Hrdalo
+Project Description: A project utilising the MEAN stack.
 
-## Development server
+## Git Repository Usage
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Git formed a key part of this project.
+A GitHub was created under: https://github.com/davidhrdalo/3813ICT-Software-Frameworks
+Two branches were established:
+Main - A relatively stable build
+Pre - Pushing lightly tested changes
+Commits were made regularly.
+The server was created in a server folder in the root of the project directory.
 
-## Code scaffolding
+## Data Structures
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+There were three key data structures for this project users, groups and channels. The structure is non-relational. The structures were stored in on the server with some initial seeder data. This data was accessed by an Angular service and stored in local storage. The schema can be found below.
 
-## Build
+### Users
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+id - number - unique
+username - string - unique
+email - string - unique
+password - string
+roles = [],
+groups = []
 
-## Running unit tests
+### Groups
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+constructor(id, name, admins = [], members = [])
 
-## Running end-to-end tests
+### Channels
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+constructor(id, name, groupId)
 
-## Further help
+## Angular Architecture
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Components
+
+### Services
+
+### Models
+
+### Routes
+
+## Node Server Architecture
+
+### Modules
+
+### Functions
+
+### Files
+
+### Global variables
+
+## Routes
+
+A list of server side routes, parameters, return values, and there purpose
+
+## Client Server Interactions
+
+Describe the details of the interaction between client and server by indicating how the data on server side will be changed and how the display of each angular component page will be updated
