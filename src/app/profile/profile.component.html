@@ -91,11 +91,14 @@
       </div>
     </div>    
 
+    <hr />
+
+
+    <div class="col-8">
     <!-- Full row - Content for superuser -->
     <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
-      <hr />
       <h3>User Management</h3>
-      <div class="col-3 card" *ngFor="let user of allUsers">
+      <div class="col-4 card" *ngFor="let user of allUsers">
         <img
         src="{{ user.profileImg }}"
         class="rounded-circle"
@@ -109,16 +112,84 @@
         </div>
       </div>
     </div>
+  </div>
+
+    <div class="col-4">
+      <h3 style="margin-left: 10px">Create User</h3>
+
+      <div style="margin: 10px; margin-top: 20px">
+        <p>
+          <strong>User Name: </strong>
+          <input type="text" class="form-control" />
+        </p>
+
+        <p>
+          <strong>User Password: </strong>
+          <input type="text" class="form-control" />
+        </p>
+
+        <button
+          type="button"
+          style="width: 120px; margin-bottom: 20px; margin-right: 10px"
+          class="btn btn-primary"
+          (click)="saveDetails()"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          style="width: 110px; margin-bottom: 20px"
+          class="btn btn-secondary"
+          (click)="toggleEditMode()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <hr />
 
     <!-- Full row - Content for group admin -->
     <div class="row" *ngIf="userData.role === 'super' || currentRole === 'group'">
-      <hr />
       <h3>Group Management</h3>
 
       <div class="col-8">List</div>
 
-      <div class="col-4">form</div>
+      <div class="col-4">
+        <h3 style="margin-left: 10px">Create Group</h3>
+
+      <div style="margin: 10px; margin-top: 20px">
+        <p>
+          <strong>Group Name: </strong>
+          <input type="text" class="form-control" />
+        </p>
+
+        <p>
+          <strong>Group Description: </strong>
+          <input type="text" class="form-control" />
+        </p>
+
+        <button
+          type="button"
+          style="width: 120px; margin-bottom: 20px; margin-right: 10px"
+          class="btn btn-primary"
+          (click)="saveDetails()"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          style="width: 110px; margin-bottom: 20px"
+          class="btn btn-secondary"
+          (click)="toggleEditMode()"
+        >
+          Cancel
+        </button>
+      </div>
+      </div>
     </div>
+
+    <hr />
 
     <!-- Full row - Default content for other roles or no role -->
     <div
@@ -129,12 +200,13 @@
         userData.role === 'chat'
       "
     >
-      <hr />
       <h3>Groups</h3>
 
       <div class="col-8">List</div>
 
-      <div class="col-4">form</div>
+      <div class="col-4">
+        
+      </div>
     </div>
   </div>
 </div>
