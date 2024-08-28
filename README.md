@@ -10,15 +10,31 @@ Git formed a key part of this project.
 
 A GitHub was created under: https://github.com/davidhrdalo/3813ICT-Software-Frameworks.
 
-Two branches were established:
-- Main - This branch served as the stable build of the project.
-- Pre - This branch was used for pushing lightly tested changes before merging into the main branch.
+### Branching Strategy
 
-Commits were made regularly to ensure continuous integration and tracking of progress.
+Two branches were established to manage the project's development lifecycle:
 
-A .gitignore file was implemented to ensure only necessary files were committed, excluding files like node_modules.
+- Main: This branch served as the stable build of the project. It contained thoroughly tested and verified code, ensuring a reliable base for deployment.
+- Pre: This branch was used for pushing lightly tested changes before merging into the main branch. It allowed for the testing of new features and functionality in isolation before integrating them into the main project.
 
-The project directory was organized with the server components housed in a /server folder at the root level.
+### Directory Structure and Version Control Approach
+
+Git was initialised in the root directory of the Angular project, which ensured that the entire codebase, including both frontend and backend components, was tracked within a single repository. This setup simplified project management and allowed for seamless integration between the frontend and backend.
+
+- A .gitignore file was created in the Angular root directory to exclude unnecessary files, such as node_modules, from being committed to the repository. This ensured that only essential files were included, reducing the repository size and preventing potential conflicts.
+
+- A server folder was created within the Angular root directory to house the backend components. Node.js was initialised within this server directory to install necessary dependencies such as Express. A separate .gitignore file was also added here to exclude backend node_modules and other unnecessary files from being committed.
+
+This organisation allowed both frontend and backend to reliably exist within the same Git repository, making it easier to manage and track the entire project.
+
+### Version Control Process
+The approach taken to version control was methodical and focused on maintaining a stable and functional codebase:
+
+- Minor Changes: For each minor change, such as adding a new function to a service, the change was implemented, tested locally, and then deployed to the Pre branch.
+
+- Testing and Integration: After completing a feature or service, the entire web application was tested to ensure that the new functionality integrated smoothly with existing components. Only after thorough testing were the changes merged from the Pre branch into the Main branch.
+
+This strategy ensured continuous integration and allowed for the gradual development of the project while minimising the risk of introducing bugs into the stable build
 
 ## Data Structures
 
@@ -65,6 +81,16 @@ The Channels data structure represents subgroups within a Group where specific t
 | groupId     | number | No     | Holds the ID of the parent group     | 1                       |
 | description | text   | No     | A brief description of the channel   | Group to chat about dogs!|
 
+### Relationships Between Data Structures
+The relationships between these data structures are fundamental to how the chat system functions:
+
+- Users and Groups: Users can belong to multiple groups, and each group can have multiple users. The members field in the Groups structure holds an array of user IDs, establishing the relationship between users and the groups they are part of.
+
+- Users and Roles: Each user has a role field, which determines their permissions within the system (e.g., Super Admin, Group Admin, or Chat User). This role affects what groups and channels they can manage or participate in.
+
+- Groups and Channels: Each group can have multiple channels, which are identified by the groupId field in the Channels structure. This field links a channel to its parent group, ensuring that channels are correctly associated with the group they belong to.
+
+- Admins and Groups: The admins field in the Groups structure holds an array of user IDs representing the group admins. These admins have elevated permissions within their respective groups.
 
 ## Angular Architecture
 
@@ -80,7 +106,7 @@ Components, services, and models were ustilised to manage the user interface and
 
 - #### LoginComponent:
   - The LoginComponent is the entry point for users. It handles user authentication and redirects authenticated users to the appropriate dashboard.
-  - 
+
 - #### RegisterComponent:
   - The RegisterComponent allows new users to create an account by submitting their details, which are then validated and stored.
 
@@ -135,9 +161,9 @@ Front-end Angular routing was utilised to allow users of the application to navi
   - path: 'register'
   - component: RegisterComponent
 -  Profile / Home Page
-  - path: 'profile'
-  - component: ProfileComponent
-  - canActivate: authGuard
+   - Path: 'profile'
+   - component: ProfileComponent
+   - canActivate: authGuard
 - Group Deatils
   - path: 'group/:id'
   - Dynamic path based off group id
