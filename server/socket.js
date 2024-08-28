@@ -1,3 +1,4 @@
+// Socket.js file - used to mage socket.io
 module.exports = {
     connect: function (io, PORT) {
 
