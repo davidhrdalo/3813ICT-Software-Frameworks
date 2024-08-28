@@ -28,88 +28,43 @@ The chat system is built around three core data structures: Users, Groups, and C
 
 The Users data structure represents individuals who interact with the chat system. Each user is uniquely identified and associated with specific roles and groups.
 
-- id
-  - Type: number
-  - unique
-  - Example: 1
-- username
-  - Type: text
-  - unique
-  - Example: john_do
-- email
-  - Type: text
-  - unique
-  - Example: john@example.com
-- password
-  - Type: text
-  - Example: Password123!
-- role
-  - Type: text
-  - Example (super user): super
-  - Example (group user): group
-  - Example (chat user): chat
-- profileImg
-  - Type: text
-  - image loaded to static storage then a text reference to its location is added
-  - Example: assets/images/37.jpg
-- firstName
-  - Type: text
-  - Example: John
-- lastName
-  - Type: text
-  - Example: Doe
-- dob
-  - Type: text
-  - Example: 2001-08-17
-- status
-  - Type: text
-  - Example: Busy
+| Field       | Type   | Unique | Description                                                      | Example              |
+|-------------|--------|--------|------------------------------------------------------------------|----------------------|
+| id          | number | Yes    | Unique identifier for each user                                  | 1                    |
+| username    | text   | Yes    | Unique identifier within the system                              | john_doe             |
+| email       | text   | Yes    | Must be unique across the system                                 | john@example.com     |
+| password    | text   | No     | Stored as a hash for security purposes                           | Password123!         |
+| role        | text   | No     | Defines the user’s role in the system (e.g., super, group, chat) | super, group, chat   |
+| profileImg  | text   | No     | Stores the file path to the user’s profile image                 | assets/images/37.jpg |
+| firstName   | text   | No     | The user’s first name                                            | John                 |
+| lastName    | text   | No     | The user’s last name                                             | Doe                  |
+| dob         | text   | No     | The user’s date of birth                                         | 2001-08-17           |
+| status      | text   | No     | Indicates the user’s current status (e.g., Busy)                 | Busy                 |
 
 ### Groups
 
 The Groups data structure organises users into collections that can manage channels and communicate within them.
 
-- id
-  - Type: number
-  - unique
-  - Example: 1
-- name
-  - Type: text
-  - Example: group1
-- admins
-  - Type: array
-  - holds an array of group admin ids
-  - Example: [2]
-- members
-  - Type: array
-  - holds an array of chat user ids
-  - Example: [1,3]
-- description‎
-  - Type: text
-  - Example: Group to chat about dogs!
-- groupeImg
-  - Type: text
-  - image loaded to static storage then a text reference to its location is added
-  - Example: assets/images/473.jpg
+| Field       | Type   | Unique | Description                                     | Example                 |
+|-------------|--------|--------|-------------------------------------------------|-------------------------|
+| id          | number | Yes    | Unique identifier for each group                | 1                       |
+| name        | text   | No     | The name of the group                           | group1                  |
+| admins      | array  | No     | Holds an array of group admin IDs               | [2]                     |
+| members     | array  | No     | Holds an array of chat user IDs                 | [1,3]                   |
+| description | text   | No     | A brief description of the group’s purpose      | Group to chat about dogs!|
+| groupImg    | text   | No     | Stores the file path to the group’s image       | assets/images/473.jpg   |
 
 ### Channels
 
 The Channels data structure represents subgroups within a Group where specific topics or conversations occur.
 
-- id
-  - Type: number
-  - unique
-  - Example: 1
-- name
-  - Type: text
-  - Example: channel1
-- groupId
-  - Type: number
-  - holds the parent group id
-  - Example: 1
-- description‎
-  - Type: text
-  - Example: Group to chat about dogs!
+| Field       | Type   | Unique | Description                          | Example                 |
+|-------------|--------|--------|--------------------------------------|-------------------------|
+| id          | number | Yes    | Unique identifier for each channel   | 1                       |
+| name        | text   | No     | The name of the channel              | channel1                |
+| groupId     | number | No     | Holds the ID of the parent group     | 1                       |
+| description | text   | No     | A brief description of the channel   | Group to chat about dogs!|
+
 
 ## Angular Architecture
 
