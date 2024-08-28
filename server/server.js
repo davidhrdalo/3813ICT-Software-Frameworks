@@ -18,7 +18,8 @@ app.use(cors()); // Enable CORS for all origins by default
 app.use(bodyParser.json()); // Parse JSON bodies
 
 // Routes
-require('./routes/api-auth.js')(app); // Route for user api
+require('./routes/api-auth.js')(app); // Route for user auth (login/ sign up) api
+require('./routes/api-user.js')(app); // Route for user api
 require('./routes/api-group.js')(app); // Route for group api
 require('./routes/api-channel.js')(app); // Route for channel api
 
