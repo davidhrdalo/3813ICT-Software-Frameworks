@@ -29,87 +29,87 @@ The chat system is built around three core data structures: Users, Groups, and C
 The Users data structure represents individuals who interact with the chat system. Each user is uniquely identified and associated with specific roles and groups.
 
 - id
-  - number
+  - Type: number
   - unique
-  - example: 1
+  - Example: 1
 - username
-  - text
+  - Type: text
   - unique
-  - example: john_do
+  - Example: john_do
 - email
-  - text
+  - Type: text
   - unique
-  - example: john@example.com
+  - Example: john@example.com
 - password
-  - text
-  - example: Password123!
+  - Type: text
+  - Example: Password123!
 - role
-  - text
-  - example super user: super
-  - example group user: group
-  - example chat user: chat
+  - Type: text
+  - Example (super user): super
+  - Example (group user): group
+  - Example (chat user): chat
 - profileImg
-  - text
+  - Type: text
   - image loaded to static storage then a text reference to its location is added
-  - assets/images/37.jpg
+  - Example: assets/images/37.jpg
 - firstName
-  - text
-  - example: John
+  - Type: text
+  - Example: John
 - lastName
-  - text
-  - example: Doe
+  - Type: text
+  - Example: Doe
 - dob
-  - text
-  - example: 2001-08-17
+  - Type: text
+  - Example: 2001-08-17
 - status
-  - text
-  - example: Busy
+  - Type: text
+  - Example: Busy
 
 ### Groups
 
 The Groups data structure organises users into collections that can manage channels and communicate within them.
 
 - id
-  - number
+  - Type: number
   - unique
-  - example: 1
+  - Example: 1
 - name
-  - text
-  - example: group1
+  - Type: text
+  - Example: group1
 - admins
-  - array
+  - Type: array
   - holds an array of group admin ids
-  - example: [2]
+  - Example: [2]
 - members
-  - array
+  - Type: array
   - holds an array of chat user ids
-  - example: [1,3]
+  - Example: [1,3]
 - description‎
-  - text
-  - example: Group to chat about dogs!
+  - Type: text
+  - Example: Group to chat about dogs!
 - groupeImg
-  - text
+  - Type: text
   - image loaded to static storage then a text reference to its location is added
-  - assets/images/473.jpg
+  - Example: assets/images/473.jpg
 
 ### Channels
 
 The Channels data structure represents subgroups within a Group where specific topics or conversations occur.
 
 - id
-  - number
+  - Type: number
   - unique
-  - example: 1
+  - Example: 1
 - name
-  - text
-  - example: channel1
+  - Type: text
+  - Example: channel1
 - groupId
-  - number
+  - Type: number
   - holds the parent group id
-  - example: 1
+  - Example: 1
 - description‎
-  - text
-  - example: Group to chat about dogs!
+  - Type: text
+  - Example: Group to chat about dogs!
 
 ## Angular Architecture
 
@@ -171,13 +171,35 @@ Components, services, and models were ustilised to manage the user interface and
 
 ### Routes
 
-- {path: 'login', component:LoginComponent},
-- {path: 'register', component:RegisterComponent},
-- {path: 'profile', component:ProfileComponent, canActivate: [authGuard]},
-- {path: 'group/:id', component:GroupComponent, canActivate: [authGuard]},
-- {path: 'group/:id/channel/:channelId', component:ChannelComponent, canActivate: [authGuard]},
-- { path: '', redirectTo: 'profile', pathMatch: 'full' }, // Redirect to profile if logged in
-- { path: '**', redirectTo: 'profile' } // Wildcard route for handling 404s
+Front-end Angular routing was utilised to allow users of the application to navigate.
+
+- User Login
+  - path: 'login'
+  - component: LoginComponent
+- User Register
+  - path: 'register'
+  - component: RegisterComponent
+-  Profile / Home Page
+  - path: 'profile'
+  - component: ProfileComponent
+  - canActivate: authGuard
+- Group Deatils
+  - path: 'group/:id'
+  - Dynamic path based off group id
+  - component: GroupComponent
+  - canActivate: authGuard
+- Channel Details
+  - path: 'group/:id/channel/:channelId'
+  - Dynamic path based off group id and channel id
+  - component: ChannelComponent
+  - canActivate: authGuard
+- Profile / Home Page Redirect
+  - path: ''
+  - redirectTo: 'profile'
+  - pathMatch: 'full'
+- Profile / Home Page Wildcard Redirect
+  - path: '**'
+  - redirectTo: 'profile'
 
 ## Node Server Architecture
 
