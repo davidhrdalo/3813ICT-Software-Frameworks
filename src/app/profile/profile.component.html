@@ -25,116 +25,116 @@
     </div>
 
     <!-- 1/3 row -->
-    <div
-      class="col-4 d-flex flex-column align-items-center"
-      *ngIf="userData"
-    >
-    <h3 style="margin-bottom: 20px;">Profile Picture</h3>
+    <div class="col-4 d-flex flex-column align-items-center" *ngIf="userData">
+      <h3 style="margin-bottom: 20px">Profile Picture</h3>
       <img
         src="{{ userData.profileImg }}"
         class="rounded-circle"
         style="width: 150px; height: 150px; margin-bottom: 15px"
         alt="Avatar"
       />
-      <button type="button" style="margin-bottom: 20px;" class="btn btn-primary mt-auto">
+      <button
+        type="button"
+        style="margin-bottom: 20px"
+        class="btn btn-primary mt-auto"
+      >
         Upload Profile
       </button>
     </div>
 
     <!-- 2/3 row -->
     <div class="col-8 d-flex flex-column" *ngIf="userData">
-      <h3 style="margin-bottom: 20px;">Details</h3>
-    
+      <h3 style="margin-bottom: 20px">Details</h3>
+
       <!-- Name -->
-      <p><strong>Name: </strong>
-        <span *ngIf="!isEditMode">{{ userData.firstName }} {{ userData.lastName }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.firstName" class="form-control" style="display: inline-block; width: auto;" />
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.lastName" class="form-control" style="display: inline-block; width: auto;" />
+      <p>
+        <strong>Name: </strong>
+        <span *ngIf="!isEditMode"
+          >{{ userData.firstName }} {{ userData.lastName }}</span
+        >
+        <input
+          *ngIf="isEditMode"
+          type="text"
+          [(ngModel)]="userEditData.firstName"
+          class="form-control"
+          style="display: inline-block; width: auto"
+        />
+        <input
+          *ngIf="isEditMode"
+          type="text"
+          [(ngModel)]="userEditData.lastName"
+          class="form-control"
+          style="display: inline-block; width: auto"
+        />
       </p>
-    
+
       <!-- Status -->
-      <p><strong>Current Status: </strong>
+      <p>
+        <strong>Current Status: </strong>
         <span *ngIf="!isEditMode">{{ userData.status }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.status" class="form-control" />
+        <input
+          *ngIf="isEditMode"
+          type="text"
+          [(ngModel)]="userEditData.status"
+          class="form-control"
+        />
       </p>
-    
+
       <!-- Username -->
-      <p><strong>Username: </strong>
+      <p>
+        <strong>Username: </strong>
         <span *ngIf="!isEditMode">{{ userData.username }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="userEditData.username" class="form-control" />
+        <input
+          *ngIf="isEditMode"
+          type="text"
+          [(ngModel)]="userEditData.username"
+          class="form-control"
+        />
       </p>
-    
+
       <!-- Email -->
-      <p><strong>Email: </strong>
+      <p>
+        <strong>Email: </strong>
         <span *ngIf="!isEditMode">{{ userData.email }}</span>
-        <input *ngIf="isEditMode" type="email" [(ngModel)]="userEditData.email" class="form-control" />
+        <input
+          *ngIf="isEditMode"
+          type="email"
+          [(ngModel)]="userEditData.email"
+          class="form-control"
+        />
       </p>
-    
+
       <!-- Date of Birth -->
-      <p><strong>Date of Birth: </strong>
+      <p>
+        <strong>Date of Birth: </strong>
         <span *ngIf="!isEditMode">{{ userData.dob }}</span>
-        <input *ngIf="isEditMode" type="date" [(ngModel)]="userEditData.dob" class="form-control" />
+        <input
+          *ngIf="isEditMode"
+          type="date"
+          [(ngModel)]="userEditData.dob"
+          class="form-control"
+        />
       </p>
-    
+
       <!-- Buttons -->
-      <button *ngIf="!isEditMode" type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-primary" (click)="toggleEditMode()">
+      <button
+        *ngIf="!isEditMode"
+        type="button"
+        style="width: 110px; margin-bottom: 20px"
+        class="btn btn-primary"
+        (click)="toggleEditMode()"
+      >
         Edit Details
       </button>
-      
+
       <div *ngIf="isEditMode">
-        <button type="button" style="width: 120px; margin-bottom: 20px; margin-right: 10px;" class="btn btn-primary" (click)="saveDetails()">
-          Save Details
-        </button>
-        <button type="button" style="width: 110px; margin-bottom: 20px;" class="btn btn-secondary" (click)="toggleEditMode()">
-          Cancel
-        </button>
-      </div>
-    </div>    
-
-    <hr />
-
-
-    <div class="col-8">
-    <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
-      <h3>User Management</h3>
-      <div class="col-4 card" *ngFor="let user of allUsers">
-        <img
-        src="{{ user.profileImg }}"
-        class="rounded-circle"
-        style="width: 75px; height: 75px; margin-bottom: 15px;"
-        alt="Avatar"
-      />
-        <p><strong>Username: </strong>{{ user.username }}</p>
-        <p><strong>Email: </strong>{{ user.email }}</p>
-        <div class="button-group">
-          <button *ngIf="userData.role === 'super'" (click)="deleteUser(user.id)" class="btn btn-outline-danger">Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <div class="col-4">
-      <h3 style="margin-left: 10px">Create User</h3>
-
-      <div style="margin: 10px; margin-top: 20px">
-        <p>
-          <strong>User Name: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
-        <p>
-          <strong>User Password: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
         <button
           type="button"
           style="width: 120px; margin-bottom: 20px; margin-right: 10px"
           class="btn btn-primary"
           (click)="saveDetails()"
         >
-          Create
+          Save Details
         </button>
         <button
           type="button"
@@ -144,48 +144,116 @@
         >
           Cancel
         </button>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col-8">
+        <!-- Full row - Content for superuser -->
+        <div *ngIf="userData.role === 'super' && allUsers?.length > 0">
+          <h3>User Management</h3>
+          <div class="row">
+            <div
+              class="col-md-6 col-lg-4 card mb-3"
+              *ngFor="let user of allUsers"
+            >
+              <img
+                src="{{ user.profileImg }}"
+                class="rounded-circle"
+                style="width: 75px; height: 75px; margin-bottom: 15px"
+                alt="Avatar"
+              />
+              <p><strong>Username: </strong>{{ user.username }}</p>
+              <p><strong>Email: </strong>{{ user.email }}</p>
+              <div class="button-group">
+                <button
+                  *ngIf="userData.role === 'super'"
+                  (click)="deleteUser(user.id)"
+                  class="btn btn-outline-danger"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <h3 style="margin-left: 10px">Create User</h3>
+        <div style="margin: 10px; margin-top: 20px">
+          <p>
+            <strong>User Name: </strong>
+            <input type="text" class="form-control" />
+          </p>
+          <p>
+            <strong>User Password: </strong>
+            <input type="text" class="form-control" />
+          </p>
+          <button
+            type="button"
+            style="width: 120px; margin-bottom: 20px; margin-right: 10px"
+            class="btn btn-primary"
+            (click)="saveDetails()"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            style="width: 110px; margin-bottom: 20px"
+            class="btn btn-secondary"
+            (click)="toggleEditMode()"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
 
     <hr />
 
     <!-- Full row - Content for group admin -->
-    <div class="row" *ngIf="userData.role === 'super' || currentRole === 'group'">
+    <div
+      class="row"
+      *ngIf="userData.role === 'super' || currentRole === 'group'"
+    >
       <h3>Group Management</h3>
 
-      <div class="col-8">List</div>
+      <div class="col-8">
+        <!-- Replace "List" with your group list or other relevant content -->
+        List
+      </div>
 
       <div class="col-4">
         <h3 style="margin-left: 10px">Create Group</h3>
-
-      <div style="margin: 10px; margin-top: 20px">
-        <p>
-          <strong>Group Name: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
-        <p>
-          <strong>Group Description: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
-        <button
-          type="button"
-          style="width: 120px; margin-bottom: 20px; margin-right: 10px"
-          class="btn btn-primary"
-          (click)="saveDetails()"
-        >
-          Create
-        </button>
-        <button
-          type="button"
-          style="width: 110px; margin-bottom: 20px"
-          class="btn btn-secondary"
-          (click)="toggleEditMode()"
-        >
-          Cancel
-        </button>
-      </div>
+        <div style="margin: 10px; margin-top: 20px">
+          <p>
+            <strong>Group Name: </strong>
+            <input type="text" class="form-control" />
+          </p>
+          <p>
+            <strong>Group Description: </strong>
+            <input type="text" class="form-control" />
+          </p>
+          <button
+            type="button"
+            style="width: 120px; margin-bottom: 20px; margin-right: 10px"
+            class="btn btn-primary"
+            (click)="saveDetails()"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            style="width: 110px; margin-bottom: 20px"
+            class="btn btn-secondary"
+            (click)="toggleEditMode()"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
 
@@ -204,9 +272,7 @@
 
       <div class="col-8">List</div>
 
-      <div class="col-4">
-        
-      </div>
+      <div class="col-4"></div>
     </div>
   </div>
 </div>
