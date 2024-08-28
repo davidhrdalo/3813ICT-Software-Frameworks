@@ -2,7 +2,7 @@
 
 Author: David Hrdalo
 
-Project Description: A project utilising the MEAN stack.
+Project Description: A project utilising the MEAN stack to create a robust, real-time chat system with multiple levels of user permissions.
 
 ## Git Repository Usage
 
@@ -11,20 +11,22 @@ Git formed a key part of this project.
 A GitHub was created under: https://github.com/davidhrdalo/3813ICT-Software-Frameworks.
 
 Two branches were established:
-- Main - A relatively stable build
-- Pre - Pushing lightly tested changes
+- Main - This branch served as the stable build of the project.
+- Pre - This branch was used for pushing lightly tested changes before merging into the main branch.
 
-Commits were made regularly.
+Commits were made regularly to ensure continuous integration and tracking of progress.
 
-A gitignore file was utilised to ensure only nessisary files were added
+A .gitignore file was implemented to ensure only necessary files were committed, excluding files like node_modules.
 
-The server was created in a server folder in the root of the project directory.
+The project directory was organized with the server components housed in a /server folder at the root level.
 
 ## Data Structures
 
-There were three key data structures for this project users, groups and channels. The structure is non-relational. The structures were stored in on the server with some initial seeder data. This data was accessed by an Angular service and stored in local storage. The schema can be found below.
+The chat system is built around three core data structures: Users, Groups, and Channels. These structures are non-relational and stored on the server, with some initial seeder data provided. This data is accessed via Angular services and temporarily stored in the client's local storage.
 
 ### Users
+
+The Users data structure represents individuals who interact with the chat system. Each user is uniquely identified and associated with specific roles and groups.
 
 - id
   - number
@@ -65,6 +67,8 @@ There were three key data structures for this project users, groups and channels
 
 ### Groups
 
+The Groups data structure organises users into collections that can manage channels and communicate within them.
+
 - id
   - number
   - unique
@@ -90,6 +94,8 @@ There were three key data structures for this project users, groups and channels
 
 ### Channels
 
+The Channels data structure represents subgroups within a Group where specific topics or conversations occur.
+
 - id
   - number
   - unique
@@ -107,65 +113,61 @@ There were three key data structures for this project users, groups and channels
 
 ## Angular Architecture
 
+Components, services, and models were ustilised to manage the user interface and data interactions efficiently.
+
 ### Components
 
+- #### NavbarComponent:
+  - The NavbarComponent is present across the entire application and provides navigation links based on the user's role.
 
+- #### SidebarComponent:
+  - The SidebarComponent is used throughout the application, displaying context-specific options like available groups and channels.
 
-#### navbar
+- #### LoginComponent:
+  - The LoginComponent is the entry point for users. It handles user authentication and redirects authenticated users to the appropriate dashboard.
+  - 
+- #### RegisterComponent:
+  - The RegisterComponent allows new users to create an account by submitting their details, which are then validated and stored.
 
-navbar is used throughout the entire application.
+- #### ProfileComponent:
+  - The ProfileComponent serves as the user's home page, displaying their personal details and status. It also provides options for editing user information.
 
-#### sidebar
+- #### GroupComponent:
+  - The GroupComponent manages the display and interaction of groups. Users can see the groups they belong to and select them to view more details or access channels.
 
-sidebar is used throughout the entire application.
+- #### ChannelComponent:
+  - The ChannelComponent allows users to interact within a specific channel. Users can view messages, send new ones, and see channel-specific details.
 
-#### login
-
-login is the first page that any sure will see.
-
-#### register
-
-register is used for new users to create accounts.
-
-#### profile
-
-profile can also be seen as the home page. It contains user details 
-
-#### group
-
-
-
-#### channel
-
-
-
-#### guard (Angular Auth Guard)
-
-
+- #### AuthGuard:
+  - The AuthGuard ensures that routes are protected and only accessible to authenticated users. It checks the user’s role before allowing access to specific routes.
 
 ### Services
 
-#### activeUser
+- #### ActiveUserService:
+  - Manages the currently authenticated user's data, such as their profile, roles, and status. It ensures that the user’s information is available across the application.
 
+- #### ChannelService:
+  - Handles the creation, retrieval, and management of channels within groups. It interacts with the backend to fetch and update channel data.
 
+- #### GroupService:
+  - Manages group-related operations such as creating, updating, and deleting groups. It also handles the retrieval of group data and member management.
 
-#### channel
+- #### SocketService:
+  - Responsible for establishing and maintaining WebSocket connections with the server. It facilitates real-time communication for the chat functionality.
 
-
-
-#### group
-
-
-
-#### socket
-
-
-
-#### user
-
-
+- #### UserService:
+  - Handles user-related operations such as registration, login, and profile updates. It interacts with the backend to manage user data and authentication.
 
 ### Models
+
+- #### UserModel:
+  - Defines the structure of a user object, including fields like id, username, email, role, etc.
+
+- #### GroupModel:
+  - Defines the structure of a group object, including fields like id, name, admins, members, etc.
+
+- #### ChannelModel:
+  - Defines the structure of a channel object, including fields like id, name, groupId, etc.
 
 ### Routes
 
