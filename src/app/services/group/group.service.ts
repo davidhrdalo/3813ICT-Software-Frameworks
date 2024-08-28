@@ -58,4 +58,17 @@ export class GroupService {
       ))
     );
   }
+
+  getGroupsUserIsNotIn(): Observable<any[]> {
+    const userData = this.activeUserService.getUserData();
+    if (!userData) {
+      return new Observable(subscriber => subscriber.next([]));
+    }
+    const userId = Number(userData.id);
+    return this.getGroups().pipe(
+      map(groups => groups.filter(group => 
+        !group.members.includes(userId) && !group.admins.includes(userId)
+      ))
+    );
+  }  
 }
