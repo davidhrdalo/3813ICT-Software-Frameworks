@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 import { CommonModule, Location } from '@angular/common';
 import { GroupService } from '../services/group/group.service';
 import { ChannelService } from '../services/channel/channel.service';
+import { ActiveUserService } from '../services/activeUser/activeUser.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,6 +19,7 @@ import { ChannelService } from '../services/channel/channel.service';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
+  user: any;
   currentRoute: string = '';
   userGroups: any[] = [];
   adminGroups: any[] = [];
@@ -30,7 +32,8 @@ export class SidebarComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private groupService: GroupService,
     private channelService: ChannelService,
-    private location: Location
+    private location: Location,
+    private activeUserService: ActiveUserService,
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -66,8 +69,13 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activeUserService.userData$.subscribe(userData => {
+      this.user = userData;
+      if (userData) {
     this.getAdminGroups();
     this.getMemberOnlyGroups();
+      }
+    });
   }
 
   getAdminGroups() {
