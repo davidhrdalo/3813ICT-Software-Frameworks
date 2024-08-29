@@ -71,4 +71,24 @@ export class GroupService {
       ))
     );
   }  
+
+  createGroup(groupName: string, groupDescription: string): Observable<any> {
+    const userData = this.activeUserService.getUserData();
+    if (!userData) {
+      return new Observable(subscriber => subscriber.error('User not logged in'));
+    }
+  
+    const newGroup = {
+      id: Date.now(),
+      name: groupName,
+      description: groupDescription,
+      admins: [userData.id],
+      members: [userData.id],
+      groupImg: 'assets/images/defaultGroup.jpg'
+    };
+  
+    return this.http.post(BACKEND_URL, newGroup, httpOptions);
+  }
+
+  
 }

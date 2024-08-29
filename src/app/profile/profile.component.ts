@@ -22,6 +22,8 @@ export class ProfileComponent implements OnInit {
   adminGroups: any[] = [];
   memberOnlyGroups: any[] = [];
   notInGroups: any[] = [];
+  groupName: string = '';
+  groupDescription: string = '';
 
   constructor(
     private activeUserService: ActiveUserService, 
@@ -99,4 +101,25 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
+
+  createGroup(): void {
+    if (!this.groupName || !this.groupDescription) {
+      alert('Please provide both a group name and description.');
+      return;
+    }
+
+    this.groupService.createGroup(this.groupName, this.groupDescription).subscribe(
+      (response) => {
+        alert('Group created successfully!');
+        this.getAdminGroups(); // Refresh the admin groups list
+        this.groupName = '';
+        this.groupDescription = '';
+      },
+      (error) => {
+        console.error('Error creating group:', error);
+        alert('Failed to create group.');
+      }
+    );
+  }
+  
 }

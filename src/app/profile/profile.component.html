@@ -255,17 +255,21 @@
         <div style="margin: 10px; margin-top: 20px">
           <p>
             <strong>Group Name: </strong>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" [(ngModel)]="groupName" />
           </p>
           <p>
             <strong>Group Description: </strong>
-            <input type="text" class="form-control" />
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="groupDescription"
+            />
           </p>
           <button
             type="button"
             style="width: 120px; margin-bottom: 20px; margin-right: 10px"
             class="btn btn-primary"
-            (click)="saveDetails()"
+            (click)="createGroup()"
           >
             Create
           </button>
@@ -279,79 +283,79 @@
           </button>
         </div>
       </div>
-    </div>
 
-    <hr />
+      <hr />
 
-    <!-- Full row - Default content for other roles or no role -->
-    <div
-      class="row"
-      *ngIf="
-        userData.role === 'super' ||
-        userData.role === 'group' ||
-        userData.role === 'chat'
-      "
-    >
-      <div class="col-12">
-        <div *ngIf="adminGroups.length > 0">
-          <h3>Groups</h3>
-          <div class="row">
-            <div
-              class="col-md-2 col-lg-3 card mb-3"
-              [routerLink]="['/group', group.id]"
-              *ngFor="let group of memberOnlyGroups"
-            >
-              <img
-                src="{{ group.groupImg }}"
-                class="rounded-circle"
-                style="width: 75px; height: 75px; margin-bottom: 15px"
-                alt="Avatar"
-              />
-              <p>
-                <strong>{{ group.name }}</strong>
-              </p>
-              <p>{{ group.description }}</p>
+      <!-- Full row - Default content for other roles or no role -->
+      <div
+        class="row"
+        *ngIf="
+          userData.role === 'super' ||
+          userData.role === 'group' ||
+          userData.role === 'chat'
+        "
+      >
+        <div class="col-12">
+          <div *ngIf="adminGroups.length > 0">
+            <h3>Groups</h3>
+            <div class="row">
+              <div
+                class="col-md-2 col-lg-3 card mb-3"
+                [routerLink]="['/group', group.id]"
+                *ngFor="let group of memberOnlyGroups"
+              >
+                <img
+                  src="{{ group.groupImg }}"
+                  class="rounded-circle"
+                  style="width: 75px; height: 75px; margin-bottom: 15px"
+                  alt="Avatar"
+                />
+                <p>
+                  <strong>{{ group.name }}</strong>
+                </p>
+                <p>{{ group.description }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <hr />
+      <hr />
 
-    <div
-      class="row"
-      *ngIf="
-        userData.role === 'super' ||
-        userData.role === 'group' ||
-        userData.role === 'chat'
-      "
-    >
-      <div class="col-12">
-        <div *ngIf="notInGroups.length > 0">
-          <h3>Groups you're not in</h3>
-          <div class="row">
-            <div
-              class="col-md-2 col-lg-3 card mb-3"
-              *ngFor="let group of notInGroups"
-            >
-              <img
-                src="{{ group.groupImg }}"
-                class="rounded-circle"
-                style="width: 75px; height: 75px; margin-bottom: 15px"
-                alt="Avatar"
-              />
-              <p>
-                <strong>{{ group.name }}</strong>
-              </p>
-              <p>{{ group.description }}</p>
-              <div class="button-group">
-                <button
-                  *ngIf="userData.role === 'super'"
-                  class="btn btn-outline-primary"
-                >
-                  Interested
-                </button>
+      <div
+        class="row"
+        *ngIf="
+          userData.role === 'super' ||
+          userData.role === 'group' ||
+          userData.role === 'chat'
+        "
+      >
+        <div class="col-12">
+          <div *ngIf="notInGroups.length > 0">
+            <h3>Groups you're not in</h3>
+            <div class="row">
+              <div
+                class="col-md-2 col-lg-3 card mb-3"
+                *ngFor="let group of notInGroups"
+              >
+                <img
+                  src="{{ group.groupImg }}"
+                  class="rounded-circle"
+                  style="width: 75px; height: 75px; margin-bottom: 15px"
+                  alt="Avatar"
+                />
+                <p>
+                  <strong>{{ group.name }}</strong>
+                </p>
+                <p>{{ group.description }}</p>
+                <div class="button-group">
+                  <button
+                    *ngIf="userData.role === 'super'"
+                    class="btn btn-outline-primary"
+                  >
+                    Interested
+                  </button>
+                </div>
               </div>
             </div>
           </div>
