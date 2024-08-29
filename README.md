@@ -184,18 +184,91 @@ Front-end Angular routing was utilised to allow users of the application to navi
 
 ## Node Server Architecture
 
+The server-side architecture is structured to handle various functionalities of the chat system, including user authentication, group management, and channel management. The server is built using Node.js and Express, with data seeded using predefined classes and objects.
+
 ### Modules
+
+- Express.js: The primary framework for building the HTTP server and defining routes.
+- CORS: Middleware to allow cross-origin requests, crucial for enabling communication between the Angular frontend and the Node.js backend.
+- Body-Parser: Middleware to parse incoming request bodies in JSON format, facilitating the handling of user input and data.
+- Socket.io: Manages real-time communication between the server and clients for functionalities such as live chat.
 
 ### Functions
 
+The key functionalities of the server are encapsulated in various files and are responsible for handling specific tasks:
+
+- server.js:
+  - Configures the Express server and applies middleware such as CORS and Body-Parser.
+  - Initializes routes for authentication, user management, group management, and channel management.
+  - Integrates Socket.io for handling real-time messaging.
+
+- listen.js:
+  - Contains the function to start the server on a specified port (3000) and logs the start time to the console.
+
+- socket.js:
+  - Manages WebSocket connections, handling events such as user connections and message broadcasts in real-time.
+
+- seederData.js:
+  - Defines the classes for User, Group, and Channel, and seeds the server with initial data for testing and development purposes.
+
 ### Files
+
+- server.js: The main entry point for the server, responsible for initializing and configuring the server, applying middleware, and setting up routes.
+- listen.js: Handles server startup and logging.
+- socket.js: Manages real-time WebSocket events and communication.
+- data/seederData.js: Contains initial data for users, groups, and channels, and exports them for use in routes.
+- routes/api-auth.js: Manages authentication routes for user login and registration.
+- routes/api-user.js: Handles user-related operations such as retrieving user details.
+- routes/api-group.js: Manages group-related operations, including retrieving and managing groups.
+- routes/api-channel.js: Handles channel-related operations, including retrieving and managing channels.
 
 ### Global variables
 
+- PORT: Specifies the port on which the server listens (default is 3000).
+- io: The Socket.io instance, used globally across the server to manage WebSocket communication.
+
 ## Routes
 
-A list of server side routes, parameters, return values, and there purpose
+Below is a list of server side routes, parameters, return values, and there purpose:
+
+### Authentication Routes (api-auth.js)
+
+| Method | Endpoint           | Parameters                                                  | Returns                                                   | Purpose                                                    |
+|--------|--------------------|-------------------------------------------------------------|-----------------------------------------------------------|------------------------------------------------------------|
+| POST   | /api/auth/signup    | `firstName`, `lastName`, `username`, `email`, `password`, `dob` | JSON object containing the user's details (excluding the password) | Registers a new user and adds them to the list of users.    |
+| POST   | /api/auth           | `username`, `password`                                     | JSON object containing the user's details (excluding the password) | Authenticates a user based on their username and password.  |
+
+### User Routes (api-user.js)
+
+| Method | Endpoint   | Parameters | Returns                          | Purpose                                                              |
+|--------|------------|------------|----------------------------------|----------------------------------------------------------------------|
+| GET    | /api/users | None       | JSON array of all users (excluding their passwords) | Retrieves a list of all users, showing essential details like username, email, and role. |
+
+
+### Group Routes (api-group.js)
+
+| Method | Endpoint     | Parameters | Returns                          | Purpose                                                              |
+|--------|--------------|------------|----------------------------------|----------------------------------------------------------------------|
+| GET    | /api/groups  | None       | JSON array of all groups         | Retrieves a list of all groups, including their names, admins, members, and descriptions. |
+
+
+### Channel Routes (api-channel.js)
+| Method | Endpoint       | Parameters | Returns                          | Purpose                                                              |
+|--------|----------------|------------|----------------------------------|----------------------------------------------------------------------|
+| GET    | /api/channels  | None       | JSON array of all channels       | Retrieves a list of all channels, including their names, group IDs, and descriptions. |
+
 
 ## Client Server Interactions
 
-Describe the details of the interaction between client and server by indicating how the data on server side will be changed and how the display of each angular component page will be updated
+The interactions between the client (Angular frontend) and the server (Node.js backend) are designed to maintain a smooth user experience by synchronizing data and ensuring real-time updates:
+
+- User Authentication:
+  - When a user signs up or logs in, the client sends a POST request to the relevant authentication route (/api/auth/signup or /api/auth). The server processes this request, verifies the user credentials or creates a new user, and sends back the user's details (excluding sensitive information like the password).
+
+- Group and Channel Management:
+  - Upon accessing the user’s profile or a specific group/channel, the client sends GET requests to the appropriate routes (/api/groups, /api/channels) to fetch the necessary data. This data is then used to populate the UI, allowing users to view and interact with their groups and channels.
+
+- Real-Time Messaging:
+  - Messages within channels are handled using Socket.io. When a user sends a message, it is emitted to the server via a WebSocket. The server then broadcasts this message to all clients connected to the channel, ensuring that all users see the message in real-time.
+
+
