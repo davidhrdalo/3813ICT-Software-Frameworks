@@ -29,5 +29,13 @@ export class ChannelService {
   createChannel(channelData: any): Observable<any> {
     return this.http.post(BACKEND_URL, channelData, httpOptions);
   }
+
+  deleteChannel(channelId: number): Observable<any> {
+    return this.http.delete(`${BACKEND_URL}/${channelId}`, httpOptions);
+  }
+
+  updateChannel(channelId: number, channelData: any): Observable<any> {
+    return this.http.put(`${BACKEND_URL}/${channelId}`, channelData, httpOptions);
+  }
   
 }

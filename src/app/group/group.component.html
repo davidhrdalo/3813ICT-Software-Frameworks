@@ -118,28 +118,54 @@
       <div class="row">
         <h3>Channels</h3>
 
-        <div
-          class="col-4 card"
-          *ngFor="let channel of channels"
-          [routerLink]="['/group', group.id, 'channel', channel.id]"
-        >
-          <p>
-            <strong>{{ channel.name }}</strong>
-          </p>
-          <p>{{ channel.description }}</p>
-          <div class="button-group">
-            <button
-              *ngIf="userData.role === 'super'"
-              class="btn btn-outline-warning"
-            >
-              Edit
-            </button>
-            <button
-              *ngIf="userData.role === 'super'"
-              class="btn btn-outline-danger"
-            >
-              Remove
-            </button>
+        <div class="col-4 card" *ngFor="let channel of channels">
+          <div *ngIf="editChannelData && editChannelData.id === channel.id">
+            <p>
+              <strong>Channel Name: </strong>
+              <input
+                type="text"
+                [(ngModel)]="editChannelData.name"
+                class="form-control"
+              />
+            </p>
+            <p>
+              <strong>Channel Description: </strong>
+              <input
+                type="text"
+                [(ngModel)]="editChannelData.description"
+                class="form-control"
+              />
+            </p>
+            <div class="button-group">
+              <button class="btn btn-outline-primary" (click)="saveChannel()">
+                Save
+              </button>
+              <button class="btn btn-outline-secondary" (click)="cancelEdit()">
+                Cancel
+              </button>
+            </div>
+          </div>
+          <div *ngIf="!editChannelData || editChannelData.id !== channel.id">
+            <p>
+              <strong>{{ channel.name }}</strong>
+            </p>
+            <p>{{ channel.description }}</p>
+            <div class="button-group">
+              <button
+                *ngIf="userData.role === 'super'"
+                class="btn btn-outline-warning"
+                (click)="editChannel(channel)"
+              >
+                Edit
+              </button>
+              <button
+                *ngIf="userData.role === 'super'"
+                class="btn btn-outline-danger"
+                (click)="deleteChannel(channel.id)"
+              >
+                Remove
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -151,12 +177,16 @@
       <div style="margin: 10px; margin-top: 20px">
         <p>
           <strong>Channel Name: </strong>
-          <input type="text" class="form-control" [(ngModel)]="channelName"/>
+          <input type="text" class="form-control" [(ngModel)]="channelName" />
         </p>
 
         <p>
           <strong>Channel Description: </strong>
-          <input type="text" class="form-control" [(ngModel)]="channelDescription"/>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="channelDescription"
+          />
         </p>
 
         <button

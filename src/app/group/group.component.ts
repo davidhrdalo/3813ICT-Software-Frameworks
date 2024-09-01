@@ -21,9 +21,11 @@ export class GroupComponent implements OnInit {
   userData: any;
   currentRole: string = '';
   isEditMode: boolean = false;
+  isEditChannelMode: boolean = false;
   allUsers: any;
   channelName: string = '';
   channelDescription: string = '';
+  editChannelData: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -150,5 +152,54 @@ export class GroupComponent implements OnInit {
   clearCreateChannel(): void {
     this.channelName = '';
     this.channelDescription = '';
+  }
+
+  editChannel(channel: any): void {
+    this.editChannelData = { ...channel }; // Create a copy of the channel data for editing
+    this.isEditChannelMode = true;
+  }
+
+  saveChannel(): void {
+    if (!this.editChannelData.name || !this.editChannelData.description) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    this.channelService.updateChannel(this.editChannelData.id, this.editChannelData).subscribe(
+      (updatedChannel) => {
+        // Update the channel in the local list
+        const index = this.channels.findIndex(ch => ch.id === updatedChannel.id);
+        if (index !== -1) {
+          this.channels[index] = updatedChannel;
+        }
+        this.editChannelData = null;
+        this.isEditChannelMode = false;
+        alert('Channel updated successfully!');
+      },
+      (error) => {
+        console.error('Error updating channel:', error);
+        alert('Failed to update channel.');
+      }
+    );
+  }
+
+  deleteChannel(channelId: number): void {
+    if (confirm('Are you sure you want to delete this channel?')) {
+      this.channelService.deleteChannel(channelId).subscribe(
+        () => {
+          this.channels = this.channels.filter(channel => channel.id !== channelId);
+          alert('Channel deleted successfully!');
+        },
+        (error) => {
+          console.error('Error deleting channel:', error);
+          alert('Failed to delete channel.');
+        }
+      );
+    }
+  }
+
+  cancelEdit(): void {
+    this.editChannelData = null;
+    this.isEditChannelMode = false;
   }
 }
