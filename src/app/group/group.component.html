@@ -151,19 +151,19 @@
       <div style="margin: 10px; margin-top: 20px">
         <p>
           <strong>Channel Name: </strong>
-          <input type="text" class="form-control" />
+          <input type="text" class="form-control" [(ngModel)]="channelName"/>
         </p>
 
         <p>
           <strong>Channel Description: </strong>
-          <input type="text" class="form-control" />
+          <input type="text" class="form-control" [(ngModel)]="channelDescription"/>
         </p>
 
         <button
           type="button"
           style="width: 120px; margin-bottom: 20px; margin-right: 10px"
           class="btn btn-primary"
-          (click)="saveDetails()"
+          (click)="createChannel()"
         >
           Create
         </button>
@@ -171,7 +171,7 @@
           type="button"
           style="width: 110px; margin-bottom: 20px"
           class="btn btn-secondary"
-          (click)="toggleEditMode()"
+          (click)="clearCreateChannel()"
         >
           Cancel
         </button>

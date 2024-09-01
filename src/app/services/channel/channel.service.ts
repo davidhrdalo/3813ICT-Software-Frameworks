@@ -25,4 +25,9 @@ export class ChannelService {
       )
     );
   }
+
+  createChannel(channelData: any): Observable<any> {
+    return this.http.post(BACKEND_URL, channelData, httpOptions);
+  }
+  
 }

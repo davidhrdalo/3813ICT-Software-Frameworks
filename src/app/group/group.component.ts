@@ -22,6 +22,8 @@ export class GroupComponent implements OnInit {
   currentRole: string = '';
   isEditMode: boolean = false;
   allUsers: any;
+  channelName: string = '';
+  channelDescription: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -119,4 +121,34 @@ export class GroupComponent implements OnInit {
     }
   }
   
+  createChannel(): void {
+    if (!this.channelName || !this.channelDescription) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const channelData = {
+      name: this.channelName,
+      description: this.channelDescription,
+      groupId: this.group.id,
+    };
+
+    this.channelService.createChannel(channelData).subscribe(
+      (newChannel) => {
+        this.channels.push(newChannel); // Add the new channel to the list
+        this.channelName = '';
+        this.channelDescription = '';
+        alert('Channel created successfully!');
+      },
+      (error) => {
+        console.error('Error creating channel:', error);
+        alert('Failed to create channel.');
+      }
+    );
+  }
+
+  clearCreateChannel(): void {
+    this.channelName = '';
+    this.channelDescription = '';
+  }
 }

@@ -90,7 +90,9 @@
       "members": [
         6
       ],
-      "interested": [],
+      "interested": [
+        1
+      ],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
     },
@@ -168,6 +170,12 @@
       "name": "channel3",
       "groupId": 1,
       "description": "Hi."
+    },
+    {
+      "id": 1725170927091,
+      "name": "d",
+      "groupId": 1,
+      "description": "d"
     }
   ]
 }
