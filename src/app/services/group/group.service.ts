@@ -92,7 +92,12 @@ export class GroupService {
 
   deleteGroup(groupId: number): Observable<any> {
     return this.http.delete(`${BACKEND_URL}/${groupId}`, httpOptions);
-  }  
+  }
+  
+  updateGroup(groupId: number, updatedGroupData: any): Observable<any> {
+    return this.http.put(`${BACKEND_URL}/${groupId}`, updatedGroupData, httpOptions);
+  }
+  
 
   
 }

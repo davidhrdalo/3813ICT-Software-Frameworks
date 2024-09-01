@@ -40,7 +40,7 @@
   "groups": [
     {
       "id": 1,
-      "name": "group1",
+      "name": "group1111",
       "admins": [
         1
       ],
@@ -48,7 +48,7 @@
         1,
         2
       ],
-      "description": "Desc1",
+      "description": "Desc1g",
       "groupImg": "assets/images/473.jpg"
     },
     {

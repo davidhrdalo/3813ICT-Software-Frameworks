@@ -53,10 +53,22 @@ export class GroupComponent implements OnInit {
   }
 
   saveDetails(): void {
-  //  this.activeUserService.updateUserData(this.userEditData); - Change when edit group added !!! HERE !!!
-    this.group = { ...this.groupEditData }; // Update the original data after saving
-    this.toggleEditMode(); // Exit edit mode after saving
-    alert('Group updated successfully!');
+    if (!this.groupEditData.name || !this.groupEditData.description) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+  
+    this.groupService.updateGroup(this.group.id, this.groupEditData).subscribe(
+      (updatedGroup) => {
+        this.group = updatedGroup; // Update the original group data with the saved data
+        this.toggleEditMode(); // Exit edit mode after saving
+        alert('Group updated successfully!');
+      },
+      (error) => {
+        console.error('Error updating group:', error);
+        alert('Failed to update group.');
+      }
+    );
   }
 
   getUserProfile(): void {
