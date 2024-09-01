@@ -183,6 +183,18 @@
       ],
       "description": "s",
       "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725018762341,
+      "name": "sss",
+      "admins": [
+        1
+      ],
+      "members": [
+        1
+      ],
+      "description": "s",
+      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
