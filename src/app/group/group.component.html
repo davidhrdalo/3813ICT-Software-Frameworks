@@ -81,6 +81,16 @@
         Edit Details
       </button>
 
+      <button
+        *ngIf="!isEditMode"
+        type="button"
+        style="width: 110px; margin-bottom: 20px"
+        class="btn btn-danger"
+        (click)="deleteGroup(group.id)"
+      >
+        Delete
+      </button>
+
       <div *ngIf="isEditMode">
         <button
           type="button"

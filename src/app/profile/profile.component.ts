@@ -121,5 +121,20 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
+
+  deleteGroup(groupId: number): void {
+    if (confirm('Are you sure you want to delete this group?')) {
+      this.groupService.deleteGroup(groupId).subscribe(
+        () => {
+          alert('Group deleted successfully!');
+          this.getAdminGroups(); // Refresh the admin groups list
+        },
+        (error) => {
+          console.error('Error deleting group:', error);
+          alert('Failed to delete group.');
+        }
+      );
+    }
+  }
   
 }

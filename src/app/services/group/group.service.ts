@@ -90,5 +90,9 @@ export class GroupService {
     return this.http.post(BACKEND_URL, newGroup, httpOptions);
   }
 
+  deleteGroup(groupId: number): Observable<any> {
+    return this.http.delete(`${BACKEND_URL}/${groupId}`, httpOptions);
+  }  
+
   
 }

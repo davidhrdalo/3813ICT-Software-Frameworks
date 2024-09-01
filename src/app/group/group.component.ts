@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { GroupService } from '../services/group/group.service';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../services/channel/channel.service';
@@ -29,6 +29,7 @@ export class GroupComponent implements OnInit {
     private channelService: ChannelService,
     private activeUserService: ActiveUserService,
     private userService: UserService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -90,4 +91,20 @@ export class GroupComponent implements OnInit {
       console.log('Channels for group:', this.channels); // Debugging log
     });
   }
+
+  deleteGroup(groupId: number): void {
+    if (confirm('Are you sure you want to delete this group?')) {
+      this.groupService.deleteGroup(groupId).subscribe(
+        () => {
+          alert('Group deleted successfully!');
+          this.router.navigate(['/profile']); // Navigate back to profile
+        },
+        (error) => {
+          console.error('Error deleting group:', error);
+          alert('Failed to delete group.');
+        }
+      );
+    }
+  }
+  
 }

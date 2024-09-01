@@ -52,19 +52,6 @@
       "groupImg": "assets/images/473.jpg"
     },
     {
-      "id": 2,
-      "name": "group2",
-      "admins": [
-        2
-      ],
-      "members": [
-        1,
-        3
-      ],
-      "description": "Desc2",
-      "groupImg": "assets/images/475.jpg"
-    },
-    {
       "id": 3,
       "name": "group3",
       "admins": [
@@ -99,102 +86,6 @@
       "members": [],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
-    },
-    {
-      "id": 1724930841821,
-      "name": "d",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "d",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930863570,
-      "name": "test2",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "tews2",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930883453,
-      "name": "d",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "d",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930953219,
-      "name": "x",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930956820,
-      "name": "x",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930964569,
-      "name": "dddd",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "dddd",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1724930976502,
-      "name": "s",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "s",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1725018762341,
-      "name": "sss",
-      "admins": [
-        1
-      ],
-      "members": [
-        1
-      ],
-      "description": "s",
-      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
