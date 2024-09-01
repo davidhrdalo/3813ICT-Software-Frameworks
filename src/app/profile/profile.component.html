@@ -234,7 +234,9 @@
                 [routerLink]="['/group', group.id]"
               />
               <p>
-                <strong [routerLink]="['/group', group.id]">{{ group.name }}</strong>
+                <strong [routerLink]="['/group', group.id]">{{
+                  group.name
+                }}</strong>
               </p>
               <p>{{ group.description }}</p>
               <div class="button-group">
@@ -351,10 +353,19 @@
                 <p>{{ group.description }}</p>
                 <div class="button-group">
                   <button
-                    *ngIf="userData.role === 'super'"
-                    class="btn btn-outline-primary"
+                    class="btn"
+                    [ngClass]="
+                      group.interested.includes(userData.id)
+                        ? 'btn-outline-danger'
+                        : 'btn-outline-primary'
+                    "
+                    (click)="markInterest(group)"
                   >
-                    Interested
+                    {{
+                      group.interested.includes(userData.id)
+                        ? "Unregister Interest"
+                        : "Interested"
+                    }}
                   </button>
                 </div>
               </div>

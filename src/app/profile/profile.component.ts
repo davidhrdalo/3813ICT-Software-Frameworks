@@ -136,5 +136,36 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
+
+  markInterest(group: any): void {
+    const userId = this.userData.id;
+  
+    if (group.interested.includes(userId)) {
+      // Unregister interest
+      this.groupService.removeInterestFromGroup(group.id, userId).subscribe(
+        () => {
+          alert('You have unregistered your interest in this group.');
+          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+        },
+        (error) => {
+          console.error('Error unregistering interest in group:', error);
+          alert('Failed to unregister interest.');
+        }
+      );
+    } else {
+      // Register interest
+      this.groupService.addInterestToGroup(group.id, userId).subscribe(
+        () => {
+          alert('You have registered your interest in this group.');
+          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+        },
+        (error) => {
+          console.error('Error registering interest in group:', error);
+          alert('Failed to register interest.');
+        }
+      );
+    }
+  }
+  
   
 }

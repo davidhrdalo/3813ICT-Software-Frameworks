@@ -19,6 +19,19 @@ class User {
     }
 }
 
+// Group Data
+class Group {
+    constructor(id, name, admins = [], members = [], interested = [], description, groupImg) {
+        this.id = id;
+        this.name = name;
+        this.admins = admins;
+        this.members = members;
+        this.interested = interested;
+        this.description = description;
+        this.groupImg = groupImg;
+    }
+}
+
 // Channel Data
 class Channel {
     constructor(id, name, groupId, description) {
@@ -26,18 +39,6 @@ class Channel {
         this.name = name;
         this.groupId = groupId;
         this.description = description;
-    }
-}
-
-// Group Data
-class Group {
-    constructor(id, name, admins = [], members = [], description, groupImg) {
-        this.id = id;
-        this.name = name;
-        this.admins = admins;
-        this.members = members;
-        this.description = description;
-        this.groupImg = groupImg;
     }
 }
 
@@ -49,7 +50,7 @@ function loadData() {
         const data = JSON.parse(rawData);
         return {
             users: data.users.map(u => new User(u.id, u.username, u.email, u.password, u.role, u.profileImg, u.firstName, u.lastName, u.dob, u.status)),
-            groups: data.groups.map(g => new Group(g.id, g.name, g.admins, g.members, g.description, g.groupImg)),
+            groups: data.groups.map(g => new Group(g.id, g.name, g.admins, g.members, g.interested, g.description, g.groupImg)),
             channels: data.channels.map(c => new Channel(c.id, c.name, c.groupId, c.description)),
         };
     } else {

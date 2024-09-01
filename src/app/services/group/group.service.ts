@@ -83,7 +83,8 @@ export class GroupService {
       name: groupName,
       description: groupDescription,
       admins: [userData.id],
-      members: [userData.id],
+      members: [],
+      interested: [],
       groupImg: 'assets/images/defaultGroup.jpg'
     };
   
@@ -98,6 +99,13 @@ export class GroupService {
     return this.http.put(`${BACKEND_URL}/${groupId}`, updatedGroupData, httpOptions);
   }
   
-
+  addInterestToGroup(groupId: number, userId: number): Observable<any> {
+    return this.http.post(`${BACKEND_URL}/${groupId}/interested`, { userId }, httpOptions);
+  }
+  
+  removeInterestFromGroup(groupId: number, userId: number): Observable<any> {
+    return this.http.post(`${BACKEND_URL}/${groupId}/unregister-interest`, { userId }, httpOptions);
+  }
+    
   
 }
