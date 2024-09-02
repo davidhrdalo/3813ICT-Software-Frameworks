@@ -5,12 +5,12 @@ const path = require('path');
 
 // User Data
 class User {
-    constructor(id, username, email, password, role, profileImg, firstName, lastName, dob, status) {
+    constructor(id, username, email, password, roles, profileImg, firstName, lastName, dob, status) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
         this.profileImg = profileImg;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,7 +49,7 @@ function loadData() {
         const rawData = fs.readFileSync(dataFilePath);
         const data = JSON.parse(rawData);
         return {
-            users: data.users.map(u => new User(u.id, u.username, u.email, u.password, u.role, u.profileImg, u.firstName, u.lastName, u.dob, u.status)),
+            users: data.users.map(u => new User(u.id, u.username, u.email, u.password, u.roles, u.profileImg, u.firstName, u.lastName, u.dob, u.status)),
             groups: data.groups.map(g => new Group(g.id, g.name, g.admins, g.members, g.interested, g.description, g.groupImg)),
             channels: data.channels.map(c => new Channel(c.id, c.name, c.groupId, c.description)),
         };

@@ -8,7 +8,7 @@ module.exports = function (app) {
             id: user.id,
             username: user.username,
             email: user.email,
-            role: user.role,
+            roles: user.roles,
             profileImg: user.profileImg,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -26,7 +26,7 @@ module.exports = function (app) {
             username,
             '', // Default empty email
             password,
-            'chat', // Default role
+            'chat', // Default roles
             'assets/images/defaultProfile.jpg', // Default profile image
             '', // Default empty first name
             '', // Default empty last name

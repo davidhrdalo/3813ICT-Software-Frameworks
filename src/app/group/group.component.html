@@ -9,15 +9,15 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group.name }}</h1>
-        <p class="lead" *ngIf="userData.role === 'super'">
+        <p class="lead" *ngIf="userData.roles.includes('super') ">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'group'">
+        <p class="lead" *ngIf="userData.roles.includes('group') && !userData.roles.includes('super')">
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'chat'">
+        <p class="lead" *ngIf="userData.roles.includes('chat') && !userData.roles.includes('super') && !userData.roles.includes('group')">
           You can view your groups and chats from here!
         </p>
       </div>
@@ -152,14 +152,14 @@
             <p>{{ channel.description }}</p>
             <div class="button-group">
               <button
-                *ngIf="userData.role === 'super'"
+                *ngIf="userData.roles.includes('super')"
                 class="btn btn-outline-warning"
                 (click)="editChannel(channel)"
               >
                 Edit
               </button>
               <button
-                *ngIf="userData.role === 'super'"
+                *ngIf="userData.roles.includes('super')"
                 class="btn btn-outline-danger"
                 (click)="deleteChannel(channel.id)"
               >
@@ -209,7 +209,7 @@
     </div>
 
     <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
+    <div class="row" *ngIf="userData.roles.includes('super') && allUsers?.length > 0">
       <hr />
       <h3>Active Members</h3>
       <div class="col-3 card" *ngFor="let user of allUsers">
@@ -223,7 +223,7 @@
         <p><strong>Email: </strong>{{ user.email }}</p>
         <div class="button-group">
           <button
-            *ngIf="userData.role === 'super'"
+            *ngIf="userData.roles.includes('super')"
             (click)="deleteUser(user.id)"
             class="btn btn-outline-danger"
           >
@@ -234,7 +234,7 @@
     </div>
 
     <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
+    <div class="row" *ngIf="userData.roles.includes('super') && allUsers?.length > 0">
       <hr />
       <h3>Requested Members</h3>
       <div class="col-3 card" *ngFor="let user of allUsers">
@@ -248,14 +248,14 @@
         <p><strong>Email: </strong>{{ user.email }}</p>
         <div class="button-group">
           <button
-            *ngIf="userData.role === 'super'"
+            *ngIf="userData.roles.includes('super')"
             (click)="deleteUser(user.id)"
             class="btn btn-outline-danger"
           >
             Allow
           </button>
           <button
-            *ngIf="userData.role === 'super'"
+            *ngIf="userData.roles.includes('super')"
             (click)="deleteUser(user.id)"
             class="btn btn-outline-danger"
           >

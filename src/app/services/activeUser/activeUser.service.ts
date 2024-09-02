@@ -67,7 +67,7 @@ export class ActiveUserService {
     sessionStorage.setItem('id', userData.id.toString());
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
-    sessionStorage.setItem('role', userData.role);
+    sessionStorage.setItem('roles', userData.roles);
     sessionStorage.setItem('profileImg', userData.profileImg);
     sessionStorage.setItem('firstName', userData.firstName);
     sessionStorage.setItem('lastName', userData.lastName);
@@ -99,7 +99,7 @@ export class ActiveUserService {
         id: sessionStorage.getItem('id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
-        role: sessionStorage.getItem('role'),
+        roles: sessionStorage.getItem('roles'),
         profileImg: sessionStorage.getItem('profileImg'),
         firstName: sessionStorage.getItem('firstName'),
         lastName: sessionStorage.getItem('lastName'),
@@ -115,7 +115,7 @@ export class ActiveUserService {
     sessionStorage.setItem('id', userData.id.toString());
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
-    sessionStorage.setItem('role', userData.role);
+    sessionStorage.setItem('roles', userData.roles);
     sessionStorage.setItem('profileImg', userData.profileImg);
     sessionStorage.setItem('firstName', userData.firstName);
     sessionStorage.setItem('lastName', userData.lastName);

@@ -5,15 +5,74 @@
       "username": "john_doe",
       "email": "john@example.com",
       "password": "pw",
-      "role": "super",
+      "roles": [
+        "super",
+        "group",
+        "chat"
+      ],
       "profileImg": "assets/images/37.jpg",
       "firstName": "John",
       "lastName": "Doe",
       "dob": "2001-08-17",
       "status": "Busy"
+    },
+    {
+      "id": 2,
+      "username": "jane_smith",
+      "email": "jane@example.com",
+      "password": "pw",
+      "roles": [
+        "group",
+        "chat"
+      ],
+      "profileImg": "assets/images/58.jpg",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "dob": "2002-03-26",
+      "status": "Available"
+    },
+    {
+      "id": 3,
+      "username": "alice_jones",
+      "email": "alice@example.com",
+      "password": "pw",
+      "roles": [
+        "chat"
+      ],
+      "profileImg": "assets/images/430.jpg",
+      "firstName": "Alice",
+      "lastName": "Jones",
+      "dob": "2020-06-10",
+      "status": "Away"
+    },
+    {
+      "id": 1725312282042,
+      "username": "x",
+      "email": "",
+      "password": "x",
+      "roles": "chat",
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
     }
   ],
   "groups": [
+    {
+      "id": 1,
+      "name": "group1",
+      "admins": [
+        1
+      ],
+      "members": [
+        1,
+        2
+      ],
+      "interested": [],
+      "description": "Desc1",
+      "groupImg": "assets/images/473.jpg"
+    },
     {
       "id": 2,
       "name": "group2",
@@ -52,9 +111,7 @@
       "members": [
         6
       ],
-      "interested": [
-        1
-      ],
+      "interested": [],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
     },
@@ -65,76 +122,35 @@
         5
       ],
       "members": [],
-      "interested": [
-        1
-      ],
+      "interested": [],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
-    },
-    {
-      "id": 1725163834411,
-      "name": "2",
-      "admins": [
-        "1"
-      ],
-      "members": [],
-      "interested": [
-        1
-      ],
-      "description": "`1",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1725267082092,
-      "name": "x",
-      "admins": [
-        "1"
-      ],
-      "members": [],
-      "interested": [],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1725268574142,
-      "name": "x",
-      "admins": [
-        "1"
-      ],
-      "members": [],
-      "interested": [],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1725275227311,
-      "name": "x",
-      "admins": [
-        "1"
-      ],
-      "members": [],
-      "interested": [],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
-    },
-    {
-      "id": 1725275236428,
-      "name": "x",
-      "admins": [
-        1
-      ],
-      "members": [],
-      "interested": [],
-      "description": "x",
-      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
+    {
+      "id": 1,
+      "name": "channel1",
+      "groupId": 1,
+      "description": "Lets chat about cats!"
+    },
+    {
+      "id": 2,
+      "name": "channel2",
+      "groupId": 1,
+      "description": "Lets chat about dogs!"
+    },
     {
       "id": 3,
       "name": "channel3",
       "groupId": 1,
       "description": "Lets chat about lions!"
+    },
+    {
+      "id": 4,
+      "name": "channel3",
+      "groupId": 1,
+      "description": "Lets chat about people!"
     },
     {
       "id": 5,
@@ -147,18 +163,6 @@
       "name": "channel3",
       "groupId": 1,
       "description": "Hi."
-    },
-    {
-      "id": 1725267101970,
-      "name": "x",
-      "groupId": 1725267094062,
-      "description": "x"
-    },
-    {
-      "id": 1725268585283,
-      "name": "x",
-      "groupId": 1,
-      "description": "x"
     }
   ]
 }
