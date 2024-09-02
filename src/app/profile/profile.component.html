@@ -213,11 +213,9 @@
 
     <hr />
 
-    <!-- Full row - Content for group admin -->
     <div
       class="row"
-      *ngIf="userData.role === 'super' || currentRole === 'group'"
-    >
+      *ngIf="userData.role === 'super'">
       <div class="col-8">
         <div *ngIf="adminGroups.length > 0">
           <h3>Group Management</h3>
@@ -289,7 +287,6 @@
 
       <hr />
 
-      <!-- Full row - Default content for other roles or no role -->
       <div
         class="row"
         *ngIf="

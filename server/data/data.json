@@ -11,54 +11,6 @@
       "lastName": "Doe",
       "dob": "2001-08-17",
       "status": "Busy"
-    },
-    {
-      "id": 2,
-      "username": "jane_smith",
-      "email": "jane@example.com",
-      "password": "pw",
-      "role": "group",
-      "profileImg": "assets/images/58.jpg",
-      "firstName": "Jane",
-      "lastName": "Smith",
-      "dob": "2002-03-26",
-      "status": "Available"
-    },
-    {
-      "id": 3,
-      "username": "alice_jones",
-      "email": "alice@example.com",
-      "password": "pw",
-      "role": "chat",
-      "profileImg": "assets/images/430.jpg",
-      "firstName": "Alice",
-      "lastName": "Jones",
-      "dob": "2020-06-10",
-      "status": "Away"
-    },
-    {
-      "id": 1725268569480,
-      "username": "x",
-      "email": "",
-      "password": "x",
-      "role": "chat",
-      "profileImg": "assets/images/defaultProfile.jpg",
-      "firstName": "",
-      "lastName": "",
-      "dob": "",
-      "status": "Active"
-    },
-    {
-      "id": 1725268596683,
-      "username": "x",
-      "email": "",
-      "password": "x",
-      "role": "chat",
-      "profileImg": "assets/images/defaultProfile.jpg",
-      "firstName": "",
-      "lastName": "",
-      "dob": "",
-      "status": "Active"
     }
   ],
   "groups": [
@@ -155,10 +107,10 @@
       "groupImg": "assets/images/defaultGroup.jpg"
     },
     {
-      "id": 1725268592327,
+      "id": 1725275227311,
       "name": "x",
       "admins": [
-        1
+        "1"
       ],
       "members": [],
       "interested": [],
@@ -166,14 +118,14 @@
       "groupImg": "assets/images/defaultGroup.jpg"
     },
     {
-      "id": 1725268600926,
-      "name": "s",
+      "id": 1725275236428,
+      "name": "x",
       "admins": [
         1
       ],
       "members": [],
       "interested": [],
-      "description": "s",
+      "description": "x",
       "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],

@@ -29,7 +29,7 @@ const data = {
         "username": "john_doe",
         "email": "john@example.com",
         "password": "pw",
-        "role": "super",
+        "roles": ["super"],
         "profileImg": "assets/images/37.jpg",
         "firstName": "John",
         "lastName": "Doe",

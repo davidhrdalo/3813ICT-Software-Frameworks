@@ -16,7 +16,6 @@ import { RouterLink } from '@angular/router';
 export class ProfileComponent implements OnInit {
   userData: any;
   userEditData: any;
-  currentRole: string = '';
   isEditMode: boolean = false;
   allUsers: any;
   adminGroups: any[] = [];
