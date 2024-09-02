@@ -39,6 +39,21 @@ export class UserService {
       .subscribe();
   }
 
+  // Method to create a new user
+  createUser(username: string, password: string): Observable<any> {
+    return this.httpClient.post(`${BACKEND_URL}/create`, { username, password }, httpOptions)
+      .pipe(
+        tap((newUser) => {
+          const currentUsers = this.allUsersSubject.value;
+          this.allUsersSubject.next([...currentUsers, newUser]);
+        }),
+        catchError((error) => {
+          console.error('Failed to create user:', error);
+          return throwError(error);
+        })
+      );
+  }
+
   // Method to determine if a user is the active user
   private isActiveUser(user: any): boolean {
     const activeUsername = sessionStorage.getItem('username');
@@ -55,7 +70,17 @@ export class UserService {
     return this.allUsersSubject.value;
   }
 
-  deleteUser(userId: number): void {
-    console.log('W')
+  deleteUser(userId: number): Observable<any> {
+    return this.httpClient.delete(`${BACKEND_URL}/${userId}`, httpOptions).pipe(
+      tap(() => {
+        const currentUsers = this.allUsersSubject.value;
+        this.allUsersSubject.next(currentUsers.filter(user => user.id !== userId));
+      }),
+      catchError((error) => {
+        console.error('Failed to delete user:', error);
+        return throwError(error);
+      })
+    );
   }
+  
 }

@@ -1,5 +1,5 @@
 // Used to store static account details
-const { User, users } = require('../data/seederData');
+const { User, users, saveData } = require('../data/seederData');
 
 module.exports = function (app) {
     // New GET route to retrieve all users
@@ -16,5 +16,41 @@ module.exports = function (app) {
             status: user.status,
         }));
         res.json(usersWithoutPassword);
+    });
+
+    // POST route to create a new user
+    app.post('/api/users/create', (req, res) => {
+        const { username, password } = req.body;
+        const newUser = new User(
+            Date.now(),
+            username,
+            '', // Default empty email
+            password,
+            'chat', // Default role
+            'assets/images/defaultProfile.jpg', // Default profile image
+            '', // Default empty first name
+            '', // Default empty last name
+            '', // Default empty dob
+            'Active' // Default status
+        );
+      
+        // Save the new user to the users array
+        users.push(newUser);
+        saveData({ users });
+        res.status(201).json(newUser);
+    });
+
+    // DELETE route to delete a user by ID
+    app.delete('/api/users/:id', (req, res) => {
+        const userId = parseInt(req.params.id, 10);
+        const userIndex = users.findIndex(user => user.id === userId);
+
+        if (userIndex !== -1) {
+            users.splice(userIndex, 1);
+            saveData({ users });
+            res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
     });
 };

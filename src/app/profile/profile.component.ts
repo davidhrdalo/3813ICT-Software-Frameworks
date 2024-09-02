@@ -24,6 +24,8 @@ export class ProfileComponent implements OnInit {
   notInGroups: any[] = [];
   groupName: string = '';
   groupDescription: string = '';
+  username: string = '';
+  password: string = '';
 
   constructor(
     private activeUserService: ActiveUserService, 
@@ -66,7 +68,17 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteUser(userId: number): void {
-    this.userService.deleteUser(userId);
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(userId).subscribe(
+        () => {
+          alert('User deleted successfully!');
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+          alert('Failed to delete user.');
+        }
+      );
+    }
   }
 
   getAdminGroups() {
@@ -166,6 +178,28 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
-  
+
+  createUser(): void {
+    if (!this.username || !this.password) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    this.userService.createUser(this.username, this.password).subscribe(
+      () => {
+        alert('User created successfully!');
+        this.clearCreateUser(); // Clear input fields after creation
+      },
+      (error) => {
+        console.error('Error creating user:', error);
+        alert('Failed to create user.');
+      }
+    );
+  }
+
+  clearCreateUser(): void {
+    this.username = '';
+    this.password = '';
+  }
   
 }

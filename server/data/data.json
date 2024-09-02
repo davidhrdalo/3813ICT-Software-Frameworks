@@ -35,23 +35,33 @@
       "lastName": "Jones",
       "dob": "2020-06-10",
       "status": "Away"
+    },
+    {
+      "id": 1725268569480,
+      "username": "x",
+      "email": "",
+      "password": "x",
+      "role": "chat",
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
+    },
+    {
+      "id": 1725268596683,
+      "username": "x",
+      "email": "",
+      "password": "x",
+      "role": "chat",
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
     }
   ],
   "groups": [
-    {
-      "id": 1,
-      "name": "group1",
-      "admins": [
-        1
-      ],
-      "members": [
-        1,
-        2
-      ],
-      "interested": [],
-      "description": "Desc1",
-      "groupImg": "assets/images/473.jpg"
-    },
     {
       "id": 2,
       "name": "group2",
@@ -121,6 +131,50 @@
       ],
       "description": "`1",
       "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725267082092,
+      "name": "x",
+      "admins": [
+        "1"
+      ],
+      "members": [],
+      "interested": [],
+      "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725268574142,
+      "name": "x",
+      "admins": [
+        "1"
+      ],
+      "members": [],
+      "interested": [],
+      "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725268592327,
+      "name": "x",
+      "admins": [
+        1
+      ],
+      "members": [],
+      "interested": [],
+      "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725268600926,
+      "name": "s",
+      "admins": [
+        1
+      ],
+      "members": [],
+      "interested": [],
+      "description": "s",
+      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
@@ -141,6 +195,18 @@
       "name": "channel3",
       "groupId": 1,
       "description": "Hi."
+    },
+    {
+      "id": 1725267101970,
+      "name": "x",
+      "groupId": 1725267094062,
+      "description": "x"
+    },
+    {
+      "id": 1725268585283,
+      "name": "x",
+      "groupId": 1,
+      "description": "x"
     }
   ]
 }
