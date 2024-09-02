@@ -60,20 +60,6 @@
   ],
   "groups": [
     {
-      "id": 1,
-      "name": "group1",
-      "admins": [
-        1
-      ],
-      "members": [
-        1,
-        2
-      ],
-      "interested": [],
-      "description": "Desc1",
-      "groupImg": "assets/images/473.jpg"
-    },
-    {
       "id": 2,
       "name": "group2",
       "admins": [
