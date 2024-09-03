@@ -20,11 +20,11 @@ module.exports = function (app) {
 
     // POST route to create a new user
     app.post('/api/users/create', (req, res) => {
-        const { username, password } = req.body;
+        const { username, email, password } = req.body;
         const newUser = new User(
             Date.now(),
             username,
-            '', // Default empty email
+            email,
             password,
             'chat', // Default roles
             'assets/images/defaultProfile.jpg', // Default profile image

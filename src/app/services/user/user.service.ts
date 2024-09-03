@@ -40,8 +40,8 @@ export class UserService {
   }
 
   // Method to create a new user
-  createUser(username: string, password: string): Observable<any> {
-    return this.httpClient.post(`${BACKEND_URL}/create`, { username, password }, httpOptions)
+  createUser(username: string, email: string, password: string): Observable<any> {
+    return this.httpClient.post(`${BACKEND_URL}/create`, { username, email, password }, httpOptions)
       .pipe(
         tap((newUser) => {
           const currentUsers = this.allUsersSubject.value;

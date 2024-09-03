@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
   groupName: string = '';
   groupDescription: string = '';
   username: string = '';
+  email: string = '';
   password: string = '';
 
   constructor(
@@ -179,12 +180,12 @@ export class ProfileComponent implements OnInit {
   }
 
   createUser(): void {
-    if (!this.username || !this.password) {
+    if (!this.username || !this.email || !this.password) {
       alert('Please fill in all required fields.');
       return;
     }
 
-    this.userService.createUser(this.username, this.password).subscribe(
+    this.userService.createUser(this.username, this.email, this.password).subscribe(
       () => {
         alert('User created successfully!');
         this.clearCreateUser(); // Clear input fields after creation
@@ -198,6 +199,7 @@ export class ProfileComponent implements OnInit {
 
   clearCreateUser(): void {
     this.username = '';
+    this.email = '';
     this.password = '';
   }
   

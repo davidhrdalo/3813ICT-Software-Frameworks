@@ -44,21 +44,23 @@
       "lastName": "Jones",
       "dob": "2020-06-10",
       "status": "Away"
-    },
-    {
-      "id": 1725312282042,
-      "username": "x",
-      "email": "",
-      "password": "x",
-      "roles": "chat",
-      "profileImg": "assets/images/defaultProfile.jpg",
-      "firstName": "",
-      "lastName": "",
-      "dob": "",
-      "status": "Active"
     }
   ],
   "groups": [
+    {
+      "id": 1,
+      "name": "group1",
+      "admins": [
+        1
+      ],
+      "members": [
+        1,
+        2
+      ],
+      "interested": [],
+      "description": "Desc1",
+      "groupImg": "assets/images/473.jpg"
+    },
     {
       "id": 2,
       "name": "group2",
@@ -111,6 +113,17 @@
       "interested": [],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
+    },
+    {
+      "id": 1725346698192,
+      "name": "x",
+      "admins": [
+        "2"
+      ],
+      "members": [],
+      "interested": [],
+      "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
