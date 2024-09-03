@@ -166,12 +166,10 @@
       <hr />
 
       <div class="col-8">
+        
         <h3>User Management</h3>
         <div class="row" *ngIf="allUsers?.length > 0; else noUsersTemplate">
-          <div
-            class="col-md-6 col-lg-4 card mb-3"
-            *ngFor="let user of allUsers"
-          >
+          <div class="col-md-6 col-lg-4 card mb-3" *ngFor="let user of allUsers">
             <img
               src="{{ user.profileImg }}"
               class="rounded-circle"
@@ -180,7 +178,9 @@
             />
             <p><strong>Username: </strong>{{ user.username }}</p>
             <p><strong>Email: </strong>{{ user.email }}</p>
+            <p><strong>Roles: </strong>{{ user.roles.join(', ') }}</p>
             <div class="button-group">
+              <!-- Delete Button (Visible if the active user is a Super Admin) -->
               <button
                 *ngIf="userData.roles.includes('super')"
                 (click)="deleteUser(user.id)"
@@ -188,9 +188,27 @@
               >
                 Delete
               </button>
+        
+              <!-- Promote to Group Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Group Admin) -->
+              <button
+                *ngIf="userData.roles.includes('super') && !user.roles.includes('group')"
+                (click)="promoteToGroupAdmin(user.id)"
+                class="btn btn-outline-primary"
+              >
+                Promote to Group Admin
+              </button>
+        
+              <!-- Promote to Super Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Super Admin) -->
+              <button
+                *ngIf="userData.roles.includes('super') && !user.roles.includes('super')"
+                (click)="promoteToSuperAdmin(user.id)"
+                class="btn btn-outline-success"
+              >
+                Promote to Super Admin
+              </button>
             </div>
           </div>
-        </div>
+        </div>  
 
         <ng-template #noUsersTemplate>
           <div class="row">

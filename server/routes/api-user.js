@@ -26,14 +26,14 @@ module.exports = function (app) {
             username,
             email,
             password,
-            'chat', // Default roles
+            ['chat'], // Default roles
             'assets/images/defaultProfile.jpg', // Default profile image
             '', // Default empty first name
             '', // Default empty last name
             '', // Default empty dob
             'Active' // Default status
         );
-      
+
         // Save the new user to the users array
         users.push(newUser);
         saveData({ users });
@@ -49,6 +49,46 @@ module.exports = function (app) {
             users.splice(userIndex, 1);
             saveData({ users });
             res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    });
+
+    // Promote user to Group Admin
+    app.post('/api/users/:id/promote/group', (req, res) => {
+        const userId = parseInt(req.params.id, 10);
+        const user = users.find(u => u.id === userId);
+
+        if (user) {
+            if (Array.isArray(user.roles) && !user.roles.includes('group')) {
+                user.roles.push('group');
+                saveData({ users });
+                res.status(200).json(user);
+            } else if (!Array.isArray(user.roles)) {
+                res.status(500).json({ error: 'User roles is not an array' });
+            } else {
+                res.status(400).json({ error: 'User is already a Group Admin' });
+            }
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    });
+
+    // Promote user to Super Admin
+    app.post('/api/users/:id/promote/super', (req, res) => {
+        const userId = parseInt(req.params.id, 10);
+        const user = users.find(u => u.id === userId);
+
+        if (user) {
+            if (Array.isArray(user.roles) && !user.roles.includes('super')) {
+                user.roles.push('super');
+                saveData({ users });
+                res.status(200).json(user);
+            } else if (!Array.isArray(user.roles)) {
+                res.status(500).json({ error: 'User roles is not an array' });
+            } else {
+                res.status(400).json({ error: 'User is already a Super Admin' });
+            }
         } else {
             res.status(404).json({ error: 'User not found' });
         }

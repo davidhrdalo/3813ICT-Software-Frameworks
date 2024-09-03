@@ -23,7 +23,8 @@
       "password": "pw",
       "roles": [
         "group",
-        "chat"
+        "chat",
+        "super"
       ],
       "profileImg": "assets/images/58.jpg",
       "firstName": "Jane",
@@ -32,18 +33,20 @@
       "status": "Available"
     },
     {
-      "id": 3,
-      "username": "alice_jones",
-      "email": "alice@example.com",
-      "password": "pw",
+      "id": 1725404418219,
+      "username": "d",
+      "email": "d",
+      "password": "d",
       "roles": [
-        "chat"
+        "chat",
+        "group",
+        "super"
       ],
-      "profileImg": "assets/images/430.jpg",
-      "firstName": "Alice",
-      "lastName": "Jones",
-      "dob": "2020-06-10",
-      "status": "Away"
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
     }
   ],
   "groups": [
@@ -57,7 +60,9 @@
         1,
         2
       ],
-      "interested": [],
+      "interested": [
+        1725347156900
+      ],
       "description": "Desc1",
       "groupImg": "assets/images/473.jpg"
     },
@@ -71,7 +76,9 @@
         1,
         3
       ],
-      "interested": [],
+      "interested": [
+        1725347156900
+      ],
       "description": "Desc2",
       "groupImg": "assets/images/475.jpg"
     },
@@ -86,7 +93,9 @@
         2,
         3
       ],
-      "interested": [],
+      "interested": [
+        1725347156900
+      ],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
     },
@@ -123,6 +132,17 @@
       "members": [],
       "interested": [],
       "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
+    },
+    {
+      "id": 1725402602081,
+      "name": "s",
+      "admins": [
+        1
+      ],
+      "members": [],
+      "interested": [],
+      "description": "s",
       "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],

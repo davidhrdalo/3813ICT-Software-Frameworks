@@ -82,5 +82,39 @@ export class UserService {
       })
     );
   }
-  
+
+     // Method to promote a user to Group Admin
+  promoteToGroupAdmin(userId: number): Observable<any> {
+    return this.httpClient.post(`${BACKEND_URL}/${userId}/promote/group`, {}, httpOptions)
+      .pipe(
+        tap((updatedUser) => {
+          const currentUsers = this.allUsersSubject.value.map(user => 
+            user.id === userId ? updatedUser : user
+          );
+          this.allUsersSubject.next(currentUsers);
+        }),
+        catchError((error) => {
+          console.error('Failed to promote user to Group Admin:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  // Method to promote a user to Super Admin
+  promoteToSuperAdmin(userId: number): Observable<any> {
+    return this.httpClient.post(`${BACKEND_URL}/${userId}/promote/super`, {}, httpOptions)
+      .pipe(
+        tap((updatedUser) => {
+          const currentUsers = this.allUsersSubject.value.map(user => 
+            user.id === userId ? updatedUser : user
+          );
+          this.allUsersSubject.next(currentUsers);
+        }),
+        catchError((error) => {
+          console.error('Failed to promote user to Super Admin:', error);
+          return throwError(error);
+        })
+      );
+  }
+ 
 }

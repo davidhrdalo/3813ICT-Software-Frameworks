@@ -28,9 +28,9 @@ export class ProfileComponent implements OnInit {
   password: string = '';
 
   constructor(
-    private activeUserService: ActiveUserService, 
+    private activeUserService: ActiveUserService,
     private userService: UserService,
-    private groupService: GroupService,
+    private groupService: GroupService
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getAllUsers(): void {
-    this.userService.allUsers$.subscribe(users => {
+    this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
@@ -120,18 +120,20 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.groupService.createGroup(this.groupName, this.groupDescription).subscribe(
-      (response) => {
-        alert('Group created successfully!');
-        this.getAdminGroups(); // Refresh the admin groups list
-        this.groupName = '';
-        this.groupDescription = '';
-      },
-      (error) => {
-        console.error('Error creating group:', error);
-        alert('Failed to create group.');
-      }
-    );
+    this.groupService
+      .createGroup(this.groupName, this.groupDescription)
+      .subscribe(
+        (response) => {
+          alert('Group created successfully!');
+          this.getAdminGroups(); // Refresh the admin groups list
+          this.groupName = '';
+          this.groupDescription = '';
+        },
+        (error) => {
+          console.error('Error creating group:', error);
+          alert('Failed to create group.');
+        }
+      );
   }
 
   deleteGroup(groupId: number): void {
@@ -151,7 +153,7 @@ export class ProfileComponent implements OnInit {
 
   markInterest(group: any): void {
     const userId = this.userData.id;
-  
+
     if (group.interested.includes(userId)) {
       // Unregister interest
       this.groupService.removeInterestFromGroup(group.id, userId).subscribe(
@@ -185,16 +187,18 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.userService.createUser(this.username, this.email, this.password).subscribe(
-      () => {
-        alert('User created successfully!');
-        this.clearCreateUser(); // Clear input fields after creation
-      },
-      (error) => {
-        console.error('Error creating user:', error);
-        alert('Failed to create user.');
-      }
-    );
+    this.userService
+      .createUser(this.username, this.email, this.password)
+      .subscribe(
+        () => {
+          alert('User created successfully!');
+          this.clearCreateUser(); // Clear input fields after creation
+        },
+        (error) => {
+          console.error('Error creating user:', error);
+          alert('Failed to create user.');
+        }
+      );
   }
 
   clearCreateUser(): void {
@@ -202,5 +206,34 @@ export class ProfileComponent implements OnInit {
     this.email = '';
     this.password = '';
   }
-  
+
+  promoteToGroupAdmin(userId: number): void {
+    if (confirm('Are you sure you want to promote this user to Group Admin?')) {
+      this.userService.promoteToGroupAdmin(userId).subscribe(
+        () => {
+          alert('User promoted to Group Admin successfully!');
+          this.getAllUsers(); // Refresh the user list after promotion
+        },
+        (error) => {
+          console.error('Error promoting user to Group Admin:', error);
+          alert('Failed to promote user to Group Admin.');
+        }
+      );
+    }
+  }
+
+  promoteToSuperAdmin(userId: number): void {
+    if (confirm('Are you sure you want to promote this user to Super Admin?')) {
+      this.userService.promoteToSuperAdmin(userId).subscribe(
+        () => {
+          alert('User promoted to Super Admin successfully!');
+          this.getAllUsers(); // Refresh the user list after promotion
+        },
+        (error) => {
+          console.error('Error promoting user to Super Admin:', error);
+          alert('Failed to promote user to Super Admin.');
+        }
+      );
+    }
+  }
 }
