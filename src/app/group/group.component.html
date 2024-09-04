@@ -146,6 +146,10 @@
       <div class="col-8">
         <div class="row">
           <h3>Channels</h3>
+          <!-- Conditional rendering for no channels -->
+          <div class="col-12" *ngIf="channels.length === 0">
+            <p>No channels available</p>
+          </div>
 
           <div class="col-4 card" *ngFor="let channel of channels">
             <div *ngIf="editChannelData && editChannelData.id === channel.id">
@@ -247,6 +251,10 @@
         <div class="col-12">
           <div class="row">
             <h3>Channels</h3>
+            <!-- Conditional rendering for no channels in non-admin view -->
+            <div class="col-12" style="height: 30vh;" *ngIf="channels.length === 0">
+              <p>No channels available</p>
+            </div>
 
             <div class="col-4 card" *ngFor="let channel of channels">
               <div
