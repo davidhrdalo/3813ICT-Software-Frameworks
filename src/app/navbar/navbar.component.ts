@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -13,16 +12,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-  userData: any;
+  userData: any; // Holds the current user data
 
-  constructor(public activeUserService: ActiveUserService) {}
+  constructor(public activeUserService: ActiveUserService) {} 
 
-  title = 'Yapper';
+  title = 'Yapper'; // Title of the application
 
+  // Initialize component
   ngOnInit(): void {
+    // Subscribe to the user data observable to get updates when user data changes
     this.activeUserService.userData$.subscribe((userData) => {
-      this.userData = userData;
-      console.log('User data updated:', userData);
+      this.userData = userData; // Update the local user data
+      console.log('User data updated:', userData); // Log the updated user data for debugging
     });
   }
 }

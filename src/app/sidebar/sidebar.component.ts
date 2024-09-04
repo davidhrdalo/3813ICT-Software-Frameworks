@@ -19,13 +19,13 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
-  user: any;
-  currentRoute: string = '';
-  userGroups: any[] = [];
-  adminGroups: any[] = [];
-  memberOnlyGroups: any[] = [];
-  channels: any[] = [];
-  groupId: number | null = null;
+  user: any; // Stores user data
+  currentRoute: string = ''; // Track current route (group or channel)
+  userGroups: any[] = []; // User's groups
+  adminGroups: any[] = []; // Groups where the user is an admin
+  memberOnlyGroups: any[] = []; // Groups where the user is only a member
+  channels: any[] = []; // Channels within the current group
+  groupId: number | null = null; // ID of the currently selected group
 
   constructor(
     private router: Router,
@@ -33,8 +33,9 @@ export class SidebarComponent implements OnInit {
     private groupService: GroupService,
     private channelService: ChannelService,
     private location: Location,
-    private activeUserService: ActiveUserService,
+    private activeUserService: ActiveUserService
   ) {
+    // Listen to route changes to determine the current route
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -43,41 +44,44 @@ export class SidebarComponent implements OnInit {
           route = route.firstChild;
         }
 
-        // Check the route's parameter to determine if we're on a group or channel route
+        // Check if the current route has group or channel parameters
         const channelId = route.snapshot.paramMap.get('channelId');
         const groupId = route.snapshot.paramMap.get('id');
 
         if (channelId) {
-          this.currentRoute = 'channel';
+          this.currentRoute = 'channel'; // Current route is a channel
         } else if (groupId) {
-          this.currentRoute = 'group';
+          this.currentRoute = 'group'; // Current route is a group
         } else {
-          this.currentRoute = route.snapshot.url[0]?.path || '';
+          this.currentRoute = route.snapshot.url[0]?.path || ''; // Other routes
         }
 
         // Load channels if on a group or channel route
         if (this.currentRoute === 'group' || this.currentRoute === 'channel') {
-          this.groupId = parseInt(groupId || '', 10);
-          this.loadChannels(this.groupId);
+          this.groupId = parseInt(groupId || '', 10); // Parse group ID from route
+          this.loadChannels(this.groupId); // Load channels for the group
         } else {
-          this.channels = [];
+          this.channels = []; // Clear channels if not in a group or channel route
           this.groupId = null;
         }
 
-        console.log('Current Route:', this.currentRoute); // Debugging
+        console.log('Current Route:', this.currentRoute); // Debugging log
       });
   }
 
   ngOnInit() {
-    this.activeUserService.userData$.subscribe(userData => {
+    // Subscribe to active user data
+    this.activeUserService.userData$.subscribe((userData) => {
       this.user = userData;
       if (userData) {
-    this.getAdminGroups();
-    this.getMemberOnlyGroups();
+        // Fetch groups where the user is an admin or member
+        this.getAdminGroups();
+        this.getMemberOnlyGroups();
       }
     });
   }
 
+  // Fetch groups where the user is an admin
   getAdminGroups() {
     this.groupService.getGroupsActiveUserIsAdminOf().subscribe(
       (groups) => {
@@ -89,6 +93,7 @@ export class SidebarComponent implements OnInit {
     );
   }
 
+  // Fetch groups where the user is a member but not an admin
   getMemberOnlyGroups() {
     this.groupService.getGroupsActiveUserIsMemberButNotAdminOf().subscribe(
       (groups) => {
@@ -100,6 +105,7 @@ export class SidebarComponent implements OnInit {
     );
   }
 
+  // Load channels belonging to a specific group
   loadChannels(groupId: number) {
     this.channelService.getChannelsByGroupId(groupId).subscribe(
       (channels) => {
@@ -111,7 +117,8 @@ export class SidebarComponent implements OnInit {
     );
   }
 
+  // Navigate back to the previous page
   goBack(): void {
-    this.location.back(); // Navigate back
+    this.location.back();
   }
 }

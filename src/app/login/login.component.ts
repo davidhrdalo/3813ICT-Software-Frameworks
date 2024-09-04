@@ -8,25 +8,34 @@ import { ActiveUserService } from '../services/activeUser/activeUser.service';
   standalone: true,
   imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  username = '';
-  password = '';
+  username = ''; // Model to hold username input
+  password = ''; // Model to hold password input
 
-  constructor(private router: Router, private activeUserService: ActiveUserService) {}
+  constructor(
+    private router: Router,
+    private activeUserService: ActiveUserService
+  ) {}
 
+  // Function called when the login form is submitted
   loginSubmitted() {
-    this.activeUserService.login(this.username, this.password)
-      .subscribe((data: any) => {
+    // Call the login function from ActiveUserService, passing the username and password
+    this.activeUserService.login(this.username, this.password).subscribe(
+      (data: any) => {
         if (data) {
-          // Navigate to the account page after successful login
-          this.router.navigateByUrl("/profile");
+          // Navigate to the profile page if login is successful
+          this.router.navigateByUrl('/profile');
         } else {
-          alert("Invalid username or password");
+          // Show an alert if login credentials are invalid
+          alert('Invalid username or password');
         }
-      }, error => {
-        alert("An error occurred during login. Please try again.");
-      });
+      },
+      (error) => {
+        // Handle any errors that occur during the login process
+        alert('An error occurred during login. Please try again.');
+      }
+    );
   }
 }

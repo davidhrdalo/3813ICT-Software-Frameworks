@@ -14,19 +14,19 @@ import { RouterLink } from '@angular/router';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  userData: any;
-  userEditData: any;
-  isEditMode: boolean = false;
-  allUsers: any;
-  allGroups: any[] = [];
-  adminGroups: any[] = [];
-  memberOnlyGroups: any[] = [];
-  notInGroups: any[] = [];
-  groupName: string = '';
-  groupDescription: string = '';
-  username: string = '';
-  email: string = '';
-  password: string = '';
+  userData: any; // Current user's data
+  userEditData: any; // Editable copy of user data
+  isEditMode: boolean = false; // Toggle for edit mode
+  allUsers: any; // All users in the system
+  allGroups: any[] = []; // All available groups
+  adminGroups: any[] = []; // Groups where the user is an admin
+  memberOnlyGroups: any[] = []; // Groups where the user is a member but not an admin
+  notInGroups: any[] = []; // Groups the user is not a part of
+  groupName: string = ''; // For creating a new group
+  groupDescription: string = ''; // For creating a new group
+  username: string = ''; // For creating a new user
+  email: string = ''; // For creating a new user
+  password: string = ''; // For creating a new user
 
   constructor(
     private activeUserService: ActiveUserService,
@@ -34,41 +34,47 @@ export class ProfileComponent implements OnInit {
     private groupService: GroupService
   ) {}
 
+  // Lifecycle hook: initialize component data
   ngOnInit(): void {
-    this.getUserProfile();
-    this.getAllUsers();
-    this.getAllGroups();
-    this.getAdminGroups();
-    this.getMemberOnlyGroups();
-    this.getGUserNotInGroups();
+    this.getUserProfile(); // Load current user's profile
+    this.getAllUsers(); // Load all users
+    this.getAllGroups(); // Load all available groups
+    this.getAdminGroups(); // Load groups where the user is an admin
+    this.getMemberOnlyGroups(); // Load groups where the user is only a member
+    this.getGUserNotInGroups(); // Load groups the user is not part of
   }
 
+  // Fetch current user profile data
   getUserProfile(): void {
     this.userData = this.activeUserService.getUserData();
   }
 
+  // Toggle edit mode for profile
   toggleEditMode(): void {
     if (this.isEditMode) {
       this.userEditData = null; // Clear edit data when exiting edit mode
     } else {
-      this.userEditData = { ...this.userData }; // Create a copy of the user data for editing
+      this.userEditData = { ...this.userData }; // Create a copy for editing
     }
     this.isEditMode = !this.isEditMode;
   }
 
+  // Save profile changes and exit edit mode
   saveDetails(): void {
     this.activeUserService.updateUserData(this.userEditData);
-    this.userData = { ...this.userEditData }; // Update the original data after saving
-    this.toggleEditMode(); // Exit edit mode after saving
+    this.userData = { ...this.userEditData }; // Update user data after saving
+    this.toggleEditMode(); // Exit edit mode
     alert('Profile updated successfully!');
   }
 
+  // Fetch all users
   getAllUsers(): void {
     this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
 
+  // Delete a user by ID
   deleteUser(userId: number): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userService.deleteUser(userId).subscribe(
@@ -83,6 +89,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  // Fetch all groups in the system
   getAllGroups() {
     this.groupService.getAllGroups().subscribe(
       (groups) => {
@@ -94,6 +101,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  // Fetch groups where the user is an admin
   getAdminGroups() {
     this.groupService.getGroupsActiveUserIsAdminOf().subscribe(
       (groups) => {
@@ -105,6 +113,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  // Fetch groups where the user is a member but not an admin
   getMemberOnlyGroups() {
     this.groupService.getGroupsActiveUserIsMemberButNotAdminOf().subscribe(
       (groups) => {
@@ -116,6 +125,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  // Fetch groups the user is not part of
   getGUserNotInGroups() {
     this.groupService.getGroupsUserIsNotIn().subscribe(
       (groups) => {
@@ -127,6 +137,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  // Create a new group
   createGroup(): void {
     if (!this.groupName || !this.groupDescription) {
       alert('Please provide both a group name and description.');
@@ -136,12 +147,11 @@ export class ProfileComponent implements OnInit {
     this.groupService
       .createGroup(this.groupName, this.groupDescription)
       .subscribe(
-        (response) => {
+        () => {
           alert('Group created successfully!');
-          this.getAdminGroups(); // Refresh the admin groups list
-          this.getAllGroups();
-          this.groupName = '';
-          this.groupDescription = '';
+          this.getAdminGroups(); // Refresh admin groups
+          this.getAllGroups(); // Refresh all groups
+          this.clearCreateGroupInputs(); // Clear input fields
         },
         (error) => {
           console.error('Error creating group:', error);
@@ -150,13 +160,20 @@ export class ProfileComponent implements OnInit {
       );
   }
 
+  // Clear inputs after creating a group
+  clearCreateGroupInputs(): void {
+    this.groupName = '';
+    this.groupDescription = '';
+  }
+
+  // Delete a group by ID
   deleteGroup(groupId: number): void {
     if (confirm('Are you sure you want to delete this group?')) {
       this.groupService.deleteGroup(groupId).subscribe(
         () => {
           alert('Group deleted successfully!');
-          this.getAdminGroups(); // Refresh the admin groups list
-          this.getAllGroups();
+          this.getAdminGroups(); // Refresh admin groups
+          this.getAllGroups(); // Refresh all groups
         },
         (error) => {
           console.error('Error deleting group:', error);
@@ -166,6 +183,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  // Register or unregister interest in a group
   markInterest(group: any): void {
     const userId = this.userData.id;
 
@@ -174,10 +192,10 @@ export class ProfileComponent implements OnInit {
       this.groupService.removeInterestFromGroup(group.id, userId).subscribe(
         () => {
           alert('You have unregistered your interest in this group.');
-          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+          this.getGUserNotInGroups(); // Refresh groups the user is not in
         },
         (error) => {
-          console.error('Error unregistering interest in group:', error);
+          console.error('Error unregistering interest:', error);
           alert('Failed to unregister interest.');
         }
       );
@@ -186,7 +204,7 @@ export class ProfileComponent implements OnInit {
       this.groupService.addInterestToGroup(group.id, userId).subscribe(
         () => {
           alert('You have registered your interest in this group.');
-          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+          this.getGUserNotInGroups(); // Refresh groups the user is not in
         },
         (error) => {
           console.error('Error registering interest in group:', error);
@@ -196,6 +214,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  // Create a new user
   createUser(): void {
     if (!this.username || !this.email || !this.password) {
       alert('Please fill in all required fields.');
@@ -207,7 +226,7 @@ export class ProfileComponent implements OnInit {
       .subscribe(
         () => {
           alert('User created successfully!');
-          this.clearCreateUser(); // Clear input fields after creation
+          this.clearCreateUser(); // Clear input fields
         },
         (error) => {
           console.error('Error creating user:', error);
@@ -216,18 +235,20 @@ export class ProfileComponent implements OnInit {
       );
   }
 
+  // Clear inputs after creating a user
   clearCreateUser(): void {
     this.username = '';
     this.email = '';
     this.password = '';
   }
 
+  // Promote a user to Group Admin
   promoteToGroupAdmin(userId: number): void {
     if (confirm('Are you sure you want to promote this user to Group Admin?')) {
       this.userService.promoteToGroupAdmin(userId).subscribe(
         () => {
           alert('User promoted to Group Admin successfully!');
-          this.getAllUsers(); // Refresh the user list after promotion
+          this.getAllUsers(); // Refresh user list after promotion
         },
         (error) => {
           console.error('Error promoting user to Group Admin:', error);
@@ -237,12 +258,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  // Promote a user to Super Admin
   promoteToSuperAdmin(userId: number): void {
     if (confirm('Are you sure you want to promote this user to Super Admin?')) {
       this.userService.promoteToSuperAdmin(userId).subscribe(
         () => {
           alert('User promoted to Super Admin successfully!');
-          this.getAllUsers(); // Refresh the user list after promotion
+          this.getAllUsers(); // Refresh user list after promotion
         },
         (error) => {
           console.error('Error promoting user to Super Admin:', error);
