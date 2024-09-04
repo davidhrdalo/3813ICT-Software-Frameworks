@@ -258,10 +258,10 @@
 
       <div class="col-8">
         <h3>Group Management</h3>
-        <div class="row" *ngIf="adminGroups.length > 0; else noGroupsTemplate">
+        <div class="row" *ngIf="(userData.roles.includes('super') ? allGroups.length : adminGroups.length) > 0; else noGroupsTemplate">
           <div
             class="col-md-6 col-lg-4 card mb-3"
-            *ngFor="let group of adminGroups"
+            *ngFor="let group of userData.roles.includes('super') ? allGroups : adminGroups"
           >
             <img
               src="{{ group.groupImg }}"
@@ -278,7 +278,6 @@
             <p>{{ group.description }}</p>
             <div class="button-group">
               <button
-                *ngIf="userData.roles.includes('super')"
                 class="btn btn-outline-danger"
                 (click)="deleteGroup(group.id)"
               >
@@ -334,9 +333,7 @@
     <div
       class="row"
       *ngIf="
-        userData.roles.includes('super') ||
-        userData.roles.includes('group') ||
-        userData.roles.includes('chat')
+        !userData.roles.includes('super')
       "
     >
       <hr />

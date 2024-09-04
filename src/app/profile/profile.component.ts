@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   userEditData: any;
   isEditMode: boolean = false;
   allUsers: any;
+  allGroups: any[] = [];
   adminGroups: any[] = [];
   memberOnlyGroups: any[] = [];
   notInGroups: any[] = [];
@@ -36,6 +37,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.getUserProfile();
     this.getAllUsers();
+    this.getAllGroups();
     this.getAdminGroups();
     this.getMemberOnlyGroups();
     this.getGUserNotInGroups();
@@ -79,6 +81,17 @@ export class ProfileComponent implements OnInit {
         }
       );
     }
+  }
+
+  getAllGroups() {
+    this.groupService.getAllGroups().subscribe(
+      (groups) => {
+        this.allGroups = groups;
+      },
+      (error) => {
+        console.error('Error fetching all groups:', error);
+      }
+    );
   }
 
   getAdminGroups() {
@@ -126,6 +139,7 @@ export class ProfileComponent implements OnInit {
         (response) => {
           alert('Group created successfully!');
           this.getAdminGroups(); // Refresh the admin groups list
+          this.getAllGroups();
           this.groupName = '';
           this.groupDescription = '';
         },
@@ -142,6 +156,7 @@ export class ProfileComponent implements OnInit {
         () => {
           alert('Group deleted successfully!');
           this.getAdminGroups(); // Refresh the admin groups list
+          this.getAllGroups();
         },
         (error) => {
           console.error('Error deleting group:', error);

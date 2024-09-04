@@ -23,6 +23,10 @@ export class GroupService {
     return this.http.get<any[]>(BACKEND_URL);
   }
 
+  getAllGroups(): Observable<any[]> {
+    return this.getGroups();
+  }
+
   getGroupsActiveUserIsMemberOf(): Observable<any[]> {
     const userData = this.activeUserService.getUserData();
     if (!userData) {
