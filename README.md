@@ -280,23 +280,23 @@ Below is a list of server side routes, parameters, return values, and there purp
 The interactions between the client (Angular frontend) and the server (Node.js backend) are designed to maintain a smooth user experience by synchronizing data and ensuring real-time updates.
 
 ### User Authentication:
-- When a user signs up or logs in, the client sends a POST request to the relevant authentication route (`/api/auth/signup` or `/api/auth`). 
-  - **Signup**: The server checks if the username already exists. If it’s unique, it creates a new user (as an instance of the `User` class), assigns default roles (e.g., `chat`), and adds the new user to the `users` array. The user data (excluding the password) is returned to the client.
+- When a user signs up or logs in, the client sends a POST request to the relevant authentication route (/api/auth/signup or /api/auth). 
+  - **Signup**: The server checks if the username already exists. If it’s unique, it creates a new user (as an instance of the User class), assigns default roles (e.g., chat), and adds the new user to the users array. The user data (excluding the password) is returned to the client.
   - **Login**: The server verifies the credentials provided in the login request. If valid, the user’s details (again, excluding the password) are returned to the client.
   
 ### Group and Channel Management:
 - **Group Data**: 
-  - When the client requests the group data, it sends a GET request to `/api/groups`. The server responds with the list of all groups, where each group is an instance of the `Group` class, containing details like `admins`, `members`, `interested` users, and other group metadata.
-  - For creating a new group, the client sends a POST request to `/api/groups`, and the server creates the group, adds it to the `groups` array, and saves the updated data.
-  - The client can also update or delete groups, as well as manage user roles (e.g., adding/removing `admins` and `members`) using the respective endpoints (`PUT`, `DELETE`).
+  - When the client requests the group data, it sends a GET request to /api/groups. The server responds with the list of all groups, where each group is an instance of the Group class, containing details like admins, members, interested users, and other group metadata.
+  - For creating a new group, the client sends a POST request to /api/groups, and the server creates the group, adds it to the groups array, and saves the updated data.
+  - The client can also update or delete groups, as well as manage user roles (e.g., adding/removing admins and members) using the respective endpoints (PUT, DELETE).
   
 - **Channel Data**: 
-  - The client can retrieve all channel data by sending a GET request to `/api/channels`. The server returns a list of channels, each being an instance of the `Channel` class, which includes the channel's name, group ID, description, and members.
-  - When a new channel is created via a POST request, the server generates a new `Channel` object and adds it to the `channels` array, saving the changes.
-  - Channels can also be updated or deleted via respective routes. The client can add or remove users from a channel by interacting with the routes (`/addMember` or `/removeMember`), which modify the `members` array in the relevant `Channel` object.
+  - The client can retrieve all channel data by sending a GET request to /api/channels. The server returns a list of channels, each being an instance of the Channel class, which includes the channel's name, group ID, description, and members.
+  - When a new channel is created via a POST request, the server generates a new Channel object and adds it to the channels array, saving the changes.
+  - Channels can also be updated or deleted via respective routes. The client can add or remove users from a channel by interacting with the routes (/addMember or /removeMember), which modify the members array in the relevant Channel object.
 
 ### Real-Time Messaging:
 - **Socket.io**: Messages within channels are handled through Socket.io for real-time communication. When a user sends a message, it is emitted to the server via a WebSocket. The server broadcasts the message to all clients connected to the specific channel, ensuring that all users can see the message in real-time.
 
 ### Data Persistence:
-- **Data Storage**: The server-side data is persisted using the `saveData` function, which writes the updated `users`, `groups`, and `channels` arrays into a `data.json` file. This ensures that any changes made (e.g., adding a new user, creating a group, etc.) are stored for future sessions. The `loadData` function reads the `data.json` file and initializes the arrays for `users`, `groups`, and `channels` at server startup.
+- **Data Storage**: The server-side data is persisted using the saveData function, which writes the updated users, groups, and channels arrays into a data.json file. This ensures that any changes made (e.g., adding a new user, creating a group, etc.) are stored for future sessions. The loadData function reads the data.json file and initialises the arrays for users, groups, and channels at server startup.
