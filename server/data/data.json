@@ -51,7 +51,8 @@
       "email": "x",
       "password": "x",
       "roles": [
-        "chat"
+        "chat",
+        "group"
       ],
       "profileImg": "assets/images/defaultProfile.jpg",
       "firstName": "",
@@ -127,15 +128,20 @@
       "interested": [],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
+    },
+    {
+      "id": 1725419425633,
+      "name": "x",
+      "admins": [
+        1725419062400
+      ],
+      "members": [],
+      "interested": [],
+      "description": "x",
+      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "channels": [
-    {
-      "id": 1,
-      "name": "channel1",
-      "groupId": 1,
-      "description": "Lets chat about cats!"
-    },
     {
       "id": 2,
       "name": "channel2",
@@ -165,6 +171,24 @@
       "name": "channel3",
       "groupId": 1,
       "description": "Hi."
+    },
+    {
+      "id": 1725419437492,
+      "name": "x",
+      "groupId": 1725419425633,
+      "description": "x"
+    },
+    {
+      "id": 1725421559568,
+      "name": "s",
+      "groupId": 2,
+      "description": "s"
+    },
+    {
+      "id": 1725421562699,
+      "name": "s",
+      "groupId": 2,
+      "description": "s"
     }
   ]
 }
