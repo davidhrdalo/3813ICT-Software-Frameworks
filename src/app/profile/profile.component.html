@@ -9,15 +9,29 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome {{ userData.firstName }}</h1>
-        <p class="lead" *ngIf="userData.role === 'super'">
-          As a <strong>Super Admin</strong> you can edit users groups or chats
+        <!-- Conditional Rendering based on roles -->
+        <p class="lead" *ngIf="userData.roles.includes('super')">
+          As a <strong>Super Admin</strong> you can edit users, groups, or chats
           from here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'group'">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('group') &&
+            !userData.roles.includes('super')
+          "
+        >
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'chat'">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('chat') &&
+            !userData.roles.includes('super') &&
+            !userData.roles.includes('group')
+          "
+        >
           You can view your groups and chats from here!
         </p>
       </div>
@@ -147,37 +161,60 @@
       </div>
     </div>
 
-    <hr />
+    <!-- Super Admin: User Management Section -->
+    <div class="row" *ngIf="userData.roles.includes('super')">
+      <hr />
 
-    <div class="row">
       <div class="col-8">
-        <div *ngIf="userData.role === 'super' && allUsers?.length > 0">
-          <h3>User Management</h3>
-          <div class="row">
-            <div
-              class="col-md-6 col-lg-4 card mb-3"
-              *ngFor="let user of allUsers"
-            >
-              <img
-                src="{{ user.profileImg }}"
-                class="rounded-circle"
-                style="width: 75px; height: 75px; margin-bottom: 15px"
-                alt="Avatar"
-              />
-              <p><strong>Username: </strong>{{ user.username }}</p>
-              <p><strong>Email: </strong>{{ user.email }}</p>
-              <div class="button-group">
-                <button
-                  *ngIf="userData.role === 'super'"
-                  (click)="deleteUser(user.id)"
-                  class="btn btn-outline-danger"
-                >
-                  Delete
-                </button>
-              </div>
+        
+        <h3>User Management</h3>
+        <div class="row" *ngIf="allUsers?.length > 0; else noUsersTemplate">
+          <div class="col-md-6 col-lg-4 card mb-3" *ngFor="let user of allUsers">
+            <img
+              src="{{ user.profileImg }}"
+              class="rounded-circle"
+              style="width: 75px; height: 75px; margin-bottom: 15px"
+              alt="Avatar"
+            />
+            <p><strong>Username: </strong>{{ user.username }}</p>
+            <p><strong>Email: </strong>{{ user.email }}</p>
+            <p><strong>Roles: </strong>{{ user.roles.join(', ') }}</p>
+            <div class="button-group">
+              <!-- Delete Button (Visible if the active user is a Super Admin) -->
+              <button
+                *ngIf="userData.roles.includes('super')"
+                (click)="deleteUser(user.id)"
+                class="btn btn-outline-danger"
+              >
+                Delete
+              </button>
+        
+              <!-- Promote to Group Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Group Admin) -->
+              <button
+                *ngIf="userData.roles.includes('super') && !user.roles.includes('group')"
+                (click)="promoteToGroupAdmin(user.id)"
+                class="btn btn-outline-primary"
+              >
+                Promote to Group Admin
+              </button>
+        
+              <!-- Promote to Super Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Super Admin) -->
+              <button
+                *ngIf="userData.roles.includes('super') && !user.roles.includes('super')"
+                (click)="promoteToSuperAdmin(user.id)"
+                class="btn btn-outline-success"
+              >
+                Promote to Super Admin
+              </button>
             </div>
           </div>
-        </div>
+        </div>  
+
+        <ng-template #noUsersTemplate>
+          <div class="row">
+            <p>No users yet.</p>
+          </div>
+        </ng-template>
       </div>
 
       <div class="col-4">
@@ -185,17 +222,21 @@
         <div style="margin: 10px; margin-top: 20px">
           <p>
             <strong>User Name: </strong>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" [(ngModel)]="username" />
+          </p>
+          <p>
+            <strong>Email: </strong>
+            <input type="text" class="form-control" [(ngModel)]="email" />
           </p>
           <p>
             <strong>User Password: </strong>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" [(ngModel)]="password" />
           </p>
           <button
             type="button"
             style="width: 120px; margin-bottom: 20px; margin-right: 10px"
             class="btn btn-primary"
-            (click)="saveDetails()"
+            (click)="createUser()"
           >
             Create
           </button>
@@ -203,7 +244,7 @@
             type="button"
             style="width: 110px; margin-bottom: 20px"
             class="btn btn-secondary"
-            (click)="toggleEditMode()"
+            (click)="clearCreateUser()"
           >
             Cancel
           </button>
@@ -211,43 +252,46 @@
       </div>
     </div>
 
-    <hr />
+    <!-- Super Admin: Group Management Section -->
+    <div class="row" *ngIf="userData.roles.includes('super') || userData.roles.includes('group')">
+      <hr />
 
-    <!-- Full row - Content for group admin -->
-    <div
-      class="row"
-      *ngIf="userData.role === 'super' || currentRole === 'group'"
-    >
       <div class="col-8">
-        <div *ngIf="adminGroups.length > 0">
-          <h3>Group Management</h3>
-          <div class="row">
-            <div
-              class="col-md-6 col-lg-4 card mb-3"
-              *ngFor="let group of adminGroups"
+        <h3>Group Management</h3>
+        <div class="row" *ngIf="(userData.roles.includes('super') ? allGroups.length : adminGroups.length) > 0; else noGroupsTemplate">
+          <div
+            class="col-md-6 col-lg-4 card mb-3"
+            *ngFor="let group of userData.roles.includes('super') ? allGroups : adminGroups"
+          >
+            <img
+              src="{{ group.groupImg }}"
+              class="rounded-circle"
+              style="width: 75px; height: 75px; margin-bottom: 15px"
+              alt="Avatar"
               [routerLink]="['/group', group.id]"
-            >
-              <img
-                src="{{ group.groupImg }}"
-                class="rounded-circle"
-                style="width: 75px; height: 75px; margin-bottom: 15px"
-                alt="Avatar"
-              />
-              <p>
-                <strong>{{ group.name }}</strong>
-              </p>
-              <p>{{ group.description }}</p>
-              <div class="button-group">
-                <button
-                  *ngIf="userData.role === 'super'"
-                  class="btn btn-outline-danger"
-                >
-                  Delete
-                </button>
-              </div>
+            />
+            <p>
+              <strong [routerLink]="['/group', group.id]">{{
+                group.name
+              }}</strong>
+            </p>
+            <p>{{ group.description }}</p>
+            <div class="button-group">
+              <button
+                class="btn btn-outline-danger"
+                (click)="deleteGroup(group.id)"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
+
+        <ng-template #noGroupsTemplate>
+          <div class="row">
+            <p>No groups yet.</p>
+          </div>
+        </ng-template>
       </div>
 
       <div class="col-4">
@@ -255,17 +299,21 @@
         <div style="margin: 10px; margin-top: 20px">
           <p>
             <strong>Group Name: </strong>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" [(ngModel)]="groupName" />
           </p>
           <p>
             <strong>Group Description: </strong>
-            <input type="text" class="form-control" />
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="groupDescription"
+            />
           </p>
           <button
             type="button"
             style="width: 120px; margin-bottom: 20px; margin-right: 10px"
             class="btn btn-primary"
-            (click)="saveDetails()"
+            (click)="createGroup()"
           >
             Create
           </button>
@@ -273,7 +321,7 @@
             type="button"
             style="width: 110px; margin-bottom: 20px"
             class="btn btn-secondary"
-            (click)="toggleEditMode()"
+            (click)="clearCreateUser()"
           >
             Cancel
           </button>
@@ -281,21 +329,21 @@
       </div>
     </div>
 
-    <hr />
-
-    <!-- Full row - Default content for other roles or no role -->
+    <!-- Shared Section for All Roles: Groups Management -->
     <div
       class="row"
       *ngIf="
-        userData.role === 'super' ||
-        userData.role === 'group' ||
-        userData.role === 'chat'
+        !userData.roles.includes('super')
       "
     >
-      <div class="col-12">
-        <div *ngIf="adminGroups.length > 0">
-          <h3>Groups</h3>
-          <div class="row">
+      <hr />
+
+        <div class="col-12">
+          <h3>Groups You're In</h3>
+          <div
+            class="row"
+            *ngIf="memberOnlyGroups.length > 0; else noMemberGroupsTemplate"
+          >
             <div
               class="col-md-2 col-lg-3 card mb-3"
               [routerLink]="['/group', group.id]"
@@ -312,49 +360,69 @@
               </p>
               <p>{{ group.description }}</p>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <hr />
-
-    <div
-      class="row"
-      *ngIf="
-        userData.role === 'super' ||
-        userData.role === 'group' ||
-        userData.role === 'chat'
-      "
-    >
-      <div class="col-12">
-        <div *ngIf="notInGroups.length > 0">
-          <h3>Groups you're not in</h3>
+        <ng-template #noMemberGroupsTemplate>
           <div class="row">
-            <div
-              class="col-md-2 col-lg-3 card mb-3"
-              *ngFor="let group of notInGroups"
-            >
-              <img
-                src="{{ group.groupImg }}"
-                class="rounded-circle"
-                style="width: 75px; height: 75px; margin-bottom: 15px"
-                alt="Avatar"
-              />
-              <p>
-                <strong>{{ group.name }}</strong>
-              </p>
-              <p>{{ group.description }}</p>
-              <div class="button-group">
-                <button
-                  *ngIf="userData.role === 'super'"
-                  class="btn btn-outline-primary"
-                >
-                  Interested
-                </button>
-              </div>
-            </div>
+            <p>No groups yet.</p>
           </div>
+        </ng-template>
+      </div>
+
+      <!-- Shared Section for All Roles: Groups Not Joined Yet -->
+      <div
+        class="row"
+        *ngIf="
+          userData.roles.includes('super') ||
+          userData.roles.includes('group') ||
+          userData.roles.includes('chat')
+        "
+      >
+        <hr />
+
+        <div class="col-12">
+            <h3>Groups you're not in</h3>
+            <div class="row" *ngIf="notInGroups.length > 0; else noNonGroups">
+              <div
+                class="col-md-2 col-lg-3 card mb-3"
+                *ngFor="let group of notInGroups"
+              >
+                <img
+                  src="{{ group.groupImg }}"
+                  class="rounded-circle"
+                  style="width: 75px; height: 75px; margin-bottom: 15px"
+                  alt="Avatar"
+                />
+                <p>
+                  <strong>{{ group.name }}</strong>
+                </p>
+                <p>{{ group.description }}</p>
+                <div class="button-group">
+                  <button
+                    class="btn"
+                    [ngClass]="
+                      group.interested.includes(userData.id)
+                        ? 'btn-outline-danger'
+                        : 'btn-outline-primary'
+                    "
+                    (click)="markInterest(group)"
+                  >
+                    {{
+                      group.interested.includes(userData.id)
+                        ? "Unregister Interest"
+                        : "Interested"
+                    }}
+                  </button>
+                </div>
+              </div>
+          </div>
+          
+          <ng-template #noNonGroups>
+            <div class="row">
+              <p>No groups yet.</p>
+            </div>
+          </ng-template>
+
         </div>
       </div>
     </div>

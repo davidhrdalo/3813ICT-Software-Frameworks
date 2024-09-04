@@ -16,22 +16,28 @@ import { RouterLink } from '@angular/router';
 export class ProfileComponent implements OnInit {
   userData: any;
   userEditData: any;
-  currentRole: string = '';
   isEditMode: boolean = false;
   allUsers: any;
+  allGroups: any[] = [];
   adminGroups: any[] = [];
   memberOnlyGroups: any[] = [];
   notInGroups: any[] = [];
+  groupName: string = '';
+  groupDescription: string = '';
+  username: string = '';
+  email: string = '';
+  password: string = '';
 
   constructor(
-    private activeUserService: ActiveUserService, 
+    private activeUserService: ActiveUserService,
     private userService: UserService,
-    private groupService: GroupService,
+    private groupService: GroupService
   ) {}
 
   ngOnInit(): void {
     this.getUserProfile();
     this.getAllUsers();
+    this.getAllGroups();
     this.getAdminGroups();
     this.getMemberOnlyGroups();
     this.getGUserNotInGroups();
@@ -58,13 +64,34 @@ export class ProfileComponent implements OnInit {
   }
 
   getAllUsers(): void {
-    this.userService.allUsers$.subscribe(users => {
+    this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
 
   deleteUser(userId: number): void {
-    this.userService.deleteUser(userId);
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(userId).subscribe(
+        () => {
+          alert('User deleted successfully!');
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+          alert('Failed to delete user.');
+        }
+      );
+    }
+  }
+
+  getAllGroups() {
+    this.groupService.getAllGroups().subscribe(
+      (groups) => {
+        this.allGroups = groups;
+      },
+      (error) => {
+        console.error('Error fetching all groups:', error);
+      }
+    );
   }
 
   getAdminGroups() {
@@ -98,5 +125,130 @@ export class ProfileComponent implements OnInit {
         console.error('Error fetching not in groups:', error);
       }
     );
+  }
+
+  createGroup(): void {
+    if (!this.groupName || !this.groupDescription) {
+      alert('Please provide both a group name and description.');
+      return;
+    }
+
+    this.groupService
+      .createGroup(this.groupName, this.groupDescription)
+      .subscribe(
+        (response) => {
+          alert('Group created successfully!');
+          this.getAdminGroups(); // Refresh the admin groups list
+          this.getAllGroups();
+          this.groupName = '';
+          this.groupDescription = '';
+        },
+        (error) => {
+          console.error('Error creating group:', error);
+          alert('Failed to create group.');
+        }
+      );
+  }
+
+  deleteGroup(groupId: number): void {
+    if (confirm('Are you sure you want to delete this group?')) {
+      this.groupService.deleteGroup(groupId).subscribe(
+        () => {
+          alert('Group deleted successfully!');
+          this.getAdminGroups(); // Refresh the admin groups list
+          this.getAllGroups();
+        },
+        (error) => {
+          console.error('Error deleting group:', error);
+          alert('Failed to delete group.');
+        }
+      );
+    }
+  }
+
+  markInterest(group: any): void {
+    const userId = this.userData.id;
+
+    if (group.interested.includes(userId)) {
+      // Unregister interest
+      this.groupService.removeInterestFromGroup(group.id, userId).subscribe(
+        () => {
+          alert('You have unregistered your interest in this group.');
+          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+        },
+        (error) => {
+          console.error('Error unregistering interest in group:', error);
+          alert('Failed to unregister interest.');
+        }
+      );
+    } else {
+      // Register interest
+      this.groupService.addInterestToGroup(group.id, userId).subscribe(
+        () => {
+          alert('You have registered your interest in this group.');
+          this.getGUserNotInGroups(); // Refresh the list of groups the user is not in
+        },
+        (error) => {
+          console.error('Error registering interest in group:', error);
+          alert('Failed to register interest.');
+        }
+      );
+    }
+  }
+
+  createUser(): void {
+    if (!this.username || !this.email || !this.password) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    this.userService
+      .createUser(this.username, this.email, this.password)
+      .subscribe(
+        () => {
+          alert('User created successfully!');
+          this.clearCreateUser(); // Clear input fields after creation
+        },
+        (error) => {
+          console.error('Error creating user:', error);
+          alert('Failed to create user.');
+        }
+      );
+  }
+
+  clearCreateUser(): void {
+    this.username = '';
+    this.email = '';
+    this.password = '';
+  }
+
+  promoteToGroupAdmin(userId: number): void {
+    if (confirm('Are you sure you want to promote this user to Group Admin?')) {
+      this.userService.promoteToGroupAdmin(userId).subscribe(
+        () => {
+          alert('User promoted to Group Admin successfully!');
+          this.getAllUsers(); // Refresh the user list after promotion
+        },
+        (error) => {
+          console.error('Error promoting user to Group Admin:', error);
+          alert('Failed to promote user to Group Admin.');
+        }
+      );
+    }
+  }
+
+  promoteToSuperAdmin(userId: number): void {
+    if (confirm('Are you sure you want to promote this user to Super Admin?')) {
+      this.userService.promoteToSuperAdmin(userId).subscribe(
+        () => {
+          alert('User promoted to Super Admin successfully!');
+          this.getAllUsers(); // Refresh the user list after promotion
+        },
+        (error) => {
+          console.error('Error promoting user to Super Admin:', error);
+          alert('Failed to promote user to Super Admin.');
+        }
+      );
+    }
   }
 }

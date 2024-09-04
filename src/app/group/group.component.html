@@ -2,22 +2,31 @@
   <!-- Start Grid -->
   <div class="row">
     <!-- Full row -->
-    <div
-      style="padding-top: 2em; padding-bottom: 2em"
-      class="col-12"
-      *ngIf="group"
-    >
+    <div style="padding-top: 2em; padding-bottom: 2em" class="col-12">
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group.name }}</h1>
-        <p class="lead" *ngIf="userData.role === 'super'">
+        <p class="lead" *ngIf="userData.roles.includes('super')">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'group'">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('group') &&
+            !userData.roles.includes('super')
+          "
+        >
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="userData.role === 'chat'">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('chat') &&
+            !userData.roles.includes('super') &&
+            !userData.roles.includes('group')
+          "
+        >
           You can view your groups and chats from here!
         </p>
       </div>
@@ -37,6 +46,9 @@
         type="button"
         style="margin-bottom: 20px"
         class="btn btn-primary mt-auto"
+        *ngIf="
+          userData.roles.includes('super') || group.admins.includes(userData.id)
+        "
       >
         Upload Profile
       </button>
@@ -72,13 +84,29 @@
 
       <!-- Buttons -->
       <button
-        *ngIf="!isEditMode"
+        *ngIf="
+          (!isEditMode && userData.roles.includes('super')) ||
+          group.admins.includes(userData.id)
+        "
         type="button"
         style="width: 110px; margin-bottom: 20px"
         class="btn btn-primary"
         (click)="toggleEditMode()"
       >
         Edit Details
+      </button>
+
+      <button
+        *ngIf="
+          (!isEditMode && userData.roles.includes('super')) ||
+          group.admins.includes(userData.id)
+        "
+        type="button"
+        style="width: 110px; margin-bottom: 20px"
+        class="btn btn-danger"
+        (click)="deleteGroup(group.id)"
+      >
+        Delete
       </button>
 
       <div *ngIf="isEditMode">
@@ -103,29 +131,170 @@
 
     <hr />
 
-    <!-- Full row - Content for channel -->
-    <div class="col-8">
-      <div class="row">
-        <h3>Channels</h3>
+    <div
+      class="row"
+      *ngIf="
+        userData.roles.includes('super') || group.admins.includes(userData.id);
+        else nonAdminChannels
+      "
+    >
+      <!-- Full row - Content for channel -->
+      <div class="col-8">
+        <div class="row">
+          <h3>Channels</h3>
+          <!-- Conditional rendering for no channels -->
+          <div class="col-12" *ngIf="channels.length === 0">
+            <p>No channels available</p>
+          </div>
 
-        <div
-          class="col-4 card"
-          *ngFor="let channel of channels"
-          [routerLink]="['/group', group.id, 'channel', channel.id]"
-        >
+          <div class="col-4 card" *ngFor="let channel of channels">
+            <div *ngIf="editChannelData && editChannelData.id === channel.id">
+              <p>
+                <strong>Channel Name: </strong>
+                <input
+                  type="text"
+                  [(ngModel)]="editChannelData.name"
+                  class="form-control"
+                />
+              </p>
+              <p>
+                <strong>Channel Description: </strong>
+                <input
+                  type="text"
+                  [(ngModel)]="editChannelData.description"
+                  class="form-control"
+                />
+              </p>
+              <div class="button-group">
+                <button class="btn btn-outline-primary" (click)="saveChannel()">
+                  Save
+                </button>
+                <button
+                  class="btn btn-outline-secondary"
+                  (click)="cancelEdit()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!editChannelData || editChannelData.id !== channel.id">
+              <p>
+                <strong
+                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                  >{{ channel.name }}</strong
+                >
+              </p>
+              <p>{{ channel.description }}</p>
+              <div class="button-group">
+                <button
+                  class="btn btn-outline-warning"
+                  (click)="editChannel(channel)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-outline-danger"
+                  (click)="deleteChannel(channel.id)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <h3 style="margin-left: 10px">Create Channel</h3>
+
+        <div style="margin: 10px; margin-top: 20px">
           <p>
-            <strong>{{ channel.name }}</strong>
+            <strong>Channel Name: </strong>
+            <input type="text" class="form-control" [(ngModel)]="channelName" />
           </p>
-          <p>{{ channel.description }}</p>
+
+          <p>
+            <strong>Channel Description: </strong>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="channelDescription"
+            />
+          </p>
+
+          <button
+            type="button"
+            style="width: 120px; margin-bottom: 20px; margin-right: 10px"
+            class="btn btn-primary"
+            (click)="createChannel()"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            style="width: 110px; margin-bottom: 20px"
+            class="btn btn-secondary"
+            (click)="clearCreateChannel()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #nonAdminChannels>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <h3>Channels</h3>
+            <!-- Conditional rendering for no channels in non-admin view -->
+            <div
+              class="col-12"
+              style="height: 30vh"
+              *ngIf="channels.length === 0"
+            >
+              <p>No channels available</p>
+            </div>
+
+            <ng-container *ngFor="let channel of channels">
+              <div class="col-4 card" *ngIf="channel.members.includes(userData.id)">
+                <div
+                  *ngIf="!editChannelData || editChannelData.id !== channel.id"
+                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                >
+                  <p>
+                    <strong>{{ channel.name }}</strong>
+                  </p>
+                  <p>{{ channel.description }}</p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <div
+      *ngIf="
+        userData.roles.includes('super') || group.admins.includes(userData.id)
+      "
+    >
+      <!-- Full row - Content for superuser -->
+      <hr />
+      <h3>Active Members</h3>
+      <div class="row" *ngIf="activeMembers.length > 0; else noActiveMembers">
+        <div class="col-3 card" *ngFor="let user of activeMembers">
+          <img
+            src="{{ user.profileImg }}"
+            class="rounded-circle"
+            style="width: 75px; height: 75px; margin-bottom: 15px"
+            alt="Avatar"
+          />
+          <p><strong>Username: </strong>{{ user.username }}</p>
+          <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              *ngIf="userData.role === 'super'"
-              class="btn btn-outline-warning"
-            >
-              Edit
-            </button>
-            <button
-              *ngIf="userData.role === 'super'"
+              (click)="removeUserFromGroup(user.id)"
               class="btn btn-outline-danger"
             >
               Remove
@@ -133,96 +302,51 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-4">
-      <h3 style="margin-left: 10px">Create Channel</h3>
-
-      <div style="margin: 10px; margin-top: 20px">
-        <p>
-          <strong>Channel Name: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
-        <p>
-          <strong>Channel Description: </strong>
-          <input type="text" class="form-control" />
-        </p>
-
-        <button
-          type="button"
-          style="width: 120px; margin-bottom: 20px; margin-right: 10px"
-          class="btn btn-primary"
-          (click)="saveDetails()"
-        >
-          Create
-        </button>
-        <button
-          type="button"
-          style="width: 110px; margin-bottom: 20px"
-          class="btn btn-secondary"
-          (click)="toggleEditMode()"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-
-    <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
-      <hr />
-      <h3>Active Members</h3>
-      <div class="col-3 card" *ngFor="let user of allUsers">
-        <img
-          src="{{ user.profileImg }}"
-          class="rounded-circle"
-          style="width: 75px; height: 75px; margin-bottom: 15px"
-          alt="Avatar"
-        />
-        <p><strong>Username: </strong>{{ user.username }}</p>
-        <p><strong>Email: </strong>{{ user.email }}</p>
-        <div class="button-group">
-          <button
-            *ngIf="userData.role === 'super'"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Remove
-          </button>
+      <ng-template #noActiveMembers>
+        <div class="row">
+          <p>No members yet.</p>
         </div>
-      </div>
-    </div>
+      </ng-template>
 
-    <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.role === 'super' && allUsers?.length > 0">
+      <!-- Full row - Content for superuser -->
       <hr />
       <h3>Requested Members</h3>
-      <div class="col-3 card" *ngFor="let user of allUsers">
-        <img
-          src="{{ user.profileImg }}"
-          class="rounded-circle"
-          style="width: 75px; height: 75px; margin-bottom: 15px"
-          alt="Avatar"
-        />
-        <p><strong>Username: </strong>{{ user.username }}</p>
-        <p><strong>Email: </strong>{{ user.email }}</p>
-        <div class="button-group">
-          <button
-            *ngIf="userData.role === 'super'"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Allow
-          </button>
-          <button
-            *ngIf="userData.role === 'super'"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Remove
-          </button>
+      <div
+        class="row"
+        *ngIf="interestedUsers.length > 0; else noInterestedUsers"
+      >
+        <div class="col-3 card" *ngFor="let user of interestedUsers">
+          <img
+            src="{{ user.profileImg }}"
+            class="rounded-circle"
+            style="width: 75px; height: 75px; margin-bottom: 15px"
+            alt="Avatar"
+          />
+          <p><strong>Username: </strong>{{ user.username }}</p>
+          <p><strong>Email: </strong>{{ user.email }}</p>
+          <div class="button-group">
+            <button
+              (click)="allowUserToJoin(user.id)"
+              class="btn btn-outline-success"
+            >
+              Allow
+            </button>
+            <button
+              (click)="removeUserFromGroup(user.id)"
+              class="btn btn-outline-danger"
+            >
+              Remove
+            </button>
+          </div>
         </div>
       </div>
+
+      <ng-template #noInterestedUsers>
+        <div class="row">
+          <p>No members yet.</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

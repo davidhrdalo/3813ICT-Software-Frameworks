@@ -14,7 +14,58 @@
       <hr />
     </div>
 
-    <div class="chat-container">
+    <!-- Sidebar - Channel Members -->
+    <div class="col-3">
+      <!-- Channel Members -->
+      <div>
+        <h3>Channel Members</h3>
+        <ul class="list-group">
+          <li
+            *ngFor="let member of channelMembers"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ member.username }}
+            <button
+              *ngIf="
+                userData.roles.includes('super') ||
+                group.admins.includes(userData.id)
+              "
+              class="btn btn-danger btn-sm"
+              (click)="removeMemberFromChannel(member.id)"
+            >
+              Remove
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <hr />
+
+      <div
+        *ngIf="
+          userData.roles.includes('super') || group.admins.includes(userData.id)
+        "
+      >
+        <!-- Non-Channel Members (Interested Members) -->
+        <h3>Non-Members</h3>
+        <ul class="list-group">
+          <li
+            *ngFor="let nonMember of nonChannelMembers"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ nonMember.username }}
+            <button
+              class="btn btn-warning btn-sm"
+              (click)="addMemberToChannel(nonMember.id)"
+            >
+              Add
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chat-container col-8">
       <div class="messages-container">
         <ng-container *ngIf="messages.length > 0; else noMessages">
           <ul>

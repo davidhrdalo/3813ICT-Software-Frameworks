@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { GroupService } from '../services/group/group.service';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../services/channel/channel.service';
@@ -21,7 +21,13 @@ export class GroupComponent implements OnInit {
   userData: any;
   currentRole: string = '';
   isEditMode: boolean = false;
+  isEditChannelMode: boolean = false;
   allUsers: any;
+  channelName: string = '';
+  channelDescription: string = '';
+  editChannelData: any = null;
+  activeMembers: any[] = [];
+  interestedUsers: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +35,7 @@ export class GroupComponent implements OnInit {
     private channelService: ChannelService,
     private activeUserService: ActiveUserService,
     private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -52,10 +59,22 @@ export class GroupComponent implements OnInit {
   }
 
   saveDetails(): void {
-  //  this.activeUserService.updateUserData(this.userEditData); - Change when edit group added !!! HERE !!!
-    this.group = { ...this.groupEditData }; // Update the original data after saving
-    this.toggleEditMode(); // Exit edit mode after saving
-    alert('Group updated successfully!');
+    if (!this.groupEditData.name || !this.groupEditData.description) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    this.groupService.updateGroup(this.group.id, this.groupEditData).subscribe(
+      (updatedGroup) => {
+        this.group = updatedGroup; // Update the original group data with the saved data
+        this.toggleEditMode(); // Exit edit mode after saving
+        alert('Group updated successfully!');
+      },
+      (error) => {
+        console.error('Error updating group:', error);
+        alert('Failed to update group.');
+      }
+    );
   }
 
   getUserProfile(): void {
@@ -63,7 +82,7 @@ export class GroupComponent implements OnInit {
   }
 
   getAllUsers(): void {
-    this.userService.allUsers$.subscribe(users => {
+    this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
@@ -73,21 +92,191 @@ export class GroupComponent implements OnInit {
   }
 
   loadGroupDetails(id: number): void {
-    this.groupService.getGroups().subscribe(groups => {
-      this.group = groups.find(group => group.id === id);
+    this.groupService.getGroups().subscribe((groups) => {
+      this.group = groups.find((group) => group.id === id);
       if (this.group) {
         console.log('Group details:', this.group); // Debugging log
         this.loadChannels(this.group.id); // Load channels after group is found
+        this.getActiveMembers(); // Fetch active members
+        this.getInterestedUsers(); // Fetch interested users
       } else {
         console.log('Group not found with ID:', id); // Debugging log
       }
     });
   }
 
+  // Function to fetch active members from the group
+  getActiveMembers(): void {
+    if (this.group) {
+      this.groupService.getActiveMembers(this.group.id).subscribe(
+        (members) => {
+          this.activeMembers = members;
+        },
+        (error) => {
+          console.error('Error fetching active members:', error);
+        }
+      );
+    }
+  }
+
+  // Function to fetch interested users from the group
+  getInterestedUsers(): void {
+    if (this.group) {
+      this.groupService.getInterestedUsers(this.group.id).subscribe(
+        (users) => {
+          this.interestedUsers = users;
+        },
+        (error) => {
+          console.error('Error fetching interested users:', error);
+        }
+      );
+    }
+  }
+
   loadChannels(groupId: number): void {
-    this.channelService.getChannelsByGroupId(groupId).subscribe(channels => {
+    this.channelService.getChannelsByGroupId(groupId).subscribe((channels) => {
       this.channels = channels;
       console.log('Channels for group:', this.channels); // Debugging log
     });
+  }
+
+  deleteGroup(groupId: number): void {
+    if (confirm('Are you sure you want to delete this group?')) {
+      this.groupService.deleteGroup(groupId).subscribe(
+        () => {
+          alert('Group deleted successfully!');
+          this.router.navigate(['/profile']); // Navigate back to profile
+        },
+        (error) => {
+          console.error('Error deleting group:', error);
+          alert('Failed to delete group.');
+        }
+      );
+    }
+  }
+
+  createChannel(): void {
+    if (!this.channelName || !this.channelDescription) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const channelData = {
+      name: this.channelName,
+      description: this.channelDescription,
+      groupId: this.group.id,
+    };
+
+    this.channelService.createChannel(channelData).subscribe(
+      (newChannel) => {
+        this.channels.push(newChannel); // Add the new channel to the list
+        this.channelName = '';
+        this.channelDescription = '';
+        alert('Channel created successfully!');
+      },
+      (error) => {
+        console.error('Error creating channel:', error);
+        alert('Failed to create channel.');
+      }
+    );
+  }
+
+  clearCreateChannel(): void {
+    this.channelName = '';
+    this.channelDescription = '';
+  }
+
+  editChannel(channel: any): void {
+    this.editChannelData = { ...channel }; // Create a copy of the channel data for editing
+    this.isEditChannelMode = true;
+  }
+
+  saveChannel(): void {
+    if (!this.editChannelData.name || !this.editChannelData.description) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    this.channelService
+      .updateChannel(this.editChannelData.id, this.editChannelData)
+      .subscribe(
+        (updatedChannel) => {
+          // Update the channel in the local list
+          const index = this.channels.findIndex(
+            (ch) => ch.id === updatedChannel.id
+          );
+          if (index !== -1) {
+            this.channels[index] = updatedChannel;
+          }
+          this.editChannelData = null;
+          this.isEditChannelMode = false;
+          alert('Channel updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating channel:', error);
+          alert('Failed to update channel.');
+        }
+      );
+  }
+
+  deleteChannel(channelId: number): void {
+    if (confirm('Are you sure you want to delete this channel?')) {
+      this.channelService.deleteChannel(channelId).subscribe(
+        () => {
+          this.channels = this.channels.filter(
+            (channel) => channel.id !== channelId
+          );
+          alert('Channel deleted successfully!');
+        },
+        (error) => {
+          console.error('Error deleting channel:', error);
+          alert('Failed to delete channel.');
+        }
+      );
+    }
+  }
+
+  cancelEdit(): void {
+    this.editChannelData = null;
+    this.isEditChannelMode = false;
+  }
+
+  // Remove user from group
+  removeUserFromGroup(userId: number): void {
+    if (this.group) {
+      this.groupService.removeUserFromGroup(this.group.id, userId).subscribe(
+        () => {
+          // Remove user from activeMembers and interestedUsers lists
+          this.activeMembers = this.activeMembers.filter(user => user.id !== userId);
+          this.interestedUsers = this.interestedUsers.filter(user => user.id !== userId);
+          alert('User removed from group successfully.');
+        },
+        (error) => {
+          console.error('Error removing user from group:', error);
+          alert('Failed to remove user from group.');
+        }
+      );
+    }
+  }
+
+  // Allow user to join group
+  allowUserToJoin(userId: number): void {
+    if (this.group) {
+      this.groupService.allowUserToJoin(this.group.id, userId).subscribe(
+        () => {
+          // Move user from interestedUsers to activeMembers
+          const user = this.interestedUsers.find(user => user.id === userId);
+          if (user) {
+            this.activeMembers.push(user);
+            this.interestedUsers = this.interestedUsers.filter(u => u.id !== userId);
+          }
+          alert('User allowed to join group successfully.');
+        },
+        (error) => {
+          console.error('Error allowing user to join group:', error);
+          alert('Failed to allow user to join group.');
+        }
+      );
+    }
   }
 }

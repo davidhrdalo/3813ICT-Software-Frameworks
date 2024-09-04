@@ -184,18 +184,121 @@ Front-end Angular routing was utilised to allow users of the application to navi
 
 ## Node Server Architecture
 
+The server-side architecture is structured to handle various functionalities of the chat system, including user authentication, group management, and channel management. The server is built using Node.js and Express, with data seeded using predefined classes and objects.
+
 ### Modules
+
+- Express.js: The primary framework for building the HTTP server and defining routes.
+- CORS: Middleware to allow cross-origin requests, crucial for enabling communication between the Angular frontend and the Node.js backend.
+- Body-Parser: Middleware to parse incoming request bodies in JSON format, facilitating the handling of user input and data.
+- Socket.io: Manages real-time communication between the server and clients for functionalities such as live chat.
 
 ### Functions
 
+The key functionalities of the server are encapsulated in various files and are responsible for handling specific tasks:
+
+- server.js:
+  - Configures the Express server and applies middleware such as CORS and Body-Parser.
+  - Initializes routes for authentication, user management, group management, and channel management.
+  - Integrates Socket.io for handling real-time messaging.
+
+- listen.js:
+  - Contains the function to start the server on a specified port (3000) and logs the start time to the console.
+
+- socket.js:
+  - Manages WebSocket connections, handling events such as user connections and message broadcasts in real-time.
+
+- seederData.js:
+  - Defines the classes for User, Group, and Channel, and seeds the server with initial data for testing and development purposes.
+
 ### Files
+
+- server.js: The main entry point for the server, responsible for initializing and configuring the server, applying middleware, and setting up routes.
+- listen.js: Handles server startup and logging.
+- socket.js: Manages real-time WebSocket events and communication.
+- data/seederData.js: Contains initial data for users, groups, and channels, and exports them for use in routes.
+- routes/api-auth.js: Manages authentication routes for user login and registration.
+- routes/api-user.js: Handles user-related operations such as retrieving user details.
+- routes/api-group.js: Manages group-related operations, including retrieving and managing groups.
+- routes/api-channel.js: Handles channel-related operations, including retrieving and managing channels.
 
 ### Global variables
 
+- PORT: Specifies the port on which the server listens (default is 3000).
+- io: The Socket.io instance, used globally across the server to manage WebSocket communication.
+
 ## Routes
 
-A list of server side routes, parameters, return values, and there purpose
+Below is a list of server side routes, parameters, return values, and there purpose:
 
-## Client Server Interactions
+### Authentication Routes (api-auth.js)
+| Method | Endpoint           | Parameters                                                             | Returns                                                                                                      | Purpose                                                    |
+|--------|--------------------|------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| POST   | /api/auth/signup    | `firstName`, `lastName`, `username`, `email`, `password`, `dob`         | JSON object containing the user's details (excluding the password), including `id`, `username`, `email`, `roles`, `profileImg`, `firstName`, `lastName`, `dob`, and `status` | Registers a new user, adds them to the `users` list, and sends back their details without the password.    |
+| POST   | /api/auth           | `username`, `password`                                                  | JSON object containing the user's details (excluding the password), including `id`, `username`, `email`, `roles`, `profileImg`, `firstName`, `lastName`, `dob`, and `status` | Authenticates a user based on their `username` and `password`. If credentials are correct, returns user details. Otherwise, returns an error message. |
 
-Describe the details of the interaction between client and server by indicating how the data on server side will be changed and how the display of each angular component page will be updated
+
+### User Routes (api-user.js)
+
+| Method | Endpoint                       | Parameters                           | Returns                                      | Purpose                                                                                 |
+|--------|--------------------------------|--------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------------------|
+| GET    | /api/users                     | None                                 | JSON array of all users (excluding passwords) | Retrieves a list of all users, including their `id`, `username`, `email`, `roles`, `profileImg`, `firstName`, `lastName`, `dob`, and `status`. |
+| POST   | /api/users/create              | `username`, `email`, `password`      | JSON object of the created user              | Creates a new user, assigns default roles (`chat`), and adds them to the `users` list. |
+| DELETE | /api/users/:id                 | `id`                                 | None                                         | Deletes the specified user from the `users` list.                                        |
+| POST   | /api/users/:id/promote/group   | `id`                                 | JSON object of the updated user              | Promotes a user to Group Admin by adding the `group` role to their roles array.         |
+| POST   | /api/users/:id/promote/super   | `id`                                 | JSON object of the updated user              | Promotes a user to Super Admin by adding the `super` role to their roles array.         |
+
+
+### Group Routes (api-group.js)
+
+| Method | Endpoint                                    | Parameters                                                              | Returns                                      | Purpose                                                                                 |
+|--------|---------------------------------------------|-------------------------------------------------------------------------|----------------------------------------------|-----------------------------------------------------------------------------------------|
+| GET    | /api/groups                                 | None                                                                    | JSON array of all groups                     | Retrieves a list of all groups, including their names, admins, members, interested users, descriptions, and group images. |
+| POST   | /api/groups                                 | `id`, `name`, `admins`, `members`, `interested`, `description`, `groupImg` | JSON object of the created group             | Creates a new group, adds it to the `groups` list, and saves the updated list.           |
+| PUT    | /api/groups/:id                             | Group details to update                                                 | JSON object of the updated group             | Updates the details of an existing group.                                               |
+| DELETE | /api/groups/:id                             | `id`                                                                    | None                                         | Deletes the specified group from the `groups` list.                                     |
+| POST   | /api/groups/:id/interested                  | `userId`                                                                | JSON object of the updated group             | Registers a user's interest in a group.                                                 |
+| POST   | /api/groups/:id/unregister-interest         | `userId`                                                                | JSON object of the updated group             | Removes a user's interest from a group.                                                 |
+| POST   | /api/groups/:groupId/removeUser             | `userId`                                                                | JSON object of the updated group             | Removes a user from the group's members and interested lists.                           |
+| POST   | /api/groups/:groupId/allowUserToJoin        | `userId`                                                                | JSON object of the updated group             | Allows a user to join the group by moving them from the interested list to the members list. |
+
+
+### Channel Routes (api-channel.js)
+
+| Method | Endpoint                              | Parameters                                     | Returns                                                       | Purpose                                                                                 |
+|--------|---------------------------------------|------------------------------------------------|---------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| GET    | /api/channels                         | None                                           | JSON array of all channels                                     | Retrieves a list of all channels, including their names, group IDs, descriptions, and members. |
+| POST   | /api/channels                         | `name`, `description`, `groupId`               | JSON object of the created channel                             | Creates a new channel, adds it to the `channels` list, and saves the updated list.      |
+| PUT    | /api/channels/:id                     | `name`, `description`, `groupId` (optional)    | JSON object of the updated channel                             | Updates the details of an existing channel.                                              |
+| DELETE | /api/channels/:id                     | `id`                                           | None                                                           | Deletes the specified channel from the `channels` list.                                 |
+| POST   | /api/channels/:id/addMember           | `userId`                                       | JSON object of the updated channel with the added member        | Adds a user to the specified channel.                                                    |
+| POST   | /api/channels/:id/removeMember        | `userId`                                       | JSON object of the updated channel without the removed member   | Removes a user from the specified channel.                                               |
+
+
+## Client-Server Interactions
+
+The interactions between the client (Angular frontend) and the server (Node.js backend) are designed to maintain a smooth user experience by synchronizing data and ensuring real-time updates.
+
+### User Authentication:
+- When a user signs up or logs in, the client sends a POST request to the relevant authentication route (`/api/auth/signup` or `/api/auth`). 
+  - **Signup**: The server checks if the username already exists. If it’s unique, it creates a new user (as an instance of the `User` class), assigns default roles (e.g., `chat`), and adds the new user to the `users` array. The user data (excluding the password) is returned to the client.
+  - **Login**: The server verifies the credentials provided in the login request. If valid, the user’s details (again, excluding the password) are returned to the client.
+  
+### Group and Channel Management:
+- **Group Data**: 
+  - When the client requests the group data, it sends a GET request to `/api/groups`. The server responds with the list of all groups, where each group is an instance of the `Group` class, containing details like `admins`, `members`, `interested` users, and other group metadata.
+  - For creating a new group, the client sends a POST request to `/api/groups`, and the server creates the group, adds it to the `groups` array, and saves the updated data.
+  - The client can also update or delete groups, as well as manage user roles (e.g., adding/removing `admins` and `members`) using the respective endpoints (`PUT`, `DELETE`).
+  
+- **Channel Data**: 
+  - The client can retrieve all channel data by sending a GET request to `/api/channels`. The server returns a list of channels, each being an instance of the `Channel` class, which includes the channel's name, group ID, description, and members.
+  - When a new channel is created via a POST request, the server generates a new `Channel` object and adds it to the `channels` array, saving the changes.
+  - Channels can also be updated or deleted via respective routes. The client can add or remove users from a channel by interacting with the routes (`/addMember` or `/removeMember`), which modify the `members` array in the relevant `Channel` object.
+
+### Real-Time Messaging:
+- **Socket.io**: Messages within channels are handled through Socket.io for real-time communication. When a user sends a message, it is emitted to the server via a WebSocket. The server broadcasts the message to all clients connected to the specific channel, ensuring that all users can see the message in real-time.
+
+### Data Persistence:
+- **Data Storage**: The server-side data is persisted using the `saveData` function, which writes the updated `users`, `groups`, and `channels` arrays into a `data.json` file. This ensures that any changes made (e.g., adding a new user, creating a group, etc.) are stored for future sessions. The `loadData` function reads the `data.json` file and initializes the arrays for `users`, `groups`, and `channels` at server startup.
+
+The system uses constructors (`User`, `Group`, `Channel`) to create consistent objects when reading from or writing to the data file. Each new user, group, or channel created via API calls is instantiated using the corresponding class.
