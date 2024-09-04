@@ -22,26 +22,31 @@ export class ChannelService {
     private groupService: GroupService
   ) {}
 
+  // Fetch all channels from the backend API
   getChannels(): Observable<any[]> {
     return this.http.get<any[]>(BACKEND_URL);
   }
 
+  // Fetch channels that belong to a specific group by filtering the list of all channels
   getChannelsByGroupId(groupId: number): Observable<any[]> {
     return this.getChannels().pipe(
-      map((channels) =>
-        channels.filter((channel) => channel.groupId === groupId)
+      map(
+        (channels) => channels.filter((channel) => channel.groupId === groupId) // Filter channels by group ID
       )
     );
   }
 
+  // Create a new channel by sending channel data to the backend API
   createChannel(channelData: any): Observable<any> {
     return this.http.post(BACKEND_URL, channelData, httpOptions);
   }
 
+  // Delete a channel by its ID
   deleteChannel(channelId: number): Observable<any> {
     return this.http.delete(`${BACKEND_URL}/${channelId}`, httpOptions);
   }
 
+  // Update a channel by sending updated channel data to the backend API
   updateChannel(channelId: number, channelData: any): Observable<any> {
     return this.http.put(
       `${BACKEND_URL}/${channelId}`,
@@ -50,33 +55,33 @@ export class ChannelService {
     );
   }
 
-  // Add a member to a channel
+  // Add a user as a member to a specific channel
   addMember(channelId: number, userId: number): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${channelId}/addMember`,
-      { userId },
+      { userId }, // Send user ID in the request body
       httpOptions
     );
   }
 
-  // Remove a member from a channel
+  // Remove a user from a channel by sending the user ID to the backend
   removeMember(channelId: number, userId: number): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${channelId}/removeMember`,
-      { userId },
+      { userId }, // Send user ID in the request body
       httpOptions
     );
   }
 
-  // Get channel members excluding the current user
+  // Get all members of a channel, excluding the current logged-in user
   getChannelMembers(channelId: number): Observable<any[]> {
     return this.getChannels().pipe(
       map((channels) => {
-        const channel = channels.find((c) => c.id === channelId);
+        const channel = channels.find((c) => c.id === channelId); // Find the channel by ID
         if (channel) {
-          const currentUser = this.activeUserService.getUserData();
+          const currentUser = this.activeUserService.getUserData(); // Get current logged-in user
           return this.filterUsersByIds(channel.members).filter(
-            (user) => user.id !== currentUser.id
+            (user) => user.id !== currentUser.id // Exclude the current user from the list
           );
         } else {
           return [];
@@ -85,14 +90,15 @@ export class ChannelService {
     );
   }
 
-  // Get users who are group members but not in the channel
+  // Get users who are members of the group but not part of a specific channel
   getNonChannelMembers(channelId: number, groupId: number): Observable<any[]> {
     return this.groupService.getActiveMembers(groupId).pipe(
       switchMap((groupMembers) =>
         this.getChannels().pipe(
           map((channels) => {
-            const channel = channels.find((c) => c.id === channelId);
-            const channelMemberIds = channel ? channel.members : [];
+            const channel = channels.find((c) => c.id === channelId); // Find the channel by ID
+            const channelMemberIds = channel ? channel.members : []; // Get member IDs in the channel
+            // Return users who are in the group but not in the channel
             return groupMembers.filter(
               (member) => !channelMemberIds.includes(member.id)
             );
@@ -102,9 +108,9 @@ export class ChannelService {
     );
   }
 
-  // Utility function to filter users by their IDs
+  // Helper function to filter all users by their IDs
   private filterUsersByIds(userIds: number[]): any[] {
-    const allUsers = this.userService.getUsers(); // Assuming this gets all users
-    return allUsers.filter((user) => userIds.includes(user.id));
+    const allUsers = this.userService.getUsers(); // Assuming this gets all users from UserService
+    return allUsers.filter((user) => userIds.includes(user.id)); // Filter users by matching IDs
   }
 }

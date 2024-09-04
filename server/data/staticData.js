@@ -1,4 +1,4 @@
-const d = {
+const data = {
   "users": [
     {
       "id": 1748532097465,
@@ -54,7 +54,7 @@ const d = {
       "email": "robert.brown@example.com",
       "password": "pw",
       "roles": ["group", "chat"],
-      "profileImg": "assets/images/60.jpg",
+      "profileImg": "assets/images/550.jpg",
       "firstName": "Robert",
       "lastName": "Brown",
       "dob": "1985-11-20",
@@ -69,7 +69,7 @@ const d = {
       "members": [1748532097465, 1832456791432, 1923785069812],
       "interested": [],
       "description": "Group for software developers",
-      "groupImg": "assets/images/430.jpg"
+      "groupImg": "assets/images/473.jpg"
     },
     {
       "id": 1901345912045,

@@ -15,19 +15,19 @@ import { UserService } from '../services/user/user.service';
   styleUrl: './group.component.css',
 })
 export class GroupComponent implements OnInit {
-  group: any = null;
-  groupEditData: any;
-  channels: any[] = [];
-  userData: any;
-  currentRole: string = '';
-  isEditMode: boolean = false;
-  isEditChannelMode: boolean = false;
-  allUsers: any;
-  channelName: string = '';
-  channelDescription: string = '';
-  editChannelData: any = null;
-  activeMembers: any[] = [];
-  interestedUsers: any[] = [];
+  group: any = null; // Stores current group details
+  groupEditData: any; // Stores editable group data for edit mode
+  channels: any[] = []; // List of group channels
+  userData: any; // Logged-in user data
+  currentRole: string = ''; // Role of the current user
+  isEditMode: boolean = false; // Toggle for group edit mode
+  isEditChannelMode: boolean = false; // Toggle for channel edit mode
+  allUsers: any; // List of all users
+  channelName: string = ''; // Name for new channel creation
+  channelDescription: string = ''; // Description for new channel creation
+  editChannelData: any = null; // Stores data for editing a channel
+  activeMembers: any[] = []; // Active members of the group
+  interestedUsers: any[] = []; // Users interested in joining the group
 
   constructor(
     private route: ActivatedRoute,
@@ -38,26 +38,29 @@ export class GroupComponent implements OnInit {
     private router: Router
   ) {}
 
+  // Lifecycle hook for initializing component
   ngOnInit(): void {
-    this.getUserProfile();
+    this.getUserProfile(); // Load user profile
+    this.getAllUsers(); // Fetch all users
 
-    this.getAllUsers();
-
+    // Get the group ID from the route and load the group details
     const groupId = this.route.snapshot.paramMap.get('id');
     if (groupId) {
       this.loadGroupDetails(parseInt(groupId, 10));
     }
   }
 
+  // Toggle group edit mode
   toggleEditMode(): void {
     if (this.isEditMode) {
-      this.groupEditData = null; // Clear edit data when exiting edit mode
+      this.groupEditData = null; // Clear edit data if exiting edit mode
     } else {
-      this.groupEditData = { ...this.group }; // Create a copy of the user data for editing
+      this.groupEditData = { ...this.group }; // Copy current group data for editing
     }
     this.isEditMode = !this.isEditMode;
   }
 
+  // Save group details after editing
   saveDetails(): void {
     if (!this.groupEditData.name || !this.groupEditData.description) {
       alert('Please fill in all required fields.');
@@ -66,8 +69,8 @@ export class GroupComponent implements OnInit {
 
     this.groupService.updateGroup(this.group.id, this.groupEditData).subscribe(
       (updatedGroup) => {
-        this.group = updatedGroup; // Update the original group data with the saved data
-        this.toggleEditMode(); // Exit edit mode after saving
+        this.group = updatedGroup; // Update the group with saved data
+        this.toggleEditMode(); // Exit edit mode
         alert('Group updated successfully!');
       },
       (error) => {
@@ -77,35 +80,38 @@ export class GroupComponent implements OnInit {
     );
   }
 
+  // Fetch the current user's profile
   getUserProfile(): void {
     this.userData = this.activeUserService.getUserData();
   }
 
+  // Fetch all users in the system
   getAllUsers(): void {
     this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
 
+  // Delete a user from the system
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId);
   }
 
+  // Load group details based on group ID
   loadGroupDetails(id: number): void {
     this.groupService.getGroups().subscribe((groups) => {
       this.group = groups.find((group) => group.id === id);
       if (this.group) {
-        console.log('Group details:', this.group); // Debugging log
-        this.loadChannels(this.group.id); // Load channels after group is found
+        this.loadChannels(this.group.id); // Load channels for the group
         this.getActiveMembers(); // Fetch active members
         this.getInterestedUsers(); // Fetch interested users
       } else {
-        console.log('Group not found with ID:', id); // Debugging log
+        console.log('Group not found with ID:', id); // Log if group not found
       }
     });
   }
 
-  // Function to fetch active members from the group
+  // Fetch active members of the group
   getActiveMembers(): void {
     if (this.group) {
       this.groupService.getActiveMembers(this.group.id).subscribe(
@@ -119,7 +125,7 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  // Function to fetch interested users from the group
+  // Fetch users interested in joining the group
   getInterestedUsers(): void {
     if (this.group) {
       this.groupService.getInterestedUsers(this.group.id).subscribe(
@@ -133,19 +139,20 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // Load channels belonging to the group
   loadChannels(groupId: number): void {
     this.channelService.getChannelsByGroupId(groupId).subscribe((channels) => {
       this.channels = channels;
-      console.log('Channels for group:', this.channels); // Debugging log
     });
   }
 
+  // Delete the group and navigate back to profile
   deleteGroup(groupId: number): void {
     if (confirm('Are you sure you want to delete this group?')) {
       this.groupService.deleteGroup(groupId).subscribe(
         () => {
           alert('Group deleted successfully!');
-          this.router.navigate(['/profile']); // Navigate back to profile
+          this.router.navigate(['/profile']); // Navigate to profile after deletion
         },
         (error) => {
           console.error('Error deleting group:', error);
@@ -155,6 +162,7 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // Create a new channel in the group
   createChannel(): void {
     if (!this.channelName || !this.channelDescription) {
       alert('Please fill in all required fields.');
@@ -169,9 +177,8 @@ export class GroupComponent implements OnInit {
 
     this.channelService.createChannel(channelData).subscribe(
       (newChannel) => {
-        this.channels.push(newChannel); // Add the new channel to the list
-        this.channelName = '';
-        this.channelDescription = '';
+        this.channels.push(newChannel); // Add new channel to the list
+        this.clearCreateChannel(); // Clear input fields after creating channel
         alert('Channel created successfully!');
       },
       (error) => {
@@ -181,16 +188,19 @@ export class GroupComponent implements OnInit {
     );
   }
 
+  // Clear the channel creation form
   clearCreateChannel(): void {
     this.channelName = '';
     this.channelDescription = '';
   }
 
+  // Edit an existing channel
   editChannel(channel: any): void {
-    this.editChannelData = { ...channel }; // Create a copy of the channel data for editing
+    this.editChannelData = { ...channel }; // Copy channel data for editing
     this.isEditChannelMode = true;
   }
 
+  // Save the edited channel details
   saveChannel(): void {
     if (!this.editChannelData.name || !this.editChannelData.description) {
       alert('Please fill in all required fields.');
@@ -201,15 +211,14 @@ export class GroupComponent implements OnInit {
       .updateChannel(this.editChannelData.id, this.editChannelData)
       .subscribe(
         (updatedChannel) => {
-          // Update the channel in the local list
+          // Update the channel in the list
           const index = this.channels.findIndex(
             (ch) => ch.id === updatedChannel.id
           );
           if (index !== -1) {
             this.channels[index] = updatedChannel;
           }
-          this.editChannelData = null;
-          this.isEditChannelMode = false;
+          this.cancelEdit(); // Exit channel edit mode
           alert('Channel updated successfully!');
         },
         (error) => {
@@ -219,6 +228,7 @@ export class GroupComponent implements OnInit {
       );
   }
 
+  // Delete a channel from the group
   deleteChannel(channelId: number): void {
     if (confirm('Are you sure you want to delete this channel?')) {
       this.channelService.deleteChannel(channelId).subscribe(
@@ -236,17 +246,18 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // Cancel editing a channel
   cancelEdit(): void {
     this.editChannelData = null;
     this.isEditChannelMode = false;
   }
 
-  // Remove user from group
+  // Remove a user from the group
   removeUserFromGroup(userId: number): void {
     if (this.group) {
       this.groupService.removeUserFromGroup(this.group.id, userId).subscribe(
         () => {
-          // Remove user from activeMembers and interestedUsers lists
+          // Update member and interested users lists
           this.activeMembers = this.activeMembers.filter(user => user.id !== userId);
           this.interestedUsers = this.interestedUsers.filter(user => user.id !== userId);
           alert('User removed from group successfully.');
@@ -259,7 +270,7 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  // Allow user to join group
+  // Allow a user to join the group from interested users
   allowUserToJoin(userId: number): void {
     if (this.group) {
       this.groupService.allowUserToJoin(this.group.id, userId).subscribe(

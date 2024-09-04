@@ -15,46 +15,51 @@ import { GroupService } from '../services/group/group.service';
   styleUrl: './channel.component.css',
 })
 export class ChannelComponent implements OnInit {
-  group: any = null;
-  channel: any = null;
-  channelMembers: any[] = [];
-  nonChannelMembers: any[] = [];
-  channelId!: number;
-  groupId!: number;
-  userData: any;
+  group: any = null; // Stores current group details
+  channel: any = null; // Stores current channel details
+  channelMembers: any[] = []; // List of channel members
+  nonChannelMembers: any[] = []; // List of non-members in the group
+  channelId!: number; // ID of the current channel
+  groupId!: number; // ID of the current group
+  userData: any; // Current user data
 
-  messagecontent: string = '';
-  messages: any[] = [];
-  ioConnection: any;
+  messagecontent: string = ''; // Message to send in chat
+  messages: any[] = []; // Chat messages array
+  ioConnection: any; // Socket connection
 
   constructor(
     private route: ActivatedRoute,
     private channelService: ChannelService,
     private socketService: SocketService,
     private activeUserService: ActiveUserService,
-    private groupService: GroupService,
+    private groupService: GroupService
   ) {}
 
+  // Lifecycle hook: called after the component is initialized
   ngOnInit(): void {
-    this.initIoConnection();
-    this.getUserProfile();
+    this.initIoConnection(); // Initialize socket connection for chat
+    this.getUserProfile(); // Load user profile data
 
+    // Subscribe to route parameters to get group and channel IDs
     this.route.paramMap.subscribe((params) => {
-      this.groupId = +params.get('id')!; // Assign groupId from route params
-      this.channelId = +params.get('channelId')!; // Assign channelId from route params
-      this.loadChannelDetails(this.groupId, this.channelId);
+      this.groupId = +params.get('id')!; // Get groupId from the route
+      this.channelId = +params.get('channelId')!; // Get channelId from the route
+      this.loadChannelDetails(this.groupId, this.channelId); // Load channel details
     });
 
+    // Alternative way to load group details from snapshot
     const groupId = this.route.snapshot.paramMap.get('id');
     if (groupId) {
       this.loadGroupDetails(parseInt(groupId, 10));
     }
   }
 
+  // Get the current user's profile
   getUserProfile(): void {
     this.userData = this.activeUserService.getUserData();
   }
 
+  // Load group details by ID
   loadGroupDetails(id: number): void {
     this.groupService.getGroups().subscribe((groups) => {
       this.group = groups.find((group) => group.id === id);
@@ -66,25 +71,28 @@ export class ChannelComponent implements OnInit {
     });
   }
 
+  // Load channel details based on groupId and channelId
   loadChannelDetails(groupId: number, channelId: number): void {
     this.channelService.getChannelsByGroupId(groupId).subscribe((channels) => {
       this.channel = channels.find((channel) => channel.id === channelId);
       if (this.channel) {
         console.log('Channel details:', this.channel); // Debugging log
-        this.loadChannelMembers(channelId);
-        this.loadNonChannelMembers(channelId, groupId);
+        this.loadChannelMembers(channelId); // Load members of the channel
+        this.loadNonChannelMembers(channelId, groupId); // Load non-members
       } else {
         console.log('Channel not found with ID:', channelId); // Debugging log
       }
     });
   }
 
+  // Load members of the current channel
   loadChannelMembers(channelId: number): void {
     this.channelService.getChannelMembers(channelId).subscribe((members) => {
       this.channelMembers = members;
     });
   }
 
+  // Load group members who are not in the current channel
   loadNonChannelMembers(channelId: number, groupId: number): void {
     this.channelService
       .getNonChannelMembers(channelId, groupId)
@@ -98,7 +106,7 @@ export class ChannelComponent implements OnInit {
     this.channelService.addMember(this.channelId, userId).subscribe(
       (response) => {
         alert('User added to channel successfully!');
-        // Refresh the lists after adding the user
+        // Refresh members list after adding user
         this.loadChannelMembers(this.channelId);
         this.loadNonChannelMembers(this.channelId, this.groupId);
       },
@@ -113,6 +121,7 @@ export class ChannelComponent implements OnInit {
     this.channelService.removeMember(this.channelId, userId).subscribe(
       (response) => {
         alert('User removed from channel successfully!');
+        // Refresh members list after removing user
         this.loadChannelMembers(this.channelId);
         this.loadNonChannelMembers(this.channelId, this.groupId);
       },
@@ -122,21 +131,23 @@ export class ChannelComponent implements OnInit {
     );
   }
 
+  // Initialize socket connection for chat
   private initIoConnection() {
     this.socketService.initSocket();
     this.ioConnection = this.socketService
       .getMessage()
       .subscribe((message: any) => {
-        this.messages.push(message);
+        this.messages.push(message); // Push received messages to the chat array
       });
   }
 
+  // Send a message through the socket
   public chat() {
     if (this.messagecontent) {
-      this.socketService.send(this.messagecontent);
-      this.messagecontent = '';
+      this.socketService.send(this.messagecontent); // Send message via socket
+      this.messagecontent = ''; // Clear input field
     } else {
-      console.log('no message');
+      console.log('No message'); // Log if message content is empty
     }
   }
 }
