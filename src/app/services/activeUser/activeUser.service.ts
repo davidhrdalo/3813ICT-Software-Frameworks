@@ -13,17 +13,18 @@ const BACKEND_URL = 'http://localhost:3000/api/auth';
   providedIn: 'root',
 })
 export class ActiveUserService {
-  private userDataSubject = new BehaviorSubject<any>(null);
-  userData$ = this.userDataSubject.asObservable();
+  private userDataSubject = new BehaviorSubject<any>(null); // Observable to track user data
+  userData$ = this.userDataSubject.asObservable(); // Expose user data as observable for subscribers
 
   constructor(private router: Router, private httpClient: HttpClient) {
-    this.initializeUserData();
+    this.initializeUserData(); // Initialize user data from session storage if available
   }
 
+  // Initialize user data by checking session storage
   private initializeUserData(): void {
     const userData = this.getUserDataFromStorage();
     if (userData) {
-      this.userDataSubject.next(userData);
+      this.userDataSubject.next(userData); // Emit stored user data if available
     }
   }
 
@@ -34,13 +35,13 @@ export class ActiveUserService {
       .pipe(
         tap((data: any) => {
           if (data) {
-            this.setSessionStorage(data);
-            this.userDataSubject.next(data); // Emit new user data immediately
+            this.setSessionStorage(data); // Store user data in session storage
+            this.userDataSubject.next(data); // Emit new user data
           }
         }),
         catchError((error) => {
           console.error('Signup failed:', error);
-          return throwError(error); // Use throwError to maintain observable chain
+          return throwError(error); // Return an observable error
         })
       );
   }
@@ -51,18 +52,18 @@ export class ActiveUserService {
     return this.httpClient.post(BACKEND_URL, user, httpOptions).pipe(
       tap((data: any) => {
         if (data) {
-          this.setSessionStorage(data);
-          this.userDataSubject.next(data); // Emit new user data immediately
+          this.setSessionStorage(data); // Store user data in session storage
+          this.userDataSubject.next(data); // Emit new user data
         }
       }),
       catchError((error) => {
         console.error('Login failed:', error);
-        return throwError(error); // Use throwError to maintain observable chain
+        return throwError(error); // Return an observable error
       })
     );
   }
 
-  // Method to set user data in session storage
+  // Store user data in session storage
   private setSessionStorage(userData: any): void {
     sessionStorage.setItem('id', userData.id.toString());
     sessionStorage.setItem('username', userData.username);
@@ -73,26 +74,27 @@ export class ActiveUserService {
     sessionStorage.setItem('lastName', userData.lastName);
     sessionStorage.setItem('dob', userData.dob);
     sessionStorage.setItem('status', userData.status);
-    this.userDataSubject.next(userData);
+    this.userDataSubject.next(userData); // Emit updated user data
   }
 
   // Method to log out the user
   logout(): void {
-    sessionStorage.clear();
-    this.userDataSubject.next(null);
-    this.router.navigate(['/login']);
+    sessionStorage.clear(); // Clear session storage
+    this.userDataSubject.next(null); // Reset user data
+    this.router.navigate(['/login']); // Navigate to login page
   }
 
-  // Method to check if a user is logged in
+  // Check if a user is currently logged in
   isLoggedIn(): boolean {
-    return sessionStorage.getItem('username') !== null;
+    return sessionStorage.getItem('username') !== null; // Check if username is in session storage
   }
 
-  // Method to get the current user data from session storage
+  // Get the current user data from the observable
   getUserData(): any {
-    return this.userDataSubject.value;
+    return this.userDataSubject.value; // Return current user data
   }
 
+  // Fetch user data from session storage
   private getUserDataFromStorage(): any {
     if (this.isLoggedIn()) {
       return {
@@ -110,7 +112,7 @@ export class ActiveUserService {
     return null;
   }
 
-  // Method to update user data in session storage
+  // Update user data and store it in session storage
   updateUserData(userData: any): void {
     sessionStorage.setItem('id', userData.id.toString());
     sessionStorage.setItem('username', userData.username);
@@ -121,6 +123,6 @@ export class ActiveUserService {
     sessionStorage.setItem('lastName', userData.lastName);
     sessionStorage.setItem('dob', userData.dob);
     sessionStorage.setItem('status', userData.status);
-    this.userDataSubject.next(userData);
+    this.userDataSubject.next(userData); // Emit updated user data
   }
 }
