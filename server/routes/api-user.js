@@ -21,6 +21,15 @@ module.exports = function (app) {
     // POST route to create a new user
     app.post('/api/users/create', (req, res) => {
         const { username, email, password } = req.body;
+
+        // Check if the username already exists
+        const userExists = users.some(user => user.username === username);
+
+        if (userExists) {
+            return res.status(400).json({ error: 'Username is already taken' });
+        }
+
+        // If the username is unique, create a new user
         const newUser = new User(
             Date.now(),
             username,
@@ -37,6 +46,8 @@ module.exports = function (app) {
         // Save the new user to the users array
         users.push(newUser);
         saveData({ users });
+
+        // Send back the created user data
         res.status(201).json(newUser);
     });
 
