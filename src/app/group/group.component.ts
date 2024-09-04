@@ -240,4 +240,43 @@ export class GroupComponent implements OnInit {
     this.editChannelData = null;
     this.isEditChannelMode = false;
   }
+
+  // Remove user from group
+  removeUserFromGroup(userId: number): void {
+    if (this.group) {
+      this.groupService.removeUserFromGroup(this.group.id, userId).subscribe(
+        () => {
+          // Remove user from activeMembers and interestedUsers lists
+          this.activeMembers = this.activeMembers.filter(user => user.id !== userId);
+          this.interestedUsers = this.interestedUsers.filter(user => user.id !== userId);
+          alert('User removed from group successfully.');
+        },
+        (error) => {
+          console.error('Error removing user from group:', error);
+          alert('Failed to remove user from group.');
+        }
+      );
+    }
+  }
+
+  // Allow user to join group
+  allowUserToJoin(userId: number): void {
+    if (this.group) {
+      this.groupService.allowUserToJoin(this.group.id, userId).subscribe(
+        () => {
+          // Move user from interestedUsers to activeMembers
+          const user = this.interestedUsers.find(user => user.id === userId);
+          if (user) {
+            this.activeMembers.push(user);
+            this.interestedUsers = this.interestedUsers.filter(u => u.id !== userId);
+          }
+          alert('User allowed to join group successfully.');
+        },
+        (error) => {
+          console.error('Error allowing user to join group:', error);
+          alert('Failed to allow user to join group.');
+        }
+      );
+    }
+  }
 }

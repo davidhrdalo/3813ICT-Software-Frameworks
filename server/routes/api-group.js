@@ -82,4 +82,43 @@ module.exports = function (app) {
         }
     });
 
+    app.post('/api/groups/:groupId/removeUser', (req, res) => {
+        const { groupId } = req.params;
+        const { userId } = req.body;
+
+        const group = groups.find(g => g.id === parseInt(groupId, 10));
+        if (group) {
+            // Remove user from members and interested lists
+            group.members = group.members.filter(memberId => memberId !== userId);
+            group.interested = group.interested.filter(interestId => interestId !== userId);
+
+            saveData({ groups }); // Save updated group data
+            res.status(200).json(group);
+        } else {
+            res.status(404).json({ error: 'Group not found.' });
+        }
+    });
+
+    // Allow a user to join a group
+    app.post('/api/groups/:groupId/allowUserToJoin', (req, res) => {
+        const { groupId } = req.params;
+        const { userId } = req.body;
+
+        const group = groups.find(g => g.id === parseInt(groupId, 10));
+        if (group) {
+            // Remove the user from the interested array if they exist
+            group.interested = group.interested.filter(interestId => interestId !== userId);
+
+            // Add the user to the members array if not already a member
+            if (!group.members.includes(userId)) {
+                group.members.push(userId);
+            }
+
+            saveData({ groups }); // Save updated group data
+            res.status(200).json(group);
+        } else {
+            res.status(404).json({ error: 'Group not found.' });
+        }
+    });
+
 };

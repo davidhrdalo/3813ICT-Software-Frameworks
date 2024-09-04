@@ -85,13 +85,17 @@ export class GroupService {
     );
   }
 
-  // Get active members of a group
+  // Get active members of a group excluding the current user
   getActiveMembers(groupId: number): Observable<any[]> {
+    const currentUser = this.activeUserService.getUserData(); // Get the current logged-in user
     return this.getGroups().pipe(
       map((groups) => {
         const group = groups.find((g) => g.id === groupId);
         if (group) {
-          return this.filterUsersByIds(group.members);
+          // Filter out the current user from the active members
+          return this.filterUsersByIds(group.members).filter(
+            (user) => user.id !== currentUser.id
+          );
         } else {
           return [];
         }
@@ -163,6 +167,22 @@ export class GroupService {
   removeInterestFromGroup(groupId: number, userId: number): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${groupId}/unregister-interest`,
+      { userId },
+      httpOptions
+    );
+  }
+
+  removeUserFromGroup(groupId: number, userId: number): Observable<any> {
+    return this.http.post(
+      `${BACKEND_URL}/${groupId}/removeUser`,
+      { userId },
+      httpOptions
+    );
+  }
+
+  allowUserToJoin(groupId: number, userId: number): Observable<any> {
+    return this.http.post(
+      `${BACKEND_URL}/${groupId}/allowUserToJoin`,
       { userId },
       httpOptions
     );

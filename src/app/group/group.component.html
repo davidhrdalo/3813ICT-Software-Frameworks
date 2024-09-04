@@ -240,7 +240,7 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="deleteUser(user.id)"
+              (click)="removeUserFromGroup(user.id)"
               class="btn btn-outline-danger"
             >
               Remove
@@ -273,13 +273,13 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="deleteUser(user.id)"
-              class="btn btn-outline-danger"
+              (click)="allowUserToJoin(user.id)"
+              class="btn btn-outline-success"
             >
               Allow
             </button>
             <button
-              (click)="deleteUser(user.id)"
+              (click)="removeUserFromGroup(user.id)"
               class="btn btn-outline-danger"
             >
               Remove
