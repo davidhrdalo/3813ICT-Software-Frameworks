@@ -1,5 +1,5 @@
 // Used to store static account details
-const { User, users } = require('../data/seederData');
+const { User, users } = require('../data/dataWrite');
 
 module.exports = function (app) {
   app.post('/api/auth/signup', (req, res) => {

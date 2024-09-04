@@ -1,4 +1,4 @@
-const { Channel, channels, saveData } = require('../data/seederData');
+const { Channel, channels, saveData } = require('../data/dataWrite');
 
 module.exports = function (app) {
     app.get('/api/channels', (req, res) => {

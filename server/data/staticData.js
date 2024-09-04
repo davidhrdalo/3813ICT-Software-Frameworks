@@ -1,4 +1,4 @@
-{
+const d = {
   "users": [
     {
       "id": 1,

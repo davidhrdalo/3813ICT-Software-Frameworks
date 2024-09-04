@@ -1,5 +1,5 @@
 // Used to store static account details
-const { User, users, saveData } = require('../data/seederData');
+const { User, users, saveData } = require('../data/dataWrite');
 
 module.exports = function (app) {
     // New GET route to retrieve all users

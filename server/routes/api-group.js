@@ -1,4 +1,4 @@
-const { Group, groups, saveData } = require('../data/seederData');
+const { Group, groups, saveData } = require('../data/dataWrite');
 
 module.exports = function (app) {
     app.get('/api/groups', (req, res) => {
