@@ -2,10 +2,7 @@
   <!-- Start Grid -->
   <div class="row">
     <!-- Full row -->
-    <div
-      style="padding-top: 2em; padding-bottom: 2em"
-      class="col-12"
-    >
+    <div style="padding-top: 2em; padding-bottom: 2em" class="col-12">
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group.name }}</h1>
         <p class="lead" *ngIf="userData.roles.includes('super')">
@@ -251,21 +248,27 @@
           <div class="row">
             <h3>Channels</h3>
             <!-- Conditional rendering for no channels in non-admin view -->
-            <div class="col-12" style="height: 30vh;" *ngIf="channels.length === 0">
+            <div
+              class="col-12"
+              style="height: 30vh"
+              *ngIf="channels.length === 0"
+            >
               <p>No channels available</p>
             </div>
 
-            <div class="col-4 card" *ngFor="let channel of channels">
-              <div
-                *ngIf="!editChannelData || editChannelData.id !== channel.id"
-                [routerLink]="['/group', group.id, 'channel', channel.id]"
-              >
-                <p>
-                  <strong>{{ channel.name }}</strong>
-                </p>
-                <p>{{ channel.description }}</p>
+            <ng-container *ngFor="let channel of channels">
+              <div class="col-4 card" *ngIf="channel.members.includes(userData.id)">
+                <div
+                  *ngIf="!editChannelData || editChannelData.id !== channel.id"
+                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                >
+                  <p>
+                    <strong>{{ channel.name }}</strong>
+                  </p>
+                  <p>{{ channel.description }}</p>
+                </div>
               </div>
-            </div>
+            </ng-container>
           </div>
         </div>
       </div>

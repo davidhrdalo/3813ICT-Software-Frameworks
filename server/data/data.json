@@ -59,6 +59,34 @@
       "lastName": "",
       "dob": "",
       "status": "Active"
+    },
+    {
+      "id": 1725437726943,
+      "username": "test",
+      "email": "test",
+      "password": "test",
+      "roles": [
+        "chat"
+      ],
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
+    },
+    {
+      "id": 1725438063697,
+      "username": "w",
+      "email": "w",
+      "password": "w",
+      "roles": [
+        "chat"
+      ],
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
+      "status": "Active"
     }
   ],
   "groups": [
@@ -69,7 +97,9 @@
         1
       ],
       "members": [
-        1
+        1,
+        1725437726943,
+        1725438063697
       ],
       "interested": [],
       "description": "Desc1",
@@ -86,7 +116,10 @@
         3,
         1725419062400
       ],
-      "interested": [],
+      "interested": [
+        1725437726943,
+        1725438063697
+      ],
       "description": "Desc2",
       "groupImg": "assets/images/475.jpg"
     },
@@ -101,7 +134,9 @@
         2,
         3
       ],
-      "interested": [],
+      "interested": [
+        1725437726943
+      ],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
     },
@@ -114,7 +149,9 @@
       "members": [
         6
       ],
-      "interested": [],
+      "interested": [
+        1725437726943
+      ],
       "description": "Desc3",
       "groupImg": "assets/images/550.jpg"
     },
@@ -147,14 +184,19 @@
       "name": "channel2",
       "groupId": 1,
       "description": "Lets chat about dogs!",
-      "members": []
+      "members": [
+        1725437726943,
+        1725438063697
+      ]
     },
     {
       "id": 3,
       "name": "channel3",
       "groupId": 1,
       "description": "Lets chat about lions!",
-      "members": []
+      "members": [
+        1725437726943
+      ]
     },
     {
       "id": 4,
@@ -175,7 +217,9 @@
       "name": "channel3",
       "groupId": 1,
       "description": "Hi.",
-      "members": []
+      "members": [
+        1725438063697
+      ]
     },
     {
       "id": 1725419437492,
