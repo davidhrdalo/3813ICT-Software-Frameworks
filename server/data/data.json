@@ -146,37 +146,59 @@
       "id": 2,
       "name": "channel2",
       "groupId": 1,
-      "description": "Lets chat about dogs!"
+      "description": "Lets chat about dogs!",
+      "members": []
     },
     {
       "id": 3,
       "name": "channel3",
       "groupId": 1,
-      "description": "Lets chat about lions!"
+      "description": "Lets chat about lions!",
+      "members": []
     },
     {
       "id": 4,
       "name": "channel3",
       "groupId": 1,
-      "description": "Lets chat about people!"
+      "description": "Lets chat about people!",
+      "members": []
     },
     {
       "id": 5,
       "name": "channel3",
       "groupId": 1,
-      "description": "Lets not chats!"
+      "description": "Lets not chats!",
+      "members": []
     },
     {
       "id": 6,
       "name": "channel3",
       "groupId": 1,
-      "description": "Hi."
+      "description": "Hi.",
+      "members": []
     },
     {
       "id": 1725419437492,
+      "name": "xd",
+      "groupId": 1725419425633,
+      "description": "x",
+      "members": []
+    },
+    {
+      "id": 1725429494058,
       "name": "x",
       "groupId": 1725419425633,
-      "description": "x"
+      "description": "x",
+      "members": []
+    },
+    {
+      "id": 1725431559141,
+      "name": "x",
+      "groupId": 2,
+      "description": "x",
+      "members": [
+        3
+      ]
     }
   ]
 }

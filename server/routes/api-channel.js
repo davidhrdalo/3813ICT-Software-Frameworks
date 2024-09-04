@@ -11,12 +11,14 @@ module.exports = function (app) {
             Date.now(),
             name,
             groupId,
-            description
+            description,
+            []
         );
         channels.push(newChannel);
         saveData({ channels });
         res.status(201).json(newChannel);
     });
+
 
     app.delete('/api/channels/:id', (req, res) => {
         const channelId = parseInt(req.params.id, 10);
@@ -40,6 +42,36 @@ module.exports = function (app) {
             res.json(channels[channelIndex]);
         } else {
             res.status(404).json({ error: 'Channel not found' });
+        }
+    });
+
+    // Add a user to a channel
+    app.post('/api/channels/:id/addMember', (req, res) => {
+        const channelId = parseInt(req.params.id, 10);
+        const { userId } = req.body;
+        const channel = channels.find(c => c.id === channelId);
+
+        if (channel && !channel.members.includes(userId)) {
+            channel.members.push(userId);
+            saveData({ channels });
+            res.status(200).json(channel);
+        } else {
+            res.status(400).json({ error: 'User is already a member or channel not found' });
+        }
+    });
+
+    // Remove a user from a channel
+    app.post('/api/channels/:id/removeMember', (req, res) => {
+        const channelId = parseInt(req.params.id, 10);
+        const { userId } = req.body;
+        const channel = channels.find(c => c.id === channelId);
+
+        if (channel && channel.members.includes(userId)) {
+            channel.members = channel.members.filter(id => id !== userId);
+            saveData({ channels });
+            res.status(200).json(channel);
+        } else {
+            res.status(400).json({ error: 'User is not a member or channel not found' });
         }
     });
 };

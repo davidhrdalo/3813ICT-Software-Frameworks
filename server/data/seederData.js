@@ -34,11 +34,12 @@ class Group {
 
 // Channel Data
 class Channel {
-    constructor(id, name, groupId, description) {
+    constructor(id, name, groupId, description, members = []) {
         this.id = id;
         this.name = name;
         this.groupId = groupId;
         this.description = description;
+        this.members = members;
     }
 }
 
@@ -51,7 +52,7 @@ function loadData() {
         return {
             users: data.users.map(u => new User(u.id, u.username, u.email, u.password, u.roles, u.profileImg, u.firstName, u.lastName, u.dob, u.status)),
             groups: data.groups.map(g => new Group(g.id, g.name, g.admins, g.members, g.interested, g.description, g.groupImg)),
-            channels: data.channels.map(c => new Channel(c.id, c.name, c.groupId, c.description)),
+            channels: data.channels.map(c => new Channel(c.id, c.name, c.groupId, c.description, c.members)),
         };
     } else {
         return { users: [], groups: [], channels: [] };
