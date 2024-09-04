@@ -301,4 +301,3 @@ The interactions between the client (Angular frontend) and the server (Node.js b
 ### Data Persistence:
 - **Data Storage**: The server-side data is persisted using the `saveData` function, which writes the updated `users`, `groups`, and `channels` arrays into a `data.json` file. This ensures that any changes made (e.g., adding a new user, creating a group, etc.) are stored for future sessions. The `loadData` function reads the `data.json` file and initializes the arrays for `users`, `groups`, and `channels` at server startup.
 
-The system uses constructors (`User`, `Group`, `Channel`) to create consistent objects when reading from or writing to the data file. Each new user, group, or channel created via API calls is instantiated using the corresponding class.
