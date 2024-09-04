@@ -80,6 +80,7 @@ The Channels data structure represents subgroups within a Group where specific t
 | name        | text   | No     | The name of the channel              | channel1                |
 | groupId     | number | No     | Holds the ID of the parent group     | 1                       |
 | description | text   | No     | A brief description of the channel   | Group to chat about dogs!|
+| members     | array  | No     | Array containing members of channel  | [1,2]                   |
 
 ### Relationships Between Data Structures
 The relationships between these data structures are fundamental to how the chat system functions:
