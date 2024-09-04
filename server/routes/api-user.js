@@ -2,7 +2,7 @@
 const { User, users, saveData } = require('../data/dataWrite');
 
 module.exports = function (app) {
-    // New GET route to retrieve all users
+    // GET route to retrieve all users without exposing passwords
     app.get('/api/users', (req, res) => {
         const usersWithoutPassword = users.map(user => ({
             id: user.id,
@@ -29,26 +29,25 @@ module.exports = function (app) {
             return res.status(400).json({ error: 'Username is already taken' });
         }
 
-        // If the username is unique, create a new user
+        // Create a new user if the username is unique
         const newUser = new User(
-            Date.now(),
+            Date.now(), // Unique ID using the current timestamp
             username,
             email,
             password,
-            ['chat'], // Default roles
+            ['chat'], // Default role is 'chat'
             'assets/images/defaultProfile.jpg', // Default profile image
-            '', // Default empty first name
-            '', // Default empty last name
-            '', // Default empty dob
+            '', // Empty first name
+            '', // Empty last name
+            '', // Empty date of birth
             'Active' // Default status
         );
 
-        // Save the new user to the users array
+        // Add the new user to the users array
         users.push(newUser);
-        saveData({ users });
+        saveData({ users }); // Save the updated users array
 
-        // Send back the created user data
-        res.status(201).json(newUser);
+        res.status(201).json(newUser); // Respond with the created user data
     });
 
     // DELETE route to delete a user by ID
@@ -57,24 +56,24 @@ module.exports = function (app) {
         const userIndex = users.findIndex(user => user.id === userId);
 
         if (userIndex !== -1) {
-            users.splice(userIndex, 1);
-            saveData({ users });
-            res.status(204).send();
+            users.splice(userIndex, 1); // Remove the user from the array
+            saveData({ users }); // Save the updated users array
+            res.status(204).send(); // Send no content response
         } else {
             res.status(404).json({ error: 'User not found' });
         }
     });
 
-    // Promote user to Group Admin
+    // POST route to promote a user to Group Admin
     app.post('/api/users/:id/promote/group', (req, res) => {
         const userId = parseInt(req.params.id, 10);
         const user = users.find(u => u.id === userId);
 
         if (user) {
             if (Array.isArray(user.roles) && !user.roles.includes('group')) {
-                user.roles.push('group');
-                saveData({ users });
-                res.status(200).json(user);
+                user.roles.push('group'); // Add 'group' role if the user doesn't already have it
+                saveData({ users }); // Save updated user data
+                res.status(200).json(user); // Respond with updated user
             } else if (!Array.isArray(user.roles)) {
                 res.status(500).json({ error: 'User roles is not an array' });
             } else {
@@ -85,16 +84,16 @@ module.exports = function (app) {
         }
     });
 
-    // Promote user to Super Admin
+    // POST route to promote a user to Super Admin
     app.post('/api/users/:id/promote/super', (req, res) => {
         const userId = parseInt(req.params.id, 10);
         const user = users.find(u => u.id === userId);
 
         if (user) {
             if (Array.isArray(user.roles) && !user.roles.includes('super')) {
-                user.roles.push('super');
-                saveData({ users });
-                res.status(200).json(user);
+                user.roles.push('super'); // Add 'super' role if the user doesn't already have it
+                saveData({ users }); // Save updated user data
+                res.status(200).json(user); // Respond with updated user
             } else if (!Array.isArray(user.roles)) {
                 res.status(500).json({ error: 'User roles is not an array' });
             } else {
