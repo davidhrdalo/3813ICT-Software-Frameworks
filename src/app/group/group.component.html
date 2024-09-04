@@ -9,15 +9,28 @@
     >
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group.name }}</h1>
-        <p class="lead" *ngIf="userData.roles.includes('super') ">
+        <p class="lead" *ngIf="userData.roles.includes('super')">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
         </p>
-        <p class="lead" *ngIf="userData.roles.includes('group') && !userData.roles.includes('super')">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('group') &&
+            !userData.roles.includes('super')
+          "
+        >
           As a <strong>Group Admin</strong> you can edit groups or chats from
           here!
         </p>
-        <p class="lead" *ngIf="userData.roles.includes('chat') && !userData.roles.includes('super') && !userData.roles.includes('group')">
+        <p
+          class="lead"
+          *ngIf="
+            userData.roles.includes('chat') &&
+            !userData.roles.includes('super') &&
+            !userData.roles.includes('group')
+          "
+        >
           You can view your groups and chats from here!
         </p>
       </div>
@@ -37,6 +50,7 @@
         type="button"
         style="margin-bottom: 20px"
         class="btn btn-primary mt-auto"
+        *ngIf="userData.roles.includes('super') || group.admins.includes(userData.id)"
       >
         Upload Profile
       </button>
@@ -72,7 +86,7 @@
 
       <!-- Buttons -->
       <button
-        *ngIf="!isEditMode"
+        *ngIf="!isEditMode && userData.roles.includes('super') || group.admins.includes(userData.id)"
         type="button"
         style="width: 110px; margin-bottom: 20px"
         class="btn btn-primary"
@@ -82,7 +96,7 @@
       </button>
 
       <button
-        *ngIf="!isEditMode"
+        *ngIf="!isEditMode && userData.roles.includes('super') || group.admins.includes(userData.id)"
         type="button"
         style="width: 110px; margin-bottom: 20px"
         class="btn btn-danger"
@@ -208,61 +222,77 @@
       </div>
     </div>
 
-    <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.roles.includes('super') && allUsers?.length > 0">
+    <div
+      *ngIf="userData.roles.includes('super') || group.admins.includes(userData.id)"
+    >
+      <!-- Full row - Content for superuser -->
       <hr />
       <h3>Active Members</h3>
-      <div class="col-3 card" *ngFor="let user of allUsers">
-        <img
-          src="{{ user.profileImg }}"
-          class="rounded-circle"
-          style="width: 75px; height: 75px; margin-bottom: 15px"
-          alt="Avatar"
-        />
-        <p><strong>Username: </strong>{{ user.username }}</p>
-        <p><strong>Email: </strong>{{ user.email }}</p>
-        <div class="button-group">
-          <button
-            *ngIf="userData.roles.includes('super')"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Remove
-          </button>
+      <div class="row" *ngIf="activeMembers.length > 0; else noActiveMembers">
+        <div class="col-3 card" *ngFor="let user of activeMembers">
+          <img
+            src="{{ user.profileImg }}"
+            class="rounded-circle"
+            style="width: 75px; height: 75px; margin-bottom: 15px"
+            alt="Avatar"
+          />
+          <p><strong>Username: </strong>{{ user.username }}</p>
+          <p><strong>Email: </strong>{{ user.email }}</p>
+          <div class="button-group">
+            <button
+              (click)="deleteUser(user.id)"
+              class="btn btn-outline-danger"
+            >
+              Remove
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Full row - Content for superuser -->
-    <div class="row" *ngIf="userData.roles.includes('super') && allUsers?.length > 0">
+      <ng-template #noActiveMembers>
+        <div class="row">
+          <p>No members yet.</p>
+        </div>
+      </ng-template>
+
+      <!-- Full row - Content for superuser -->
       <hr />
       <h3>Requested Members</h3>
-      <div class="col-3 card" *ngFor="let user of allUsers">
-        <img
-          src="{{ user.profileImg }}"
-          class="rounded-circle"
-          style="width: 75px; height: 75px; margin-bottom: 15px"
-          alt="Avatar"
-        />
-        <p><strong>Username: </strong>{{ user.username }}</p>
-        <p><strong>Email: </strong>{{ user.email }}</p>
-        <div class="button-group">
-          <button
-            *ngIf="userData.roles.includes('super')"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Allow
-          </button>
-          <button
-            *ngIf="userData.roles.includes('super')"
-            (click)="deleteUser(user.id)"
-            class="btn btn-outline-danger"
-          >
-            Remove
-          </button>
+      <div
+        class="row"
+        *ngIf="interestedUsers.length > 0; else noInterestedUsers"
+      >
+        <div class="col-3 card" *ngFor="let user of interestedUsers">
+          <img
+            src="{{ user.profileImg }}"
+            class="rounded-circle"
+            style="width: 75px; height: 75px; margin-bottom: 15px"
+            alt="Avatar"
+          />
+          <p><strong>Username: </strong>{{ user.username }}</p>
+          <p><strong>Email: </strong>{{ user.email }}</p>
+          <div class="button-group">
+            <button
+              (click)="deleteUser(user.id)"
+              class="btn btn-outline-danger"
+            >
+              Allow
+            </button>
+            <button
+              (click)="deleteUser(user.id)"
+              class="btn btn-outline-danger"
+            >
+              Remove
+            </button>
+          </div>
         </div>
       </div>
+
+      <ng-template #noInterestedUsers>
+        <div class="row">
+          <p>No members yet.</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

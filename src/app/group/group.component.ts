@@ -26,6 +26,8 @@ export class GroupComponent implements OnInit {
   channelName: string = '';
   channelDescription: string = '';
   editChannelData: any = null;
+  activeMembers: any[] = [];
+  interestedUsers: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +35,7 @@ export class GroupComponent implements OnInit {
     private channelService: ChannelService,
     private activeUserService: ActiveUserService,
     private userService: UserService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +63,7 @@ export class GroupComponent implements OnInit {
       alert('Please fill in all required fields.');
       return;
     }
-  
+
     this.groupService.updateGroup(this.group.id, this.groupEditData).subscribe(
       (updatedGroup) => {
         this.group = updatedGroup; // Update the original group data with the saved data
@@ -80,7 +82,7 @@ export class GroupComponent implements OnInit {
   }
 
   getAllUsers(): void {
-    this.userService.allUsers$.subscribe(users => {
+    this.userService.allUsers$.subscribe((users) => {
       this.allUsers = users;
     });
   }
@@ -90,19 +92,49 @@ export class GroupComponent implements OnInit {
   }
 
   loadGroupDetails(id: number): void {
-    this.groupService.getGroups().subscribe(groups => {
-      this.group = groups.find(group => group.id === id);
+    this.groupService.getGroups().subscribe((groups) => {
+      this.group = groups.find((group) => group.id === id);
       if (this.group) {
         console.log('Group details:', this.group); // Debugging log
         this.loadChannels(this.group.id); // Load channels after group is found
+        this.getActiveMembers(); // Fetch active members
+        this.getInterestedUsers(); // Fetch interested users
       } else {
         console.log('Group not found with ID:', id); // Debugging log
       }
     });
   }
 
+  // Function to fetch active members from the group
+  getActiveMembers(): void {
+    if (this.group) {
+      this.groupService.getActiveMembers(this.group.id).subscribe(
+        (members) => {
+          this.activeMembers = members;
+        },
+        (error) => {
+          console.error('Error fetching active members:', error);
+        }
+      );
+    }
+  }
+
+  // Function to fetch interested users from the group
+  getInterestedUsers(): void {
+    if (this.group) {
+      this.groupService.getInterestedUsers(this.group.id).subscribe(
+        (users) => {
+          this.interestedUsers = users;
+        },
+        (error) => {
+          console.error('Error fetching interested users:', error);
+        }
+      );
+    }
+  }
+
   loadChannels(groupId: number): void {
-    this.channelService.getChannelsByGroupId(groupId).subscribe(channels => {
+    this.channelService.getChannelsByGroupId(groupId).subscribe((channels) => {
       this.channels = channels;
       console.log('Channels for group:', this.channels); // Debugging log
     });
@@ -122,7 +154,7 @@ export class GroupComponent implements OnInit {
       );
     }
   }
-  
+
   createChannel(): void {
     if (!this.channelName || !this.channelDescription) {
       alert('Please fill in all required fields.');
@@ -165,29 +197,35 @@ export class GroupComponent implements OnInit {
       return;
     }
 
-    this.channelService.updateChannel(this.editChannelData.id, this.editChannelData).subscribe(
-      (updatedChannel) => {
-        // Update the channel in the local list
-        const index = this.channels.findIndex(ch => ch.id === updatedChannel.id);
-        if (index !== -1) {
-          this.channels[index] = updatedChannel;
+    this.channelService
+      .updateChannel(this.editChannelData.id, this.editChannelData)
+      .subscribe(
+        (updatedChannel) => {
+          // Update the channel in the local list
+          const index = this.channels.findIndex(
+            (ch) => ch.id === updatedChannel.id
+          );
+          if (index !== -1) {
+            this.channels[index] = updatedChannel;
+          }
+          this.editChannelData = null;
+          this.isEditChannelMode = false;
+          alert('Channel updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating channel:', error);
+          alert('Failed to update channel.');
         }
-        this.editChannelData = null;
-        this.isEditChannelMode = false;
-        alert('Channel updated successfully!');
-      },
-      (error) => {
-        console.error('Error updating channel:', error);
-        alert('Failed to update channel.');
-      }
-    );
+      );
   }
 
   deleteChannel(channelId: number): void {
     if (confirm('Are you sure you want to delete this channel?')) {
       this.channelService.deleteChannel(channelId).subscribe(
         () => {
-          this.channels = this.channels.filter(channel => channel.id !== channelId);
+          this.channels = this.channels.filter(
+            (channel) => channel.id !== channelId
+          );
           alert('Channel deleted successfully!');
         },
         (error) => {

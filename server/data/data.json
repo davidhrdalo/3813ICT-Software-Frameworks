@@ -64,22 +64,6 @@
   ],
   "groups": [
     {
-      "id": 1,
-      "name": "group1",
-      "admins": [
-        1
-      ],
-      "members": [
-        1,
-        2
-      ],
-      "interested": [
-        1725347156900
-      ],
-      "description": "Desc1",
-      "groupImg": "assets/images/473.jpg"
-    },
-    {
       "id": 2,
       "name": "group2",
       "admins": [
@@ -116,7 +100,9 @@
         "1"
       ],
       "members": [],
-      "interested": [],
+      "interested": [
+        1725409170670
+      ],
       "description": "t",
       "groupImg": "assets/images/defaultGroup.jpg"
     },
@@ -127,7 +113,9 @@
         1725408407583
       ],
       "members": [],
-      "interested": [],
+      "interested": [
+        1725409170670
+      ],
       "description": "t",
       "groupImg": "assets/images/defaultGroup.jpg"
     }
