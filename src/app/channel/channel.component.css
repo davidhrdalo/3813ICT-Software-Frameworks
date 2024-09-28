@@ -39,7 +39,7 @@
   .chat-bubble {
     background-color: #f0f0f0;
     border-radius: 10px;
-    padding: 10px 15px;
+    padding: 15px 15px;
     display: inline-block;
     max-width: 80%;
     word-wrap: break-word;
@@ -73,3 +73,24 @@
     font-style: italic;
   }
   
+  @media (max-width: 768px) {
+    .chat-container {
+      height: 50vh;
+    }
+  
+    .col-md-2,
+    .col-md-10 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  
+    .chat-container,
+    .video-container {
+      margin-top: 15px;
+    }
+  
+    .member-item button {
+      width: 100%;
+      margin-top: 5px;
+    }
+  }

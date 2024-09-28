@@ -1,35 +1,27 @@
-<div class="container">
-  <!-- Start Grid -->
+<div class="container-fluid">
   <div class="row">
-    <!-- Full row -->
-    <div
-      style="padding-top: 2em; padding-bottom: 2em"
-      class="col-12"
-      *ngIf="channel"
-    >
-      <div class="jumbotron jumbotron-fluid">
-        <h1 class="display-4">Welcome to {{ channel.name }}</h1>
-        <p class="lead">{{ channel.description }}</p>
+    <!-- Channel Header -->
+    <div class="col-12" *ngIf="channel" style="padding: 1em 0;">
+      <div class="jumbotron jumbotron-fluid p-3">
+        <h1 class="display-5">Welcome to {{ channel.name }}</h1>
+        <p class="lead mb-0">{{ channel.description }}</p>
       </div>
       <hr />
     </div>
 
-    <!-- Sidebar - Channel Members -->
-    <div class="col-3">
+    <!-- Sidebar - Channel Members and Non-Members -->
+    <div class="col-md-2">
       <!-- Channel Members -->
-      <div>
-        <h3>Channel Members</h3>
+      <div class="mb-3">
+        <h4>Members</h4>
         <ul class="list-group">
           <li
             *ngFor="let member of channelMembers"
-            class="list-group-item d-flex justify-content-between align-items-center"
+            class="list-group-item d-flex justify-content-between align-items-center p-2 member-item"
           >
             {{ member.username }}
             <button
-              *ngIf="
-                userData.roles.includes('super') ||
-                group.admins.includes(userData._id)
-              "
+              *ngIf="userData.roles.includes('super') || group.admins.includes(userData._id)"
               class="btn btn-danger btn-sm"
               (click)="removeMemberFromChannel(member._id)"
             >
@@ -39,25 +31,19 @@
         </ul>
       </div>
 
-      <hr />
-
+      <!-- Non-Members -->
       <div
-        *ngIf="
-          userData.roles.includes('super') || group.admins.includes(userData._id)
-        "
+        *ngIf="userData.roles.includes('super') || group.admins.includes(userData._id)"
+        class="mb-3"
       >
-        <!-- Non-Channel Members (Interested Members) -->
-        <h3>Non-Members</h3>
+        <h4>Non-Members</h4>
         <ul class="list-group">
           <li
             *ngFor="let nonMember of nonChannelMembers"
-            class="list-group-item d-flex justify-content-between align-items-center"
+            class="list-group-item d-flex justify-content-between align-items-center p-2 member-item"
           >
             {{ nonMember.username }}
-            <button
-              class="btn btn-warning btn-sm"
-              (click)="addMemberToChannel(nonMember._id)"
-            >
+            <button class="btn btn-warning btn-sm" (click)="addMemberToChannel(nonMember._id)">
               Add
             </button>
           </li>
@@ -65,52 +51,53 @@
       </div>
     </div>
 
-    <div class="chat-container col-8">
-      <div class="messages-container">
-        <ng-container *ngIf="messages.length > 0; else noMessages">
-          <ul>
-            <li *ngFor="let m of messages">
-              <div class="chat-bubble">{{ m }}</div>
-            </li>
-          </ul>
-        </ng-container>
-        <ng-template #noMessages>
-          <div class="no-messages">No Messages, Say Something!</div>
-        </ng-template>
-      </div>
+    <!-- Chat and Video Section -->
+    <div class="col-md-10">
+      <div class="row">
+        <!-- Chat Container (Reduced Size) -->
+        <div class="col-md-7 chat-container">
+          <div class="messages-container mb-3">
+            <ng-container *ngIf="messages.length > 0; else noMessages">
+              <ul>
+                <li *ngFor="let m of messages">
+                  <div class="chat-bubble p-2">{{ m }}</div>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #noMessages>
+              <div class="no-messages p-2">No Messages, Say Something!</div>
+            </ng-template>
+          </div>
 
-      <div class="input-container">
-        <form>
-          <div class="form-group">
-            <label for="messagecontent">New Message</label>
-            <input
-              type="text"
-              [(ngModel)]="messagecontent"
-              name="messagecontent"
-              _id="messagecontent"
-              class="form-control"
-            />
+          <div class="input-container">
+            <form>
+              <div class="form-group mb-2">
+                <label for="messagecontent">New Message</label>
+                <input
+                  type="text"
+                  [(ngModel)]="messagecontent"
+                  name="messagecontent"
+                  id="messagecontent"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group d-flex justify-content-between">
+                <button (click)="chat()" class="btn btn-primary flex-grow-1">
+                  Send Message
+                </button>
+                <button (click)="chat()" class="btn btn-secondary flex-grow-1 mx-2">
+                  Send Picture
+                </button>
+              </div>
+            </form>
           </div>
-          <div class="form-group d-flex justify-content-between">
-            <button (click)="chat()" class="btn btn-primary flex-grow-2">
-              Send Message
-            </button>
-            <button (click)="chat()" class="btn btn-primary flex-grow-1 mx-2">
-              Send Picture
-            </button>
-            <button (click)="chat()" class="btn btn-primary flex-grow-1">
-              Video Chat
-            </button>
-          </div>
-        </form>
+        </div>
+
+        <!-- Video Component (Increased Size) -->
+        <div class="col-md-5">
+          <app-video></app-video>
+        </div>
       </div>
     </div>
-
-    <!-- Video Component -->
-    <div class="col-4">
-      <app-video></app-video>
-    </div>
-
-
   </div>
 </div>
