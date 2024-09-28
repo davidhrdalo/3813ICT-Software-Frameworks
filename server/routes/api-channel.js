@@ -8,8 +8,9 @@ module.exports = function (app, client) {
     app.get('/api/channels', async (req, res) => {
         try {
             const channels = await channelsCollection.find({}).toArray();
-            res.json(channels);
+            res.status(200).json(channels);
         } catch (error) {
+            console.error('Error fetching channels:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -26,8 +27,13 @@ module.exports = function (app, client) {
                 members: []
             };
             const result = await channelsCollection.insertOne(newChannel);
-            res.status(201).json(newChannel);
+            if (result.insertedId) {
+                res.status(201).json(newChannel);
+            } else {
+                res.status(400).json({ error: 'Failed to create channel' });
+            }
         } catch (error) {
+            console.error('Error creating channel:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -38,11 +44,12 @@ module.exports = function (app, client) {
             const channelId = new ObjectId(req.params.id);
             const result = await channelsCollection.deleteOne({ _id: channelId });
             if (result.deletedCount === 1) {
-                res.status(204).send();
+                res.status(200).json({ message: 'Channel deleted successfully' });
             } else {
                 res.status(404).json({ error: 'Channel not found' });
             }
         } catch (error) {
+            console.error('Error deleting channel:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -51,17 +58,24 @@ module.exports = function (app, client) {
     app.put('/api/channels/:id', async (req, res) => {
         try {
             const channelId = new ObjectId(req.params.id);
+            const { _id, ...updateData } = req.body; // Remove _id from update data
             const result = await channelsCollection.findOneAndUpdate(
                 { _id: channelId },
-                { $set: req.body },
+                { $set: updateData },
                 { returnDocument: 'after' }
             );
             if (result.value) {
-                res.json(result.value);
+                res.status(200).json(result.value);
             } else {
-                res.status(404).json({ error: 'Channel not found' });
+                const channel = await channelsCollection.findOne({ _id: channelId });
+                if (channel) {
+                    res.status(200).json(channel); // Channel exists but no changes were made
+                } else {
+                    res.status(404).json({ error: 'Channel not found' });
+                }
             }
         } catch (error) {
+            console.error('Error updating channel:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -72,16 +86,26 @@ module.exports = function (app, client) {
             const channelId = new ObjectId(req.params.id);
             const { userId } = req.body;
             const result = await channelsCollection.findOneAndUpdate(
-                { _id: channelId, members: { $ne: userId } },
+                { _id: channelId },
                 { $addToSet: { members: userId } },
                 { returnDocument: 'after' }
             );
             if (result.value) {
                 res.status(200).json(result.value);
             } else {
-                res.status(400).json({ error: 'User is already a member or channel not found' });
+                const channel = await channelsCollection.findOne({ _id: channelId });
+                if (channel) {
+                    if (channel.members.includes(userId)) {
+                        res.status(200).json(channel); // User already a member
+                    } else {
+                        res.status(400).json({ error: 'Failed to add user to channel' });
+                    }
+                } else {
+                    res.status(404).json({ error: 'Channel not found' });
+                }
             }
         } catch (error) {
+            console.error('Error adding member to channel:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -99,9 +123,15 @@ module.exports = function (app, client) {
             if (result.value) {
                 res.status(200).json(result.value);
             } else {
-                res.status(400).json({ error: 'User is not a member or channel not found' });
+                const channel = await channelsCollection.findOne({ _id: channelId });
+                if (channel) {
+                    res.status(200).json(channel); // Channel exists but user wasn't a member
+                } else {
+                    res.status(404).json({ error: 'Channel not found' });
+                }
             }
         } catch (error) {
+            console.error('Error removing member from channel:', error);
             res.status(500).json({ error: error.message });
         }
     });

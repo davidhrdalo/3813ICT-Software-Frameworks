@@ -37,17 +37,28 @@ module.exports = function (app, client) {
     app.put('/api/groups/:id', async (req, res) => {
         try {
             const groupId = new ObjectId(req.params.id);
+            
+            // Create a new object without the _id field
+            const { _id, ...updateData } = req.body;
+
             const updatedGroup = await groupsCollection.findOneAndUpdate(
                 { _id: groupId },
-                { $set: req.body },
+                { $set: updateData },
                 { returnDocument: 'after' }
             );
+
             if (updatedGroup.value) {
-                res.json(updatedGroup.value);
+                res.status(200).json(updatedGroup.value);
             } else {
-                res.status(404).json({ error: 'Group not found' });
+                const group = await groupsCollection.findOne({ _id: groupId });
+                if (group) {
+                    res.status(200).json(group); // Group exists but no changes were made
+                } else {
+                    res.status(404).json({ error: 'Group not found' });
+                }
             }
         } catch (error) {
+            console.error('Error updating group:', error);
             res.status(500).json({ error: error.message });
         }
     });
