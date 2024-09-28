@@ -4,7 +4,15 @@
   "description": "node express backend for 3813-ict-software-frameworks assignment",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "authIntTest": "mocha ./tests/integrationTest/authIntTest.js",
+    "authUnitTest": "mocha ./tests/unitTest/authUnitTest.js",
+    "channelIntTest": "mocha ./tests/integrationTest/channelIntTest.js",
+    "channelUnitTest": "mocha ./tests/unitTest/channelUnitTest.js",
+    "groupIntTest": "mocha ./tests/integrationTest/groupIntTest.js",
+    "groupUnitTest": "mocha ./tests/unitTest/groupUnitTest.js",
+    "userIntTest": "mocha ./tests/integrationTest/userIntTest.js",
+    "userUnitTest": "mocha ./tests/unitTest/userUnitTest.js",
+
     "start": "node server.js"
   },
   "repository": {
@@ -23,5 +31,8 @@
     "mongodb": "^6.9.0",
     "peer": "^1.0.2",
     "peerjs": "^1.5.4"
+  },
+  "devDependencies": {
+    "mocha": "^10.7.3"
   }
 }
