@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
 module.exports = function (app, client) {
     const db = client.db('softwareFrameworks');
@@ -8,6 +9,8 @@ module.exports = function (app, client) {
     app.get('/api/channels', async (req, res) => {
         try {
             const channels = await channelsCollection.find({}).toArray();
+            // Uncomment the next line to read from static file instead of MongoDB
+            // const channels = await readStaticFile('channels');
             res.status(200).json(channels);
         } catch (error) {
             console.error('Error fetching channels:', error);
@@ -28,6 +31,9 @@ module.exports = function (app, client) {
             };
             const result = await channelsCollection.insertOne(newChannel);
             if (result.insertedId) {
+                // Update static file
+                const allChannels = await channelsCollection.find({}).toArray();
+                await updateStaticFile(allChannels, 'channels');
                 res.status(201).json(newChannel);
             } else {
                 res.status(400).json({ error: 'Failed to create channel' });
@@ -44,6 +50,9 @@ module.exports = function (app, client) {
             const channelId = new ObjectId(req.params.id);
             const result = await channelsCollection.deleteOne({ _id: channelId });
             if (result.deletedCount === 1) {
+                // Update static file
+                const allChannels = await channelsCollection.find({}).toArray();
+                await updateStaticFile(allChannels, 'channels');
                 res.status(200).json({ message: 'Channel deleted successfully' });
             } else {
                 res.status(404).json({ error: 'Channel not found' });
@@ -65,6 +74,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allChannels = await channelsCollection.find({}).toArray();
+                await updateStaticFile(allChannels, 'channels');
                 res.status(200).json(result.value);
             } else {
                 const channel = await channelsCollection.findOne({ _id: channelId });
@@ -91,6 +103,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allChannels = await channelsCollection.find({}).toArray();
+                await updateStaticFile(allChannels, 'channels');
                 res.status(200).json(result.value);
             } else {
                 const channel = await channelsCollection.findOne({ _id: channelId });
@@ -121,6 +136,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allChannels = await channelsCollection.find({}).toArray();
+                await updateStaticFile(allChannels, 'channels');
                 res.status(200).json(result.value);
             } else {
                 const channel = await channelsCollection.findOne({ _id: channelId });

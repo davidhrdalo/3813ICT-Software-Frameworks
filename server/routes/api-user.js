@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
 module.exports = function (app, client) {
     const db = client.db('softwareFrameworks');
@@ -8,6 +9,8 @@ module.exports = function (app, client) {
     app.get('/api/users', async (req, res) => {
         try {
             const users = await usersCollection.find({}, { projection: { password: 0 } }).toArray();
+            // Uncomment the next line to read from static file instead of MongoDB
+            // const users = await readStaticFile();
             res.status(200).json(users);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -40,6 +43,9 @@ module.exports = function (app, client) {
 
             const result = await usersCollection.insertOne(newUser);
             if (result.insertedId) {
+                // Update static file
+                const allUsers = await usersCollection.find({}).toArray();
+                await updateStaticFile(allUsers, 'users');
                 res.status(201).json(newUser);
             } else {
                 res.status(500).json({ error: 'Failed to create user' });
@@ -57,6 +63,9 @@ module.exports = function (app, client) {
             const result = await usersCollection.deleteOne({ _id: userId });
 
             if (result.deletedCount === 1) {
+                // Update static file
+                const allUsers = await usersCollection.find({}).toArray();
+                await updateStaticFile(allUsers, 'users');
                 res.status(200).json({ message: 'User deleted successfully' });
             } else {
                 res.status(404).json({ error: 'User not found' });
@@ -78,6 +87,9 @@ module.exports = function (app, client) {
             );
     
             if (result.value) {
+                // Update static file
+                const allUsers = await usersCollection.find({}).toArray();
+                await updateStaticFile(allUsers, 'users');
                 res.status(200).json(result.value);
             } else {
                 const user = await usersCollection.findOne({ _id: userId });
@@ -104,6 +116,9 @@ module.exports = function (app, client) {
             );
 
             if (result.value) {
+                // Update static file
+                const allUsers = await usersCollection.find({}).toArray();
+                await updateStaticFile(allUsers, 'users');
                 res.status(200).json(result.value);
             } else {
                 const user = await usersCollection.findOne({ _id: userId });

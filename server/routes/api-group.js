@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
 module.exports = function (app, client) {
     const db = client.db('softwareFrameworks');
@@ -8,6 +9,8 @@ module.exports = function (app, client) {
     app.get('/api/groups', async (req, res) => {
         try {
             const groups = await groupsCollection.find({}).toArray();
+            // Uncomment the next line to read from static file instead of MongoDB
+            // const groups = await readStaticFile();
             res.json(groups);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -27,6 +30,9 @@ module.exports = function (app, client) {
                 groupImg: req.body.groupImg
             };
             const result = await groupsCollection.insertOne(newGroup);
+            // Update static file
+            const allGroups = await groupsCollection.find({}).toArray();
+            await updateStaticFile(allGroups, 'groups');
             res.status(201).json(newGroup);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -48,6 +54,9 @@ module.exports = function (app, client) {
             );
 
             if (updatedGroup.value) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.status(200).json(updatedGroup.value);
             } else {
                 const group = await groupsCollection.findOne({ _id: groupId });
@@ -69,6 +78,9 @@ module.exports = function (app, client) {
             const groupId = new ObjectId(req.params.id);
             const result = await groupsCollection.deleteOne({ _id: groupId });
             if (result.deletedCount === 1) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.status(204).send();
             } else {
                 res.status(404).json({ error: 'Group not found' });
@@ -89,6 +101,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.json(result.value);
             } else {
                 res.status(400).json({ error: 'User already registered interest or group not found' });
@@ -109,6 +124,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.json(result.value);
             } else {
                 res.status(404).json({ error: 'Group not found' });
@@ -129,6 +147,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.json(result.value);
             } else {
                 res.status(404).json({ error: 'Group not found' });
@@ -152,6 +173,9 @@ module.exports = function (app, client) {
                 { returnDocument: 'after' }
             );
             if (result.value) {
+                // Update static file
+                const allGroups = await groupsCollection.find({}).toArray();
+                await updateStaticFile(allGroups, 'groups');
                 res.json(result.value);
             } else {
                 res.status(404).json({ error: 'Group not found' });
