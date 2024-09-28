@@ -8,8 +8,9 @@ module.exports = function (app, client) {
     app.get('/api/users', async (req, res) => {
         try {
             const users = await usersCollection.find({}, { projection: { password: 0 } }).toArray();
-            res.json(users);
+            res.status(200).json(users);
         } catch (error) {
+            console.error('Error fetching users:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -19,32 +20,32 @@ module.exports = function (app, client) {
         try {
             const { username, email, password } = req.body;
 
-            // Check if the username already exists
             const userExists = await usersCollection.findOne({ username });
-
             if (userExists) {
                 return res.status(400).json({ error: 'Username is already taken' });
             }
 
-            // Create a new user if the username is unique
             const newUser = {
                 _id: new ObjectId(),
                 username,
                 email,
                 password,
-                roles: ['chat'], // Default role is 'chat'
-                profileImg: 'assets/images/defaultProfile.jpg', // Default profile image
+                roles: ['chat'],
+                profileImg: 'assets/images/defaultProfile.jpg',
                 firstName: '',
                 lastName: '',
                 dob: '',
-                status: 'Active' // Default status
+                status: 'Active'
             };
 
-            // Add the new user to the users collection
-            await usersCollection.insertOne(newUser);
-
-            res.status(201).json(newUser); // Respond with the created user data
+            const result = await usersCollection.insertOne(newUser);
+            if (result.insertedId) {
+                res.status(201).json(newUser);
+            } else {
+                res.status(500).json({ error: 'Failed to create user' });
+            }
         } catch (error) {
+            console.error('Error creating user:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -56,11 +57,12 @@ module.exports = function (app, client) {
             const result = await usersCollection.deleteOne({ _id: userId });
 
             if (result.deletedCount === 1) {
-                res.status(204).send(); // Send no content response
+                res.status(200).json({ message: 'User deleted successfully' });
             } else {
                 res.status(404).json({ error: 'User not found' });
             }
         } catch (error) {
+            console.error('Error deleting user:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -70,17 +72,23 @@ module.exports = function (app, client) {
         try {
             const userId = new ObjectId(req.params.id);
             const result = await usersCollection.findOneAndUpdate(
-                { _id: userId, roles: { $ne: 'group' } },
+                { _id: userId },
                 { $addToSet: { roles: 'group' } },
                 { returnDocument: 'after' }
             );
-
+    
             if (result.value) {
                 res.status(200).json(result.value);
             } else {
-                res.status(400).json({ error: 'User is already a Group Admin or not found' });
+                const user = await usersCollection.findOne({ _id: userId });
+                if (user && user.roles.includes('group')) {
+                    res.status(200).json(user);
+                } else {
+                    res.status(404).json({ error: 'User not found' });
+                }
             }
         } catch (error) {
+            console.error('Error in promote to group admin:', error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -90,7 +98,7 @@ module.exports = function (app, client) {
         try {
             const userId = new ObjectId(req.params.id);
             const result = await usersCollection.findOneAndUpdate(
-                { _id: userId, roles: { $ne: 'super' } },
+                { _id: userId },
                 { $addToSet: { roles: 'super' } },
                 { returnDocument: 'after' }
             );
@@ -98,9 +106,15 @@ module.exports = function (app, client) {
             if (result.value) {
                 res.status(200).json(result.value);
             } else {
-                res.status(400).json({ error: 'User is already a Super Admin or not found' });
+                const user = await usersCollection.findOne({ _id: userId });
+                if (user && user.roles.includes('super')) {
+                    res.status(200).json(user);
+                } else {
+                    res.status(404).json({ error: 'User not found' });
+                }
             }
         } catch (error) {
+            console.error('Error in promote to super admin:', error);
             res.status(500).json({ error: error.message });
         }
     });
