@@ -4,7 +4,7 @@
     <!-- Full row -->
     <div style="padding-top: 2em; padding-bottom: 2em" class="col-12">
       <div class="jumbotron jumbotron-fluid">
-        <h1 class="display-4">Welcome to {{ group.name }}</h1>
+        <h1 class="display-4">Welcome to {{ group?.name }}</h1>
         <p class="lead" *ngIf="userData.roles.includes('super')">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
@@ -61,7 +61,7 @@
       <!-- Name -->
       <p>
         <strong>Group Name: </strong>
-        <span *ngIf="!isEditMode">{{ group.name }}</span>
+        <span *ngIf="!isEditMode">{{ group?.name }}</span>
         <input
           *ngIf="isEditMode"
           type="text"
@@ -73,7 +73,7 @@
       <!-- Description -->
       <p>
         <strong>Group Description: </strong>
-        <span *ngIf="!isEditMode">{{ group.description }}</span>
+        <span *ngIf="!isEditMode">{{ group?.description }}</span>
         <input
           *ngIf="isEditMode"
           type="text"
