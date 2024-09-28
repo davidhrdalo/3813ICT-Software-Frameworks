@@ -5,6 +5,8 @@ const app = express();
 const cors = require('cors');
 const http = require('http').Server(app); // HTTP server
 const bodyParser = require('body-parser');
+const { PeerServer } = require('peer');
+const fs = require('fs');
 const { MongoClient } = require('mongodb');
 
 // MongoDB client setup
@@ -70,12 +72,29 @@ http.listen(PORT, () => {
     console.log('Server has been started on port ' + PORT + ' at ' + h + ':' + m);
 });
 
+
+// Video support changes below!
+
+const sslOptions = {
+    // generate a SSL certificate in the elf terminal.
+    // openssl genrsa -out key.pem
+    // openssl req -new -key key.pem -out csr.pem
+    // openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+    // rm csr.pem
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+
 // Additional info for SSL setup (if needed in the future)
 // To switch to HTTPS, follow these steps:
 // const https = require('https'),
-//   fs = require('fs'),
-//   options = {
-//     key: fs.readFileSync('key.pem'),
-//     cert: fs.readFileSync('cert.pem')
-//   };
-// Replace http.listen() with https.createServer(options, app).listen(PORT)
+// Replace http.listen() with https.createServer(sslOptions, app).listen(PORT)
+
+// Peer - to run Peer video support
+PeerServer({
+    port: 3001,
+    path: '/',
+    ssl: sslOptions
+});
+
+console.log(`Starting SSL PeerServer at: ${3001}`);

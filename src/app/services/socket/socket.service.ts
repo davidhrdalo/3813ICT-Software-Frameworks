@@ -9,6 +9,7 @@ const SERVER_URL = 'http://localhost:3000';
 })
 export class SocketService {
   private socket: any;
+  public socketId: any;
 
   constructor() { }
 
@@ -27,6 +28,19 @@ export class SocketService {
   getMessage() {
     return new Observable(observer => {
       this.socket.on('message', (data: any) => { observer.next(data) });
+    });
+  }
+
+  // Peer video support below
+  peerID(message: string) {
+    this.socket.emit('peerID', message);
+  }
+
+  getPeerID() {
+    return new Observable(observer => {
+      this.socket.on('peerID', (data: string) => {
+        observer.next(data);
+      });
     });
   }
 }

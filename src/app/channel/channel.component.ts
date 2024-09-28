@@ -6,11 +6,12 @@ import { SocketService } from '../services/socket/socket.service';
 import { FormsModule } from '@angular/forms';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 import { GroupService } from '../services/group/group.service';
+import { VideosComponent } from '../video/video.component';
 
 @Component({
   selector: 'app-channel',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, VideosComponent],
   templateUrl: './channel.component.html',
   styleUrl: './channel.component.css',
 })
