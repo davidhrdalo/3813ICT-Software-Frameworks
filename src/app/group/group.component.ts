@@ -46,7 +46,7 @@ export class GroupComponent implements OnInit {
     // Get the group ID from the route and load the group details
     const groupId = this.route.snapshot.paramMap.get('id');
     if (groupId) {
-      this.loadGroupDetails(parseInt(groupId, 10));
+      this.loadGroupDetails(groupId);
     }
   }
 
@@ -67,7 +67,7 @@ export class GroupComponent implements OnInit {
       return;
     }
 
-    this.groupService.updateGroup(this.group.id, this.groupEditData).subscribe(
+    this.groupService.updateGroup(this.group._id, this.groupEditData).subscribe(
       (updatedGroup) => {
         this.group = updatedGroup; // Update the group with saved data
         this.toggleEditMode(); // Exit edit mode
@@ -93,16 +93,16 @@ export class GroupComponent implements OnInit {
   }
 
   // Delete a user from the system
-  deleteUser(userId: number): void {
+  deleteUser(userId: string): void {
     this.userService.deleteUser(userId);
   }
 
   // Load group details based on group ID
-  loadGroupDetails(id: number): void {
+  loadGroupDetails(id: string): void {
     this.groupService.getGroups().subscribe((groups) => {
-      this.group = groups.find((group) => group.id === id);
+      this.group = groups.find((group) => group._id === id);
       if (this.group) {
-        this.loadChannels(this.group.id); // Load channels for the group
+        this.loadChannels(this.group._id); // Load channels for the group
         this.getActiveMembers(); // Fetch active members
         this.getInterestedUsers(); // Fetch interested users
       } else {
@@ -114,7 +114,7 @@ export class GroupComponent implements OnInit {
   // Fetch active members of the group
   getActiveMembers(): void {
     if (this.group) {
-      this.groupService.getActiveMembers(this.group.id).subscribe(
+      this.groupService.getActiveMembers(this.group._id).subscribe(
         (members) => {
           this.activeMembers = members;
         },
@@ -128,7 +128,7 @@ export class GroupComponent implements OnInit {
   // Fetch users interested in joining the group
   getInterestedUsers(): void {
     if (this.group) {
-      this.groupService.getInterestedUsers(this.group.id).subscribe(
+      this.groupService.getInterestedUsers(this.group._id).subscribe(
         (users) => {
           this.interestedUsers = users;
         },
@@ -140,14 +140,14 @@ export class GroupComponent implements OnInit {
   }
 
   // Load channels belonging to the group
-  loadChannels(groupId: number): void {
+  loadChannels(groupId: string): void {
     this.channelService.getChannelsByGroupId(groupId).subscribe((channels) => {
       this.channels = channels;
     });
   }
 
   // Delete the group and navigate back to profile
-  deleteGroup(groupId: number): void {
+  deleteGroup(groupId: string): void {
     if (confirm('Are you sure you want to delete this group?')) {
       this.groupService.deleteGroup(groupId).subscribe(
         () => {
@@ -172,7 +172,7 @@ export class GroupComponent implements OnInit {
     const channelData = {
       name: this.channelName,
       description: this.channelDescription,
-      groupId: this.group.id,
+      groupId: this.group._id,
     };
 
     this.channelService.createChannel(channelData).subscribe(
@@ -208,12 +208,12 @@ export class GroupComponent implements OnInit {
     }
 
     this.channelService
-      .updateChannel(this.editChannelData.id, this.editChannelData)
+      .updateChannel(this.editChannelData._id, this.editChannelData)
       .subscribe(
         (updatedChannel) => {
           // Update the channel in the list
           const index = this.channels.findIndex(
-            (ch) => ch.id === updatedChannel.id
+            (ch) => ch._id === updatedChannel._id
           );
           if (index !== -1) {
             this.channels[index] = updatedChannel;
@@ -229,12 +229,12 @@ export class GroupComponent implements OnInit {
   }
 
   // Delete a channel from the group
-  deleteChannel(channelId: number): void {
+  deleteChannel(channelId: string): void {
     if (confirm('Are you sure you want to delete this channel?')) {
       this.channelService.deleteChannel(channelId).subscribe(
         () => {
           this.channels = this.channels.filter(
-            (channel) => channel.id !== channelId
+            (channel) => channel._id !== channelId
           );
           alert('Channel deleted successfully!');
         },
@@ -253,13 +253,13 @@ export class GroupComponent implements OnInit {
   }
 
   // Remove a user from the group
-  removeUserFromGroup(userId: number): void {
+  removeUserFromGroup(userId: string): void {
     if (this.group) {
-      this.groupService.removeUserFromGroup(this.group.id, userId).subscribe(
+      this.groupService.removeUserFromGroup(this.group._id, userId).subscribe(
         () => {
           // Update member and interested users lists
-          this.activeMembers = this.activeMembers.filter(user => user.id !== userId);
-          this.interestedUsers = this.interestedUsers.filter(user => user.id !== userId);
+          this.activeMembers = this.activeMembers.filter(user => user._id !== userId);
+          this.interestedUsers = this.interestedUsers.filter(user => user._id !== userId);
           alert('User removed from group successfully.');
         },
         (error) => {
@@ -271,15 +271,15 @@ export class GroupComponent implements OnInit {
   }
 
   // Allow a user to join the group from interested users
-  allowUserToJoin(userId: number): void {
+  allowUserToJoin(userId: string): void {
     if (this.group) {
-      this.groupService.allowUserToJoin(this.group.id, userId).subscribe(
+      this.groupService.allowUserToJoin(this.group._id, userId).subscribe(
         () => {
           // Move user from interestedUsers to activeMembers
-          const user = this.interestedUsers.find(user => user.id === userId);
+          const user = this.interestedUsers.find(user => user._id === userId);
           if (user) {
             this.activeMembers.push(user);
-            this.interestedUsers = this.interestedUsers.filter(u => u.id !== userId);
+            this.interestedUsers = this.interestedUsers.filter(u => u._id !== userId);
           }
           alert('User allowed to join group successfully.');
         },

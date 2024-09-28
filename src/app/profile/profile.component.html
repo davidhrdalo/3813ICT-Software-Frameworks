@@ -183,7 +183,7 @@
               <!-- Delete Button (Visible if the active user is a Super Admin) -->
               <button
                 *ngIf="userData.roles.includes('super')"
-                (click)="deleteUser(user.id)"
+                (click)="deleteUser(user._id)"
                 class="btn btn-outline-danger"
               >
                 Delete
@@ -192,7 +192,7 @@
               <!-- Promote to Group Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Group Admin) -->
               <button
                 *ngIf="userData.roles.includes('super') && !user.roles.includes('group')"
-                (click)="promoteToGroupAdmin(user.id)"
+                (click)="promoteToGroupAdmin(user._id)"
                 class="btn btn-outline-primary"
               >
                 Promote to Group Admin
@@ -201,7 +201,7 @@
               <!-- Promote to Super Admin Button (Visible if the active user is a Super Admin and the selected user is not already a Super Admin) -->
               <button
                 *ngIf="userData.roles.includes('super') && !user.roles.includes('super')"
-                (click)="promoteToSuperAdmin(user.id)"
+                (click)="promoteToSuperAdmin(user._id)"
                 class="btn btn-outline-success"
               >
                 Promote to Super Admin
@@ -268,10 +268,10 @@
               class="rounded-circle"
               style="width: 75px; height: 75px; margin-bottom: 15px"
               alt="Avatar"
-              [routerLink]="['/group', group.id]"
+              [routerLink]="['/group', group._id]"
             />
             <p>
-              <strong [routerLink]="['/group', group.id]">{{
+              <strong [routerLink]="['/group', group._id]">{{
                 group.name
               }}</strong>
             </p>
@@ -279,7 +279,7 @@
             <div class="button-group">
               <button
                 class="btn btn-outline-danger"
-                (click)="deleteGroup(group.id)"
+                (click)="deleteGroup(group._id)"
               >
                 Delete
               </button>
@@ -346,7 +346,7 @@
           >
             <div
               class="col-md-2 col-lg-3 card mb-3"
-              [routerLink]="['/group', group.id]"
+              [routerLink]="['/group', group._id]"
               *ngFor="let group of memberOnlyGroups"
             >
               <img
@@ -401,14 +401,14 @@
                   <button
                     class="btn"
                     [ngClass]="
-                      group.interested.includes(userData.id)
+                      group.interested.includes(userData._id)
                         ? 'btn-outline-danger'
                         : 'btn-outline-primary'
                     "
                     (click)="markInterest(group)"
                   >
                     {{
-                      group.interested.includes(userData.id)
+                      group.interested.includes(userData._id)
                         ? "Unregister Interest"
                         : "Interested"
                     }}

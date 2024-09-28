@@ -78,13 +78,13 @@ export class UserService {
   }
 
   // Delete a user by sending a DELETE request to the backend
-  deleteUser(userId: number): Observable<any> {
+  deleteUser(userId: string): Observable<any> {
     return this.httpClient.delete(`${BACKEND_URL}/${userId}`, httpOptions).pipe(
       tap(() => {
         // Update the user list locally by removing the deleted user
         const currentUsers = this.allUsersSubject.value;
         this.allUsersSubject.next(
-          currentUsers.filter((user) => user.id !== userId)
+          currentUsers.filter((user) => user._id !== userId)
         );
       }),
       catchError((error) => {
@@ -95,14 +95,14 @@ export class UserService {
   }
 
   // Promote a user to Group Admin by sending a POST request to the backend
-  promoteToGroupAdmin(userId: number): Observable<any> {
+  promoteToGroupAdmin(userId: string): Observable<any> {
     return this.httpClient
       .post(`${BACKEND_URL}/${userId}/promote/group`, {}, httpOptions)
       .pipe(
         tap((updatedUser) => {
           // Update the user list locally with the updated user role
           const currentUsers = this.allUsersSubject.value.map((user) =>
-            user.id === userId ? updatedUser : user
+            user._id === userId ? updatedUser : user
           );
           this.allUsersSubject.next(currentUsers); // Update the user list in the BehaviorSubject
         }),
@@ -114,14 +114,14 @@ export class UserService {
   }
 
   // Promote a user to Super Admin by sending a POST request to the backend
-  promoteToSuperAdmin(userId: number): Observable<any> {
+  promoteToSuperAdmin(userId: string): Observable<any> {
     return this.httpClient
       .post(`${BACKEND_URL}/${userId}/promote/super`, {}, httpOptions)
       .pipe(
         tap((updatedUser) => {
           // Update the user list locally with the updated user role
           const currentUsers = this.allUsersSubject.value.map((user) =>
-            user.id === userId ? updatedUser : user
+            user._id === userId ? updatedUser : user
           );
           this.allUsersSubject.next(currentUsers); // Update the user list in the BehaviorSubject
         }),

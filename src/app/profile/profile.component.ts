@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Delete a user by ID
-  deleteUser(userId: number): void {
+  deleteUser(userId: string): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userService.deleteUser(userId).subscribe(
         () => {
@@ -167,7 +167,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Delete a group by ID
-  deleteGroup(groupId: number): void {
+  deleteGroup(groupId: string): void {
     if (confirm('Are you sure you want to delete this group?')) {
       this.groupService.deleteGroup(groupId).subscribe(
         () => {
@@ -185,11 +185,11 @@ export class ProfileComponent implements OnInit {
 
   // Register or unregister interest in a group
   markInterest(group: any): void {
-    const userId = this.userData.id;
+    const userId = this.userData._id;
 
     if (group.interested.includes(userId)) {
       // Unregister interest
-      this.groupService.removeInterestFromGroup(group.id, userId).subscribe(
+      this.groupService.removeInterestFromGroup(group._id, userId).subscribe(
         () => {
           alert('You have unregistered your interest in this group.');
           this.getGUserNotInGroups(); // Refresh groups the user is not in
@@ -201,7 +201,7 @@ export class ProfileComponent implements OnInit {
       );
     } else {
       // Register interest
-      this.groupService.addInterestToGroup(group.id, userId).subscribe(
+      this.groupService.addInterestToGroup(group._id, userId).subscribe(
         () => {
           alert('You have registered your interest in this group.');
           this.getGUserNotInGroups(); // Refresh groups the user is not in
@@ -243,7 +243,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Promote a user to Group Admin
-  promoteToGroupAdmin(userId: number): void {
+  promoteToGroupAdmin(userId: string): void {
     if (confirm('Are you sure you want to promote this user to Group Admin?')) {
       this.userService.promoteToGroupAdmin(userId).subscribe(
         () => {
@@ -259,7 +259,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Promote a user to Super Admin
-  promoteToSuperAdmin(userId: number): void {
+  promoteToSuperAdmin(userId: string): void {
     if (confirm('Are you sure you want to promote this user to Super Admin?')) {
       this.userService.promoteToSuperAdmin(userId).subscribe(
         () => {

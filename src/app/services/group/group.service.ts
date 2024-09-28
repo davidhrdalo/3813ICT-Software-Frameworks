@@ -37,11 +37,11 @@ export class GroupService {
       // Return an empty array if no user data is available
       return new Observable((subscriber) => subscriber.next([]));
     }
-    const userId = userData.id;
+    const userId = userData._id;
     // Filter groups where the user is listed as a member
     return this.getGroups().pipe(
       map((groups) =>
-        groups.filter((group) => group.members.includes(Number(userId)))
+        groups.filter((group) => group.members.includes(userId))
       )
     );
   }
@@ -52,7 +52,7 @@ export class GroupService {
     if (!userData) {
       return new Observable((subscriber) => subscriber.next([]));
     }
-    const userId = Number(userData.id); // Convert user ID to number
+    const userId = userData._id;
     // Filter groups where the user is listed as an admin
     return this.getGroups().pipe(
       map((groups) => groups.filter((group) => group.admins.includes(userId)))
@@ -65,7 +65,7 @@ export class GroupService {
     if (!userData) {
       return new Observable((subscriber) => subscriber.next([]));
     }
-    const userId = Number(userData.id);
+    const userId = userData._id;
     // Filter groups where the user is a member but not an admin
     return this.getGroups().pipe(
       map((groups) =>
@@ -83,7 +83,7 @@ export class GroupService {
     if (!userData) {
       return new Observable((subscriber) => subscriber.next([]));
     }
-    const userId = Number(userData.id);
+    const userId = userData._id;
     // Filter out groups where the user is neither a member nor an admin
     return this.getGroups().pipe(
       map((groups) =>
@@ -96,15 +96,15 @@ export class GroupService {
   }
 
   // Fetch active members of a group, excluding the current logged-in user
-  getActiveMembers(groupId: number): Observable<any[]> {
+  getActiveMembers(groupId: string): Observable<any[]> {
     const currentUser = this.activeUserService.getUserData(); // Get the current logged-in user
     return this.getGroups().pipe(
       map((groups) => {
-        const group = groups.find((g) => g.id === groupId); // Find the group by its ID
+        const group = groups.find((g) => g._id === groupId); // Find the group by its ID
         if (group) {
           // Filter out the current user from the group members list
           return this.filterUsersByIds(group.members).filter(
-            (user) => user.id !== currentUser.id
+            (user) => user._id !== currentUser._id
           );
         } else {
           return [];
@@ -114,10 +114,10 @@ export class GroupService {
   }
 
   // Fetch users who have expressed interest in a group
-  getInterestedUsers(groupId: number): Observable<any[]> {
+  getInterestedUsers(groupId: string): Observable<any[]> {
     return this.getGroups().pipe(
       map((groups) => {
-        const group = groups.find((g) => g.id === groupId); // Find the group by its ID
+        const group = groups.find((g) => g._id === groupId); // Find the group by its ID
         if (group) {
           // Get users who are interested in the group
           return this.filterUsersByIds(group.interested);
@@ -129,9 +129,9 @@ export class GroupService {
   }
 
   // Utility function to filter users by their IDs (assumes userService.getUsers() returns all users)
-  private filterUsersByIds(userIds: number[]): any[] {
+  private filterUsersByIds(userIds: string[]): any[] {
     const allUsers = this.userService.getUsers(); // Fetch all users from UserService
-    return allUsers.filter((user) => userIds.includes(user.id)); // Filter users by matching IDs
+    return allUsers.filter((user) => userIds.includes(user._id)); // Filter users by matching IDs
   }
 
   // Create a new group with the active user as the admin
@@ -146,10 +146,9 @@ export class GroupService {
 
     // Create a new group object with the current user as the admin
     const newGroup = {
-      id: Date.now(), // Use current timestamp as group ID
       name: groupName,
       description: groupDescription,
-      admins: [userData.id], // Set the active user as the admin
+      admins: [userData._id], // Set the active user as the admin
       members: [],
       interested: [],
       groupImg: 'assets/images/defaultGroup.jpg', // Default group image
@@ -160,12 +159,12 @@ export class GroupService {
   }
 
   // Delete a group by its ID
-  deleteGroup(groupId: number): Observable<any> {
+  deleteGroup(groupId: string): Observable<any> {
     return this.http.delete(`${BACKEND_URL}/${groupId}`, httpOptions);
   }
 
   // Update an existing group by sending the updated data to the backend
-  updateGroup(groupId: number, updatedGroupData: any): Observable<any> {
+  updateGroup(groupId: string, updatedGroupData: any): Observable<any> {
     return this.http.put(
       `${BACKEND_URL}/${groupId}`,
       updatedGroupData,
@@ -174,7 +173,7 @@ export class GroupService {
   }
 
   // Add a user to a group's interested list
-  addInterestToGroup(groupId: number, userId: number): Observable<any> {
+  addInterestToGroup(groupId: string, userId: string): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${groupId}/interested`,
       { userId }, // Send user ID in the request body
@@ -183,7 +182,7 @@ export class GroupService {
   }
 
   // Remove a user's interest from a group
-  removeInterestFromGroup(groupId: number, userId: number): Observable<any> {
+  removeInterestFromGroup(groupId: string, userId: string): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${groupId}/unregister-interest`,
       { userId }, // Send user ID in the request body
@@ -192,7 +191,7 @@ export class GroupService {
   }
 
   // Remove a user from a group
-  removeUserFromGroup(groupId: number, userId: number): Observable<any> {
+  removeUserFromGroup(groupId: string, userId: string): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${groupId}/removeUser`,
       { userId }, // Send user ID in the request body
@@ -201,7 +200,7 @@ export class GroupService {
   }
 
   // Allow a user to join a group
-  allowUserToJoin(groupId: number, userId: number): Observable<any> {
+  allowUserToJoin(groupId: string, userId: string): Observable<any> {
     return this.http.post(
       `${BACKEND_URL}/${groupId}/allowUserToJoin`,
       { userId }, // Send user ID in the request body

@@ -47,7 +47,7 @@
         style="margin-bottom: 20px"
         class="btn btn-primary mt-auto"
         *ngIf="
-          userData.roles.includes('super') || group.admins.includes(userData.id)
+          userData.roles.includes('super') || group.admins.includes(userData._id)
         "
       >
         Upload Profile
@@ -86,7 +86,7 @@
       <button
         *ngIf="
           (!isEditMode && userData.roles.includes('super')) ||
-          group.admins.includes(userData.id)
+          group.admins.includes(userData._id)
         "
         type="button"
         style="width: 110px; margin-bottom: 20px"
@@ -99,12 +99,12 @@
       <button
         *ngIf="
           (!isEditMode && userData.roles.includes('super')) ||
-          group.admins.includes(userData.id)
+          group.admins.includes(userData._id)
         "
         type="button"
         style="width: 110px; margin-bottom: 20px"
         class="btn btn-danger"
-        (click)="deleteGroup(group.id)"
+        (click)="deleteGroup(group._id)"
       >
         Delete
       </button>
@@ -134,7 +134,7 @@
     <div
       class="row"
       *ngIf="
-        userData.roles.includes('super') || group.admins.includes(userData.id);
+        userData.roles.includes('super') || group.admins.includes(userData._id);
         else nonAdminChannels
       "
     >
@@ -148,7 +148,7 @@
           </div>
 
           <div class="col-4 card" *ngFor="let channel of channels">
-            <div *ngIf="editChannelData && editChannelData.id === channel.id">
+            <div *ngIf="editChannelData && editChannelData._id === channel._id">
               <p>
                 <strong>Channel Name: </strong>
                 <input
@@ -177,10 +177,10 @@
                 </button>
               </div>
             </div>
-            <div *ngIf="!editChannelData || editChannelData.id !== channel.id">
+            <div *ngIf="!editChannelData || editChannelData._id !== channel._id">
               <p>
                 <strong
-                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                  [routerLink]="['/group', group._id, 'channel', channel._id]"
                   >{{ channel.name }}</strong
                 >
               </p>
@@ -194,7 +194,7 @@
                 </button>
                 <button
                   class="btn btn-outline-danger"
-                  (click)="deleteChannel(channel.id)"
+                  (click)="deleteChannel(channel._id)"
                 >
                   Remove
                 </button>
@@ -257,10 +257,10 @@
             </div>
 
             <ng-container *ngFor="let channel of channels">
-              <div class="col-4 card" *ngIf="channel.members.includes(userData.id)">
+              <div class="col-4 card" *ngIf="channel.members.includes(userData._id)">
                 <div
-                  *ngIf="!editChannelData || editChannelData.id !== channel.id"
-                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                  *ngIf="!editChannelData || editChannelData._id !== channel._id"
+                  [routerLink]="['/group', group._id, 'channel', channel._id]"
                 >
                   <p>
                     <strong>{{ channel.name }}</strong>
@@ -276,7 +276,7 @@
 
     <div
       *ngIf="
-        userData.roles.includes('super') || group.admins.includes(userData.id)
+        userData.roles.includes('super') || group.admins.includes(userData._id)
       "
     >
       <!-- Full row - Content for superuser -->
@@ -294,7 +294,7 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="removeUserFromGroup(user.id)"
+              (click)="removeUserFromGroup(user._id)"
               class="btn btn-outline-danger"
             >
               Remove
@@ -327,13 +327,13 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="allowUserToJoin(user.id)"
+              (click)="allowUserToJoin(user._id)"
               class="btn btn-outline-success"
             >
               Allow
             </button>
             <button
-              (click)="removeUserFromGroup(user.id)"
+              (click)="removeUserFromGroup(user._id)"
               class="btn btn-outline-danger"
             >
               Remove

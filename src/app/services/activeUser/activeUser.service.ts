@@ -65,7 +65,7 @@ export class ActiveUserService {
 
   // Store user data in session storage
   private setSessionStorage(userData: any): void {
-    sessionStorage.setItem('id', userData.id.toString());
+    sessionStorage.setItem('_id', userData._id);
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('roles', userData.roles);
@@ -98,7 +98,7 @@ export class ActiveUserService {
   private getUserDataFromStorage(): any {
     if (this.isLoggedIn()) {
       return {
-        id: sessionStorage.getItem('id'),
+        _id: sessionStorage.getItem('_id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
         roles: sessionStorage.getItem('roles'),
@@ -114,7 +114,7 @@ export class ActiveUserService {
 
   // Update user data and store it in session storage
   updateUserData(userData: any): void {
-    sessionStorage.setItem('id', userData.id.toString());
+    sessionStorage.setItem('_id', userData._id);
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('roles', userData.roles);

@@ -25,7 +25,7 @@ export class SidebarComponent implements OnInit {
   adminGroups: any[] = []; // Groups where the user is an admin
   memberOnlyGroups: any[] = []; // Groups where the user is only a member
   channels: any[] = []; // Channels within the current group
-  groupId: number | null = null; // ID of the currently selected group
+  groupId: string | null = null; // ID of the currently selected group
 
   constructor(
     private router: Router,
@@ -58,8 +58,10 @@ export class SidebarComponent implements OnInit {
 
         // Load channels if on a group or channel route
         if (this.currentRoute === 'group' || this.currentRoute === 'channel') {
-          this.groupId = parseInt(groupId || '', 10); // Parse group ID from route
-          this.loadChannels(this.groupId); // Load channels for the group
+          this.groupId = groupId; // Store group ID from route
+          if (this.groupId) {
+            this.loadChannels(this.groupId); // Load channels for the group
+          }
         } else {
           this.channels = []; // Clear channels if not in a group or channel route
           this.groupId = null;
@@ -106,7 +108,7 @@ export class SidebarComponent implements OnInit {
   }
 
   // Load channels belonging to a specific group
-  loadChannels(groupId: number) {
+  loadChannels(groupId: string) {
     this.channelService.getChannelsByGroupId(groupId).subscribe(
       (channels) => {
         this.channels = channels;
