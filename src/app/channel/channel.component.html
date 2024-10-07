@@ -59,9 +59,15 @@
           <div class="messages-container mb-3">
             <ng-container *ngIf="messages.length > 0; else noMessages">
               <ul>
-                <li *ngFor="let m of messages">
-                  <div class="chat-bubble p-2">{{ m }}</div>
-                </li>
+                <div *ngFor="let message of messages">
+                  <div *ngIf="message.system" class="system-message">
+                    <em>{{ message.message }}</em>
+                  </div>
+                  <div *ngIf="!message.system" class="chat-message">
+                    <img [src]="message.profilePic" alt="{{ message.username }}'s profile picture" class="profile-pic" />
+                    <p class="chat-bubble p-2"><strong>{{ message.username }}</strong>: {{ message.message }}</p>
+                  </div>
+                </div>
               </ul>
             </ng-container>
             <ng-template #noMessages>

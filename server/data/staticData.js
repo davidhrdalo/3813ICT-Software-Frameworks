@@ -79,42 +79,52 @@ module.exports = {
   ],
   "channels": [
     {
-      "_id": "66f7da9517c8f02911b71bda",
-      "name": "General Discussion",
-      "groupId": "66f7da9517c8f02911b71bd6",
+      "_id": "66f7b6934b316144de297cc6",
+      "name": "General Discussinon",
+      "groupId": "66f7b6934b316144de297cc2",
       "description": "General chat for all members",
       "members": [
-        "66f7da9517c8f02911b71bd1",
-        "66f7da9517c8f02911b71bd2",
-        "66f7da9517c8f02911b71bd3"
+        "66f7b6934b316144de297cbd",
+        "66f7b6934b316144de297cbe",
+        "66f7b6934b316144de297cbf"
       ]
     },
     {
-      "_id": "66f7da9517c8f02911b71bdc",
+      "_id": "66f7b6934b316144de297cc7",
+      "name": "Project Updates",
+      "groupId": "66f7b6934b316144de297cc3",
+      "description": "Project management discussions",
+      "members": [
+        "66f7b6934b316144de297cc1",
+        "66f7b6934b316144de297cbd"
+      ]
+    },
+    {
+      "_id": "66f7b6934b316144de297cc8",
       "name": "Design Critiques",
-      "groupId": "66f7da9517c8f02911b71bd8",
+      "groupId": "66f7b6934b316144de297cc4",
       "description": "Feedback and critique sessions for design",
       "members": [
-        "66f7da9517c8f02911b71bd2",
-        "66f7da9517c8f02911b71bd3",
-        "66f7da9517c8f02911b71bd4"
+        "66f7b6934b316144de297cbe",
+        "66f7b6934b316144de297cbf",
+        "66f7b6934b316144de297cc0"
       ]
     },
     {
-      "_id": "66f7da9517c8f02911b71bdd",
+      "_id": "66f7b6934b316144de297cc9",
       "name": "QA Testing",
-      "groupId": "66f7da9517c8f02911b71bd9",
+      "groupId": "66f7b6934b316144de297cc5",
       "description": "Channel for discussing QA testing strategies",
       "members": [
-        "66f7da9517c8f02911b71bd3",
-        "66f7da9517c8f02911b71bd5"
+        "66f7b6934b316144de297cbf",
+        "66f7b6934b316144de297cc1"
       ]
     },
     {
-      "_id": "66f7dd36d4f6c79a42ca8203",
-      "name": "s",
-      "groupId": "66f7da9517c8f02911b71bd6",
-      "description": "s",
+      "_id": "670361c789e1ecabb1eac6de",
+      "name": "d",
+      "groupId": "66f7b6934b316144de297cc2",
+      "description": "d",
       "members": []
     }
   ]

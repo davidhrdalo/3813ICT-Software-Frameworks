@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import io from 'socket.io-client';
+import { HttpClient } from '@angular/common/http';
+import { ActiveUserService } from '../activeUser/activeUser.service';
 
 const SERVER_URL = 'http://localhost:3000';
 
@@ -11,7 +13,10 @@ export class SocketService {
   private socket: any;
   public socketId: any;
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private activeUserService: ActiveUserService
+  ) { }
 
   // Setup Connection to socket server
   initSocket() {
@@ -19,15 +24,78 @@ export class SocketService {
     return () => { this.socket.disconnect(); }
   }
 
-  // Emit a message to the socket server
-  send(message: string) {
-    this.socket.emit('message', message);
+  // Emit a message to the socket server for a specific channel
+  sendMessage(channelId: string, message: string): Observable<any> {
+    const userData = this.activeUserService.getUserData();
+    if (!userData) {
+      console.error('No active user found');
+      return new Observable(); // Return an empty observable to satisfy return type
+    }
+
+    const messageData = {
+      channelId,
+      userId: userData._id,
+      username: userData.username,
+      message,
+      profilePic: userData.profileImg
+    };
+
+    // Emit the message via socket
+    this.socket.emit('channelMessage', messageData);
+
+    // Also send the message to the server via HTTP POST
+    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData);
   }
 
-  // Listen for "message" events from the socket server
-  getMessage() {
+  // Listen for "channelMessage" events from the socket server
+  getMessages(channelId: string): Observable<any> {
     return new Observable(observer => {
-      this.socket.on('message', (data: any) => { observer.next(data) });
+      this.socket.on(`channelMessage:${channelId}`, (data: any) => {
+        observer.next(data);
+      });
+    });
+  }
+
+  // Get chat history for a specific channel
+  getChatHistory(channelId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${SERVER_URL}/api/chat/${channelId}`);
+  }
+
+  // Join a specific channel
+  joinChannel(channelId: string) {
+    const userData = this.activeUserService.getUserData();
+    if (userData) {
+      this.socket.emit('joinChannel', { channelId, userId: userData._id, username: userData.username });
+    } else {
+      console.error('No active user found when joining channel');
+    }
+  }
+
+  // Leave a specific channel
+  leaveChannel(channelId: string) {
+    const userData = this.activeUserService.getUserData();
+    if (userData) {
+      this.socket.emit('leaveChannel', { channelId, userId: userData._id, username: userData.username });
+    } else {
+      console.error('No active user found when leaving channel');
+    }
+  }
+
+  // Listen for users joining the channel
+  onUserJoined(channelId: string): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on(`userJoined:${channelId}`, (data: any) => {
+        observer.next(data);
+      });
+    });
+  }
+
+  // Listen for users leaving the channel
+  onUserLeft(channelId: string): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on(`userLeft:${channelId}`, (data: any) => {
+        observer.next(data);
+      });
     });
   }
 

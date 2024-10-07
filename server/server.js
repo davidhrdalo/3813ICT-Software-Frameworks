@@ -49,20 +49,42 @@ require('./routes/api-auth.js')(app, client); // Route for user auth (login/sign
 require('./routes/api-user.js')(app, client, formidable, fs, path); // Route for user operations
 require('./routes/api-group.js')(app, client, formidable, fs, path); // Route for group operations
 require('./routes/api-channel.js')(app, client, formidable, fs, path); // Route for channel operations
+require('./routes/api-chat.js')(app, client, formidable, fs, path); // Route for chat
 
 // Socket.io logic
 io.on('connection', (socket) => {
     // Log connection information
     console.log('User connected on port 3000: ' + socket.id);
 
-    // Emit messages to all connected sockets
-    socket.on('message', (message) => {
-        io.emit('message', message);
+    // Handle joinChannel event
+    socket.on('joinChannel', ({ channelId, userId, username }) => {
+        socket.join(channelId);
+        console.log(`${username} joined channel ${channelId}`);
+        // Notify other users in the channel
+        socket.to(channelId).emit(`userJoined:${channelId}`, { username });
+    });
+
+    // Handle leaveChannel event
+    socket.on('leaveChannel', ({ channelId, userId, username }) => {
+        socket.leave(channelId);
+        console.log(`${username} left channel ${channelId}`);
+        // Notify other users in the channel
+        socket.to(channelId).emit(`userLeft:${channelId}`, { username });
+    });
+
+    // Handle channelMessage event
+    socket.on('channelMessage', (messageData) => {
+        const channelId = messageData.channelId;
+        console.log(`Message received in channel ${channelId} from ${messageData.username}: ${messageData.message}`);
+
+        // Broadcast the message to the channel
+        io.in(channelId).emit(`channelMessage:${channelId}`, messageData);
     });
 
     // Handle disconnection
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
+        // Optionally, you can handle user disconnects here
     });
 });
 
