@@ -6,6 +6,7 @@ import { ChannelService } from '../services/channel/channel.service';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user/user.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-group',
@@ -29,13 +30,18 @@ export class GroupComponent implements OnInit {
   activeMembers: any[] = []; // Active members of the group
   interestedUsers: any[] = []; // Users interested in joining the group
 
+  // Upload img
+  selectedfile: any = null;
+  imagepath = '';
+
   constructor(
     private route: ActivatedRoute,
     private groupService: GroupService,
     private channelService: ChannelService,
     private activeUserService: ActiveUserService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   // Lifecycle hook for initializing component
@@ -258,8 +264,12 @@ export class GroupComponent implements OnInit {
       this.groupService.removeUserFromGroup(this.group._id, userId).subscribe(
         () => {
           // Update member and interested users lists
-          this.activeMembers = this.activeMembers.filter(user => user._id !== userId);
-          this.interestedUsers = this.interestedUsers.filter(user => user._id !== userId);
+          this.activeMembers = this.activeMembers.filter(
+            (user) => user._id !== userId
+          );
+          this.interestedUsers = this.interestedUsers.filter(
+            (user) => user._id !== userId
+          );
           alert('User removed from group successfully.');
         },
         (error) => {
@@ -276,10 +286,12 @@ export class GroupComponent implements OnInit {
       this.groupService.allowUserToJoin(this.group._id, userId).subscribe(
         () => {
           // Move user from interestedUsers to activeMembers
-          const user = this.interestedUsers.find(user => user._id === userId);
+          const user = this.interestedUsers.find((user) => user._id === userId);
           if (user) {
             this.activeMembers.push(user);
-            this.interestedUsers = this.interestedUsers.filter(u => u._id !== userId);
+            this.interestedUsers = this.interestedUsers.filter(
+              (u) => u._id !== userId
+            );
           }
           alert('User allowed to join group successfully.');
         },
@@ -288,6 +300,27 @@ export class GroupComponent implements OnInit {
           alert('Failed to allow user to join group.');
         }
       );
+    }
+  }
+
+  // Profile Image Select
+  onFileSelected(event: any) {
+    this.selectedfile = event.target.files[0];
+  }
+
+  // group Image Upload
+  onUpload() {
+    if (this.selectedfile && this.group) {
+      const fd = new FormData();
+      fd.append('image', this.selectedfile, this.selectedfile.name);
+
+      const groupId = this.group._id;
+
+      this.groupService.imgupload(groupId, fd).subscribe((res) => {
+        console.log('Image changed')
+      });
+    } else {
+      console.error('No file selected or group data is missing!');
     }
   }
 }

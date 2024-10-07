@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const formidable = require('formidable'); // Image upload
 const path = require('path');
 app.use('/data/images/profileImages', express.static(path.join(__dirname, 'data/images/profileImages')));
+app.use('/data/images/groupImages', express.static(path.join(__dirname, 'data/images/groupImages')));
 const { PeerServer } = require('peer');
 const fs = require('fs');
 const { MongoClient } = require('mongodb');

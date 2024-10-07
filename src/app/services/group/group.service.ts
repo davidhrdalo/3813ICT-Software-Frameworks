@@ -40,9 +40,7 @@ export class GroupService {
     const userId = userData._id;
     // Filter groups where the user is listed as a member
     return this.getGroups().pipe(
-      map((groups) =>
-        groups.filter((group) => group.members.includes(userId))
-      )
+      map((groups) => groups.filter((group) => group.members.includes(userId)))
     );
   }
 
@@ -206,5 +204,10 @@ export class GroupService {
       { userId }, // Send user ID in the request body
       httpOptions
     );
+  }
+  
+  // Handle group profile images
+  imgupload(groupId: string, fd: any) {
+    return this.http.post<any>(`${BACKEND_URL}/${groupId}/upload`, fd);
   }
 }

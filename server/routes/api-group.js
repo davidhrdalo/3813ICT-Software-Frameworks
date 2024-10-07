@@ -1,9 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
-module.exports = function (app, client) {
+module.exports = function (app, client, formidable, fs, path) {
     const db = client.db('softwareFrameworks');
     const groupsCollection = db.collection('groups');
+    const baseUrl = 'http://localhost:3000'; // Used for img upload
 
     // Get all groups
     app.get('/api/groups', async (req, res) => {
@@ -43,7 +44,7 @@ module.exports = function (app, client) {
     app.put('/api/groups/:id', async (req, res) => {
         try {
             const groupId = new ObjectId(req.params.id);
-            
+
             // Create a new object without the _id field
             const { _id, ...updateData } = req.body;
 
@@ -166,7 +167,7 @@ module.exports = function (app, client) {
             const userId = req.body.userId;
             const result = await groupsCollection.findOneAndUpdate(
                 { _id: groupId },
-                { 
+                {
                     $pull: { interested: userId },
                     $addToSet: { members: userId }
                 },
@@ -183,5 +184,81 @@ module.exports = function (app, client) {
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
+    });
+
+    app.post('/api/groups/:groupId/upload', (req, res) => {
+        const form = new formidable.IncomingForm();
+        const uploadFolder = path.join(__dirname, "../data/images/groupImages");
+        form.uploadDir = uploadFolder;
+        form.keepExtensions = true;
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                console.log("Error parsing the files:", err);
+                return res.status(400).json({
+                    status: "Fail",
+                    message: "There was an error parsing the files",
+                    error: err.message,
+                });
+            }
+            console.log('Files:', JSON.stringify(files, null, 2));
+            if (!files.image || !Array.isArray(files.image) || files.image.length === 0) {
+                return res.status(400).json({
+                    status: "Fail",
+                    message: "No image file uploaded or filename is missing",
+                });
+            }
+            const uploadedFile = files.image[0];
+            const oldpath = uploadedFile.filepath;
+            const newpath = path.join(uploadFolder, uploadedFile.originalFilename);
+            try {
+                await fs.promises.rename(oldpath, newpath);
+                const groupId = req.params.groupId;
+                console.log('Received groupId:', groupId);
+                if (!ObjectId.isValid(groupId)) {
+                    return res.status(400).json({
+                        status: "Fail",
+                        message: "Invalid group ID",
+                    });
+                }
+                const groupObjectId = new ObjectId(groupId);
+                console.log('Converted groupObjectId:', groupObjectId);
+                const groupImgPath = `${baseUrl}/data/images/groupImages/${uploadedFile.originalFilename}`;
+                const updateResult = await groupsCollection.updateOne(
+                    { _id: groupObjectId },
+                    { $set: { groupImg: groupImgPath } }
+                );
+                console.log('Update Result:', updateResult);
+                if (updateResult.matchedCount === 0) {
+                    console.log("No documents matched the query");
+                    return res.status(404).json({
+                        status: "Fail",
+                        message: "Group not found",
+                    });
+                } else if (updateResult.modifiedCount === 0) {
+                    console.log("Document matched but not modified");
+                    res.status(200).json({
+                        result: 'OK',
+                        message: "Group image is already up to date"
+                    });
+                } else {
+                    // Update static file if needed
+                    const allGroups = await groupsCollection.find({}).toArray();
+                    await updateStaticFile(allGroups, 'groups');
+                    // Send success response
+                    res.status(200).json({
+                        result: 'OK',
+                        data: { 'filename': uploadedFile.originalFilename, 'size': uploadedFile.size, 'url': groupImgPath },
+                        message: "Upload and group image update successful"
+                    });
+                }
+            } catch (error) {
+                console.log("Error updating group image:", error);
+                res.status(500).json({
+                    status: "Fail",
+                    message: "Failed to update group image",
+                    error: error.message,
+                });
+            }
+        });
     });
 };
