@@ -125,3 +125,5 @@ PeerServer({
 });
 
 console.log(`Starting SSL PeerServer at: ${3001}`);
+
+module.exports = app; // this export is for test
