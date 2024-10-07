@@ -4,15 +4,11 @@
   "description": "node express backend for 3813-ict-software-frameworks assignment",
   "main": "server.js",
   "scripts": {
-    "authIntTest": "mocha ./tests/integrationTest/authIntTest.js",
-    "authUnitTest": "mocha ./tests/unitTest/authUnitTest.js",
-    "channelIntTest": "mocha ./tests/integrationTest/channelIntTest.js",
-    "channelUnitTest": "mocha ./tests/unitTest/channelUnitTest.js",
-    "groupIntTest": "mocha ./tests/integrationTest/groupIntTest.js",
-    "groupUnitTest": "mocha ./tests/unitTest/groupUnitTest.js",
-    "userIntTest": "mocha ./tests/integrationTest/userIntTest.js",
-    "userUnitTest": "mocha ./tests/unitTest/userUnitTest.js",
-    "chatUnitTest": "mocha ./tests/integrationTest/chatIntTest.js",
+    "authTest": "mocha ./tests/authTest.js",
+    "channelTest": "mocha ./tests/channelTest.js",
+    "groupTest": "mocha ./tests/groupTest.js",
+    "userTest": "mocha ./tests/userTest.js",
+    "chatTest": "mocha ./tests/chatTest.js",
     "start": "node server.js"
   },
   "repository": {

@@ -1,5 +1,5 @@
 var assert = require('assert');
-var app = require('../../server.js');
+var app = require('../server.js');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');

@@ -71,6 +71,19 @@ module.exports = {
       "interested": [],
       "description": "This is a test group",
       "groupImg": "http://example.com/image.jpg"
+    },
+    {
+      "_id": "6703b5ccfaa214d0a6b731ef",
+      "name": "New Group",
+      "admins": [
+        "615c1bdee7a1f123a4a85c34"
+      ],
+      "members": [
+        "615c1bdee7a1f123a4a85c34"
+      ],
+      "interested": [],
+      "description": "This is a test group",
+      "groupImg": "http://example.com/image.jpg"
     }
   ],
   "users": [
