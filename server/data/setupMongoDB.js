@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require('mongodb');
+const { updateStaticFile } = require('./staticDataHandler.js');
 
 const uri = 'mongodb://localhost:27017';
 const dbName = 'softwareFrameworks';
@@ -20,7 +21,7 @@ async function main() {
     // Prepare data with ObjectIds
     const users = [
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba0f40c4b8f9d5f9f9a"),
         username: "super_admin",
         email: "superadmin@example.com",
         password: "123",
@@ -32,7 +33,7 @@ async function main() {
         status: "Active"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba1f40c4b8f9d5f9f9b"),
         username: "john_doe",
         email: "john.doe@example.com",
         password: "pw",
@@ -44,7 +45,7 @@ async function main() {
         status: "Busy"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba2f40c4b8f9d5f9f9c"),
         username: "jane_smith",
         email: "jane.smith@example.com",
         password: "pw",
@@ -56,7 +57,7 @@ async function main() {
         status: "Available"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba3f40c4b8f9d5f9f9d"),
         username: "alice_jones",
         email: "alice.jones@example.com",
         password: "pw",
@@ -68,7 +69,7 @@ async function main() {
         status: "Away"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9e"),
         username: "robert_brown",
         email: "robert.brown@example.com",
         password: "pw",
@@ -88,7 +89,7 @@ async function main() {
 
     const groups = [
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9e"),
         name: "Developers",
         admins: [userIdMap.super_admin],
         members: [userIdMap.super_admin, userIdMap.john_doe, userIdMap.jane_smith],
@@ -97,7 +98,7 @@ async function main() {
         groupImg: "assets/images/473.jpg"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9f"),
         name: "Project Management",
         admins: [userIdMap.robert_brown],
         members: [userIdMap.robert_brown, userIdMap.super_admin],
@@ -106,7 +107,7 @@ async function main() {
         groupImg: "assets/images/430.jpg"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9d"),
         name: "Designers",
         admins: [userIdMap.john_doe],
         members: [userIdMap.john_doe, userIdMap.jane_smith, userIdMap.alice_jones],
@@ -115,7 +116,7 @@ async function main() {
         groupImg: "assets/images/58.jpg"
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9c"),
         name: "Testers",
         admins: [userIdMap.jane_smith],
         members: [userIdMap.jane_smith, userIdMap.robert_brown],
@@ -132,28 +133,28 @@ async function main() {
 
     const channels = [
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("78909ba4f40c4b8f9d5f9f9e"),
         name: "General Discussion",
         groupId: groupIdMap["Developers"],
         description: "General chat for all members",
         members: [userIdMap.super_admin, userIdMap.john_doe, userIdMap.jane_smith]
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64ebc0f4f40c4b8f9d5f9f9f"),
         name: "Project Updates",
         groupId: groupIdMap["Project Management"],
         description: "Project management discussions",
         members: [userIdMap.robert_brown, userIdMap.super_admin]
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64e09ba4f40c4b8f9d5f9f8d"),
         name: "Design Critiques",
         groupId: groupIdMap["Designers"],
         description: "Feedback and critique sessions for design",
         members: [userIdMap.john_doe, userIdMap.jane_smith, userIdMap.alice_jones]
       },
       {
-        _id: new ObjectId(),
+        _id: new ObjectId("64ebc0f4f40c4b8f9d5f9f9e"),
         name: "QA Testing",
         groupId: groupIdMap["Testers"],
         description: "Channel for discussing QA testing strategies",
@@ -165,6 +166,11 @@ async function main() {
     await usersCollection.insertMany(users);
     await groupsCollection.insertMany(groups);
     await channelsCollection.insertMany(channels);
+
+    // Write data to the static JSON file
+    await updateStaticFile(users, 'users');
+    await updateStaticFile(groups, 'groups');
+    await updateStaticFile(channels, 'channels');
 
     console.log('Data inserted successfully');
   } catch (err) {

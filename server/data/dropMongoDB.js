@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { updateStaticFile } = require('./staticDataHandler.js'); // Adjust path to your module
 
 const uri = 'mongodb://localhost:27017';
 const dbName = 'softwareFrameworks';
@@ -14,6 +15,12 @@ async function dropDatabase() {
     
     await db.dropDatabase();
     console.log(`Database '${dbName}' has been dropped successfully`);
+    
+    // After dropping the database, wipe the static file clean
+    await updateStaticFile([], 'groups');
+    await updateStaticFile([], 'users');
+    await updateStaticFile([], 'channels');
+    console.log('Static file has been wiped clean');
   } catch (err) {
     console.error('An error occurred:', err);
   } finally {
