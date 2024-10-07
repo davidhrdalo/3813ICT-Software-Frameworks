@@ -5,6 +5,9 @@ const app = express();
 const cors = require('cors');
 const http = require('http').Server(app); // HTTP server
 const bodyParser = require('body-parser');
+const formidable = require('formidable'); // Image upload
+const path = require('path');
+app.use('/data/images/profileImages', express.static(path.join(__dirname, 'data/images/profileImages')));
 const { PeerServer } = require('peer');
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
@@ -43,9 +46,9 @@ app.use(cors({
 
 // Routes
 require('./routes/api-auth.js')(app, client); // Route for user auth (login/sign up)
-require('./routes/api-user.js')(app, client); // Route for user operations
-require('./routes/api-group.js')(app, client); // Route for group operations
-require('./routes/api-channel.js')(app, client); // Route for channel operations
+require('./routes/api-user.js')(app, client, formidable, fs, path); // Route for user operations
+require('./routes/api-group.js')(app, client, formidable, fs, path); // Route for group operations
+require('./routes/api-channel.js')(app, client, formidable, fs, path); // Route for channel operations
 
 // Socket.io logic
 io.on('connection', (socket) => {

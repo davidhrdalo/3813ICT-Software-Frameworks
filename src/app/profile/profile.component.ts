@@ -28,6 +28,10 @@ export class ProfileComponent implements OnInit {
   email: string = ''; // For creating a new user
   password: string = ''; // For creating a new user
 
+  // Upload img
+  selectedfile: any = null;
+  imagepath = '';
+
   constructor(
     private activeUserService: ActiveUserService,
     private userService: UserService,
@@ -271,6 +275,35 @@ export class ProfileComponent implements OnInit {
           alert('Failed to promote user to Super Admin.');
         }
       );
+    }
+  }
+
+  // Profile Image Select
+  onFileSelected(event: any) {
+    this.selectedfile = event.target.files[0];
+  }
+
+  // Profile Image Upload
+  onUpload() {
+    if (this.selectedfile && this.userData) {
+      const fd = new FormData();
+      fd.append('image', this.selectedfile, this.selectedfile.name);
+
+      const userId = this.userData._id;
+
+      this.userService.imgupload(userId, fd).subscribe((res) => {
+        if (res && res.data.filename) {
+          this.imagepath = res.data.filename;
+
+          // Update the userData.profileImg with the new image path
+          this.userData.profileImg = `http://localhost:3000/data/images/profileImages/${this.imagepath}`;
+
+          // Update the user data in the ActiveUserService
+          this.activeUserService.updateUserData(this.userData);
+        }
+      });
+    } else {
+      console.error('No file selected or user data is missing!');
     }
   }
 }

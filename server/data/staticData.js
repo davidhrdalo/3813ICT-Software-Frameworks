@@ -2,7 +2,7 @@ module.exports = {
   "groups": [],
   "users": [
     {
-      "_id": "66f7da9517c8f02911b71bd1",
+      "_id": "66f7dd5eaa05fa98d6e9de03",
       "username": "super_admin",
       "email": "superadmin@example.com",
       "password": "123",
@@ -11,14 +11,14 @@ module.exports = {
         "group",
         "chat"
       ],
-      "profileImg": "assets/images/defaultProfile.jpg",
+      "profileImg": "assets/images/profileImages/PNG_transparency_demonstration_1.png",
       "firstName": "Super",
       "lastName": "Admin",
       "dob": "1980-01-01",
       "status": "Active"
     },
     {
-      "_id": "66f7da9517c8f02911b71bd2",
+      "_id": "66f7dd5eaa05fa98d6e9de04",
       "username": "john_doe",
       "email": "john.doe@example.com",
       "password": "pw",
@@ -27,21 +27,19 @@ module.exports = {
         "group",
         "chat"
       ],
-      "profileImg": "assets/images/37.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/PNG_transparency_demonstration_1.png",
       "firstName": "John",
       "lastName": "Doe",
       "dob": "1990-08-17",
       "status": "Busy"
     },
     {
-      "_id": "66f7da9517c8f02911b71bd3",
+      "_id": "66f7dd5eaa05fa98d6e9de05",
       "username": "jane_smith",
       "email": "jane.smith@example.com",
       "password": "pw",
       "roles": [
-        "chat",
-        "group",
-        "super"
+        "chat"
       ],
       "profileImg": "assets/images/58.jpg",
       "firstName": "Jane",
@@ -50,43 +48,29 @@ module.exports = {
       "status": "Available"
     },
     {
-      "_id": "66f7da9517c8f02911b71bd4",
-      "username": "alice_jones",
-      "email": "alice.jones@example.com",
+      "_id": "66f7dd5eaa05fa98d6e9de07",
+      "username": "robert_brown",
+      "email": "robert.brown@example.com",
       "password": "pw",
       "roles": [
-        "chat",
-        "super"
-      ],
-      "profileImg": "assets/images/430.jpg",
-      "firstName": "Alice",
-      "lastName": "Jones",
-      "dob": "1998-06-10",
-      "status": "Away"
-    },
-    {
-      "_id": "66f7dc4264ea7bc333458b3b",
-      "username": "egwF",
-      "email": "Ef",
-      "password": "Eqwfg",
-      "roles": [
+        "group",
         "chat"
       ],
-      "profileImg": "assets/images/defaultProfile.jpg",
-      "firstName": "",
-      "lastName": "",
-      "dob": "",
+      "profileImg": "assets/images/550.jpg",
+      "firstName": "Robert",
+      "lastName": "Brown",
+      "dob": "1985-11-20",
       "status": "Active"
     },
     {
-      "_id": "66f7dd24fbcdb40f1719e7bc",
+      "_id": "67034a3084a77d765d534b9e",
       "username": "s",
       "email": "s",
       "password": "s",
       "roles": [
         "chat"
       ],
-      "profileImg": "assets/images/defaultProfile.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/PNG_transparency_demonstration_1.png",
       "firstName": "",
       "lastName": "",
       "dob": "",

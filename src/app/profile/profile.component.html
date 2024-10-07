@@ -42,18 +42,23 @@
     <div class="col-4 d-flex flex-column align-items-center" *ngIf="userData">
       <h3 style="margin-bottom: 20px">Profile Picture</h3>
       <img
-        src="{{ userData.profileImg }}"
+        [src]="userData.profileImg"
         class="rounded-circle"
         style="width: 150px; height: 150px; margin-bottom: 15px"
         alt="Avatar"
       />
-      <button
-        type="button"
-        style="margin-bottom: 20px"
-        class="btn btn-primary mt-auto"
-      >
-        Upload Profile
-      </button>
+      <form>
+        <div class="form-group">
+          <input
+            type="file"
+            class="form-control"
+            (change)="onFileSelected($event)"
+            name="uploadfile"
+            id="uploadfile"
+          />
+        </div>
+        <button class="btn btn-primary" type="button" (click)="onUpload()">Submit</button>
+      </form>
     </div>
 
     <!-- 2/3 row -->

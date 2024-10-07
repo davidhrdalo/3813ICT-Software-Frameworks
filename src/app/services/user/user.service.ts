@@ -131,4 +131,9 @@ export class UserService {
         })
       );
   }
+
+  // Handle user profile images
+  imgupload(userId: string, fd: any) {
+    return this.httpClient.post<any>(`${BACKEND_URL}/${userId}/upload`, fd);
+  }
 }

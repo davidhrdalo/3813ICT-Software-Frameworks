@@ -12,7 +12,6 @@
     "groupUnitTest": "mocha ./tests/unitTest/groupUnitTest.js",
     "userIntTest": "mocha ./tests/integrationTest/userIntTest.js",
     "userUnitTest": "mocha ./tests/unitTest/userUnitTest.js",
-
     "start": "node server.js"
   },
   "repository": {
@@ -28,6 +27,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "formidable": "^3.5.1",
     "mongodb": "^6.9.0",
     "peer": "^1.0.2",
     "peerjs": "^1.5.4"

@@ -41,7 +41,7 @@ module.exports = function (app, client) {
 
             // Send back the new user's data (excluding the password)
             res.json({
-                id: newUser._id,
+                _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
                 roles: newUser.roles,
@@ -70,7 +70,7 @@ module.exports = function (app, client) {
             if (user) {
                 // If credentials match, return the user data (excluding the password)
                 res.json({
-                    id: user._id,
+                    _id: user._id,
                     username: user.username,
                     email: user.email,
                     roles: user.roles,

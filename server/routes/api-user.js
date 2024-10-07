@@ -1,9 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
-module.exports = function (app, client) {
+module.exports = function (app, client, formidable, fs, path) {
     const db = client.db('softwareFrameworks');
     const usersCollection = db.collection('users');
+    const baseUrl = 'http://localhost:3000'; // Used for img upload
 
     // GET route to retrieve all users without exposing passwords
     app.get('/api/users', async (req, res) => {
@@ -85,7 +86,7 @@ module.exports = function (app, client) {
                 { $addToSet: { roles: 'group' } },
                 { returnDocument: 'after' }
             );
-    
+
             if (result.value) {
                 // Update static file
                 const allUsers = await usersCollection.find({}).toArray();
@@ -133,4 +134,81 @@ module.exports = function (app, client) {
             res.status(500).json({ error: error.message });
         }
     });
+
+    app.post('/api/users/:id/upload', (req, res) => {
+        const form = new formidable.IncomingForm();
+        const uploadFolder = path.join(__dirname, "../data/images/profileImages");
+        form.uploadDir = uploadFolder;
+        form.keepExtensions = true;
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                console.log("Error parsing the files:", err);
+                return res.status(400).json({
+                    status: "Fail",
+                    message: "There was an error parsing the files",
+                    error: err.message,
+                });
+            }
+            console.log('Files:', JSON.stringify(files, null, 2));
+            if (!files.image || !Array.isArray(files.image) || files.image.length === 0) {
+                return res.status(400).json({
+                    status: "Fail",
+                    message: "No image file uploaded or filename is missing",
+                });
+            }
+            const uploadedFile = files.image[0];
+            const oldpath = uploadedFile.filepath;
+            const newpath = path.join(uploadFolder, uploadedFile.originalFilename);
+            try {
+                await fs.promises.rename(oldpath, newpath);
+                const userId = req.params.id;
+                console.log('Received userId:', userId);
+                if (!ObjectId.isValid(userId)) {
+                    return res.status(400).json({
+                        status: "Fail",
+                        message: "Invalid user ID",
+                    });
+                }
+                const userObjectId = new ObjectId(userId);
+                console.log('Converted userObjectId:', userObjectId);
+                const profileImgPath = `${baseUrl}/data/images/profileImages/${uploadedFile.originalFilename}`;
+                const updateResult = await usersCollection.updateOne(
+                    { _id: userObjectId },
+                    { $set: { profileImg: profileImgPath } }
+                );
+                console.log('Update Result:', updateResult);
+                if (updateResult.matchedCount === 0) {
+                    console.log("No documents matched the query");
+                    return res.status(404).json({
+                        status: "Fail",
+                        message: "User not found",
+                    });
+                } else if (updateResult.modifiedCount === 0) {
+                    console.log("Document matched but not modified");
+                    res.status(200).json({
+                        result: 'OK',
+                        message: "Profile image is already up to date"
+                    });
+                } else {
+                    // Update static file
+                    const allUsers = await usersCollection.find({}).toArray();
+                    await updateStaticFile(allUsers, 'users');
+                    // Send success response
+                    res.status(200).json({
+                        result: 'OK',
+                        data: { 'filename': uploadedFile.originalFilename, 'size': uploadedFile.size, 'url': profileImgPath },
+                        message: "Upload and profile image update successful"
+                    });
+                }
+            } catch (error) {
+                console.log("Error updating profile image:", error);
+                res.status(500).json({
+                    status: "Fail",
+                    message: "Failed to update profile image",
+                    error: error.message,
+                });
+            }
+        });
+    });
+
 };
