@@ -65,7 +65,8 @@
                   </div>
                   <div *ngIf="!message.system" class="chat-message">
                     <img [src]="message.profilePic" alt="{{ message.username }}'s profile picture" class="profile-pic" />
-                    <p class="chat-bubble p-2"><strong>{{ message.username }}</strong>: {{ message.message }}</p>
+                    <p *ngIf="message.message" class="chat-bubble p-2"><strong>{{ message.username }}</strong>: {{ message.message }}</p>
+                    <img *ngIf="message.imageUrl" [src]="message.imageUrl" class="chat-image" />
                   </div>
                 </div>
               </ul>
@@ -88,15 +89,24 @@
                 />
               </div>
               <div class="form-group d-flex justify-content-between">
-                <button (click)="chat()" class="btn btn-primary flex-grow-1">
+                <button type="button" (click)="chat()" class="btn btn-primary flex-grow-1">
                   Send Message
                 </button>
-                <button (click)="chat()" class="btn btn-secondary flex-grow-1 mx-2">
-                  Send Picture
-                </button>
+                <form>
+                  <div class="form-group">
+                    <input
+                      type="file"
+                      class="form-control"
+                      (change)="onFileSelected($event)"
+                      name="uploadfile"
+                      id="uploadfile"
+                    />
+                  </div>
+                  <button class="btn btn-primary" type="button" (click)="uploadImage()">Submit</button>
+                </form>
               </div>
             </form>
-          </div>
+          </div>          
         </div>
 
         <!-- Video Component (Increased Size) -->

@@ -99,6 +99,35 @@ export class SocketService {
     });
   }
 
+  // Send an image message
+  sendImageMessage(channelId: string, imageUrl: string): Observable<any> {
+    const userData = this.activeUserService.getUserData();
+    if (!userData) {
+      console.error('No active user found');
+      return new Observable(); // Return an empty observable
+    }
+
+    const messageData = {
+      channelId,
+      userId: userData._id,
+      username: userData.username,
+      message: '', // No text message
+      profilePic: userData.profileImg,
+      imageUrl: imageUrl
+    };
+
+    // Emit the message via socket
+    this.socket.emit('channelMessage', messageData);
+
+    // Also send the message to the server via HTTP POST
+    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData);
+  }
+
+  // Upload image to the server
+  uploadImage(channelId: string, formData: FormData): Observable<any> {
+    return this.http.post(`${SERVER_URL}/api/chat/${channelId}/upload`, formData)
+  }
+
   // Peer video support below
   peerID(message: string) {
     this.socket.emit('peerID', message);

@@ -4,6 +4,12 @@
   height: 65vh;
 }
 
+.chat-image {
+  max-width: 150px;
+  max-height: 150px;
+  margin-top: 5px;
+}
+
 .messages-container {
   flex: 1;
   overflow-y: auto;

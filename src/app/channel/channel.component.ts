@@ -20,13 +20,15 @@ export class ChannelComponent implements OnInit, OnDestroy {
   channel: any = null; // Stores current channel details
   channelMembers: any[] = []; // List of channel members
   nonChannelMembers: any[] = []; // List of non-members in the group
-  channelId!: string; // ID of the current channel
-  groupId!: string; // ID of the current group
+  channelId: string = ''; // ID of the current channel
+  groupId: string = ''; // ID of the current group
   userData: any; // Current user data
 
   messagecontent: string = ''; // Message to send in chat
   messages: any[] = []; // Chat messages array
-  // ioConnection: any; // Socket connection
+
+  selectedFile: any = null;
+  imagepath = '';
 
   private messageSubscriptions: any[] = [];
 
@@ -208,6 +210,52 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.messagecontent = '';
     } else {
       console.log('No message or channel ID is undefined');
+    }
+  }
+
+  // Handle file selection
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadImage() {
+    if (this.selectedFile && this.channelId) {
+      const fd = new FormData();
+      fd.append('file', this.selectedFile, this.selectedFile.name);
+
+      this.socketService.uploadImage(this.channelId, fd).subscribe(
+        (response: any) => {
+          console.log('Image upload successful:', response);
+          const imageUrl = response.data.url;
+          this.sendImageMessage(imageUrl);
+          this.selectedFile = null; // Reset the file selection
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+          // Optionally, show an error message to the user
+          // alert('Failed to upload image. Please try again.');
+        }
+      );
+    } else {
+      console.error('No file selected or channel ID is undefined');
+      // Optionally, show an error message to the user
+      // alert('Please select an image file first.');
+    }
+  }
+
+  // Send a chat message containing the image URL
+  sendImageMessage(imageUrl: string) {
+    if (this.channelId) {
+      this.socketService
+        .sendImageMessage(this.channelId, imageUrl)
+        .subscribe(
+          () => {
+            // Image message sent successfully
+          },
+          (error) => {
+            console.error('Error sending image message', error);
+          }
+        );
     }
   }
 }

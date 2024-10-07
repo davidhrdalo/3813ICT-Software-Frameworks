@@ -6,7 +6,6 @@ import { ChannelService } from '../services/channel/channel.service';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user/user.service';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-group',
@@ -41,7 +40,6 @@ export class GroupComponent implements OnInit {
     private activeUserService: ActiveUserService,
     private userService: UserService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   // Lifecycle hook for initializing component
