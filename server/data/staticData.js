@@ -18,7 +18,7 @@ module.exports = {
     },
     {
       "_id": "66f7b6934b316144de297cc3",
-      "name": "Project Management",
+      "name": "Project Managemente",
       "admins": [
         "66f7b6934b316144de297cc1"
       ],
@@ -58,6 +58,19 @@ module.exports = {
       "interested": [],
       "description": "Group for testing and quality assurance",
       "groupImg": "assets/images/37.jpg"
+    },
+    {
+      "_id": "6703b37dbf70dcb9139ec9dc",
+      "name": "New Group",
+      "admins": [
+        "615c1bdee7a1f123a4a85c34"
+      ],
+      "members": [
+        "615c1bdee7a1f123a4a85c34"
+      ],
+      "interested": [],
+      "description": "This is a test group",
+      "groupImg": "http://example.com/image.jpg"
     }
   ],
   "users": [

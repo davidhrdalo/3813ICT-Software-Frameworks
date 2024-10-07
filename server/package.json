@@ -12,6 +12,7 @@
     "groupUnitTest": "mocha ./tests/unitTest/groupUnitTest.js",
     "userIntTest": "mocha ./tests/integrationTest/userIntTest.js",
     "userUnitTest": "mocha ./tests/unitTest/userUnitTest.js",
+    "chatUnitTest": "mocha ./tests/integrationTest/chatIntTest.js",
     "start": "node server.js"
   },
   "repository": {
