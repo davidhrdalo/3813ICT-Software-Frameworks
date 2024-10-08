@@ -86,6 +86,13 @@
   color: gray;
 }
 
+.event-message {
+  text-align: center;
+  font-style: italic;
+  color: gray;
+  margin-bottom: 10px;
+}
+
 .chat-message {
   display: flex;
   align-items: center;

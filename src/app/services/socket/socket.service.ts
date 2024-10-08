@@ -109,6 +109,16 @@ export class SocketService {
     });
   }
 
+  onUserEvent(channelId: string): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on(`userEvent`, (data: any) => {
+        if (data.channelId === channelId) {
+          observer.next(data);
+        }
+      });
+    });
+  }
+
   uploadImage(channelId: string, formData: FormData): Observable<any> {
     return this.http.post(
       `${SERVER_URL}/api/chat/${channelId}/upload`,

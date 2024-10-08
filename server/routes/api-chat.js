@@ -10,14 +10,20 @@ module.exports = function (app, client, formidable, fs, path) {
     app.get('/api/chat/:channelId', async (req, res) => {
         try {
             const channelId = new ObjectId(req.params.channelId);
-            const messages = await chatsCollection.find({ channelId: channelId })
-                .sort({ timestamp: 1 })
-                .limit(100)  // Limit to last 100 messages
-                .toArray();
-
+            const messages = await chatsCollection.find({ 
+                channelId: channelId,
+                $or: [
+                    { message: { $exists: true } },
+                    { eventType: { $in: ['join', 'leave'] } }
+                ]
+            })
+            .sort({ timestamp: 1 })
+            .limit(100)
+            .toArray();
+    
             res.status(200).json(messages);
         } catch (error) {
-            console.error('Error fetching chat messages:', error);
+            console.error('Error fetching chat history:', error);
             res.status(500).json({ error: error.message });
         }
     });

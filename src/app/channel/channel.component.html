@@ -80,7 +80,15 @@
                   <div *ngIf="message.system" class="system-message">
                     <em>{{ message.message }}</em>
                   </div>
-                  <div *ngIf="!message.system" class="chat-message">
+                  <div *ngIf="message.eventType" class="event-message">
+                    {{ message.username }} has
+                    {{ message.eventType === "join" ? "joined" : "left" }} the
+                    channel
+                  </div>
+                  <div
+                    *ngIf="!message.system && !message.eventType"
+                    class="chat-message"
+                  >
                     <img
                       [src]="message.profilePic"
                       alt="{{ message.username }}'s profile picture"

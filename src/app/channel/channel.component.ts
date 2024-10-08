@@ -55,6 +55,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
         console.error('Group ID or Channel ID is missing in route parameters');
       }
     });
+
+    this.socketService.onUserEvent(this.channelId).subscribe((event) => {
+      this.messages.push(event);
+    });
   }
 
   ngOnDestroy(): void {

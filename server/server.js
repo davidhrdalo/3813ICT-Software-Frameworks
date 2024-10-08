@@ -12,7 +12,7 @@ app.use('/data/images/groupImages', express.static(path.join(__dirname, 'data/im
 app.use('/data/images/chatImages', express.static(path.join(__dirname, 'data/images/chatImages')));
 const { PeerServer } = require('peer');
 const fs = require('fs');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 // MongoDB client setup
 const client = new MongoClient('mongodb://localhost:27017');
@@ -53,22 +53,44 @@ require('./routes/api-group.js')(app, client, formidable, fs, path); // Route fo
 require('./routes/api-channel.js')(app, client, formidable, fs, path); // Route for channel operations
 require('./routes/api-chat.js')(app, client, formidable, fs, path); // Route for chat
 
+// function to save join/leave events
+async function saveJoinLeaveEvent(channelId, userId, username, eventType) {
+    const db = client.db('softwareFrameworks');
+    const chatsCollection = db.collection('chats');
+    const event = {
+        channelId: new ObjectId(channelId),
+        userId: new ObjectId(userId),
+        username: username,
+        eventType: eventType,
+        timestamp: new Date()
+    };
+
+    try {
+        await chatsCollection.insertOne(event);
+        io.to(channelId).emit('userEvent', event);
+    } catch (error) {
+        console.error(`Error saving ${eventType} event:`, error);
+    }
+}
+
 // Socket.io logic
 io.on('connection', (socket) => {
     // Log connection information
     console.log('User connected on port 3000: ' + socket.id);
 
     // Handle joinChannel event
-    socket.on('joinChannel', ({ channelId, userId, username }) => {
+    socket.on('joinChannel', async ({ channelId, userId, username }) => {
         socket.join(channelId);
+        await saveJoinLeaveEvent(channelId, userId, username, 'join');
         console.log(`${username} joined channel ${channelId}`);
         // Notify other users in the channel
         socket.to(channelId).emit(`userJoined:${channelId}`, { username });
     });
 
     // Handle leaveChannel event
-    socket.on('leaveChannel', ({ channelId, userId, username }) => {
+    socket.on('leaveChannel', async ({ channelId, userId, username }) => {
         socket.leave(channelId);
+        await saveJoinLeaveEvent(channelId, userId, username, 'leave');
         console.log(`${username} left channel ${channelId}`);
         // Notify other users in the channel
         socket.to(channelId).emit(`userLeft:${channelId}`, { username });
