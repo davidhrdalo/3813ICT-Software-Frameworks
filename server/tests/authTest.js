@@ -65,15 +65,15 @@ describe('User API Tests', function() {
             chai.request(app)
                 .post('/api/auth')
                 .send({
-                    username: 'johndoe',
-                    password: 'password123'
+                    username: 'john_doe', // Updated to use existing username
+                    password: 'pw'         // Updated to use existing password
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('username').eql('johndoe');
-                    res.body.should.have.property('email').eql('johndoe@example.com');
-                    res.body.should.have.property('roles').eql(['chat']);
+                    res.body.should.have.property('username').eql('john_doe');
+                    res.body.should.have.property('email').eql('john.doe@example.com');
+                    res.body.should.have.property('roles').eql(['super', 'group', 'chat']);
                     done();
                 });
         });
@@ -82,7 +82,7 @@ describe('User API Tests', function() {
             chai.request(app)
                 .post('/api/auth')
                 .send({
-                    username: 'johndoe',
+                    username: 'john_doe',     // Updated to use existing username
                     password: 'wrongpassword'
                 })
                 .end((err, res) => {
@@ -93,4 +93,5 @@ describe('User API Tests', function() {
                 });
         });
     });
+
 });

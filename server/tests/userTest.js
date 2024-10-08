@@ -72,7 +72,7 @@ describe('User API Tests', function() {
     // Test for deleting a user by ID
     describe('/DELETE api/users/:id', () => {
         it('it should DELETE a user given the id', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with a valid user ID
+            const userId = '64e09ba3f40c4b8f9d5f9f9d'; // Using existing user ID (alice_jones)
 
             chai.request(app)
                 .delete(`/api/users/${userId}`)
@@ -88,7 +88,7 @@ describe('User API Tests', function() {
     // Test for promoting a user to Group Admin
     describe('/POST api/users/:id/promote/group', () => {
         it('it should PROMOTE a user to Group Admin', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with a valid user ID
+            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
 
             chai.request(app)
                 .post(`/api/users/${userId}/promote/group`)
@@ -104,7 +104,7 @@ describe('User API Tests', function() {
     // Test for promoting a user to Super Admin
     describe('/POST api/users/:id/promote/super', () => {
         it('it should PROMOTE a user to Super Admin', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with a valid user ID
+            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
 
             chai.request(app)
                 .post(`/api/users/${userId}/promote/super`)
@@ -120,7 +120,7 @@ describe('User API Tests', function() {
     // Test for uploading a profile image
     describe('/POST api/users/:id/upload', () => {
         it('it should UPLOAD a profile image and update the user', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with a valid user ID
+            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
 
             chai.request(app)
                 .post(`/api/users/${userId}/upload`)

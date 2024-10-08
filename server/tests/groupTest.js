@@ -36,11 +36,11 @@ describe('Group API Tests', function() {
                 .post('/api/groups')
                 .send({
                     name: 'New Group',
-                    admins: ['615c1bdee7a1f123a4a85c34'], // Replace with valid admin IDs
-                    members: ['615c1bdee7a1f123a4a85c34'],
+                    admins: ['64e09ba0f40c4b8f9d5f9f9a'], // Using existing admin ID (super_admin)
+                    members: ['64e09ba0f40c4b8f9d5f9f9a'],
                     interested: [],
                     description: 'This is a test group',
-                    groupImg: 'http://example.com/image.jpg'
+                    groupImg: 'http://localhost:3000/data/images/groupImages/473.jpg' // Using existing group image
                 })
                 .end((err, res) => {
                     res.should.have.status(201);
@@ -61,7 +61,7 @@ describe('Group API Tests', function() {
             };
 
             // Replace this with a valid group ID from your database
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9f'; // Project Management
 
             chai.request(app)
                 .put(`/api/groups/${groupId}`)
@@ -80,7 +80,7 @@ describe('Group API Tests', function() {
     describe('/DELETE api/groups/:id', () => {
         it('it should DELETE a group given the id', (done) => {
             // Replace this with a valid group ID from your database
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9c'; // Testers
 
             chai.request(app)
                 .delete(`/api/groups/${groupId}`)
@@ -94,10 +94,10 @@ describe('Group API Tests', function() {
     // Test for registering interest in a group
     describe('/POST api/groups/:id/interested', () => {
         it('it should REGISTER interest in a group', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
 
             // Replace with valid group ID
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9d'; // Designers
 
             chai.request(app)
                 .post(`/api/groups/${groupId}/interested`)
@@ -114,10 +114,10 @@ describe('Group API Tests', function() {
     // Test for unregistering interest in a group
     describe('/POST api/groups/:id/unregister-interest', () => {
         it('it should UNREGISTER interest in a group', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
 
             // Replace with valid group ID
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9d'; // Designers
 
             chai.request(app)
                 .post(`/api/groups/${groupId}/unregister-interest`)
@@ -134,10 +134,10 @@ describe('Group API Tests', function() {
     // Test for removing a user from a group
     describe('/POST api/groups/:groupId/removeUser', () => {
         it('it should REMOVE a user from the group', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba1f40c4b8f9d5f9f9b'; // Using existing user ID (john_doe)
 
             // Replace with valid group ID
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9e'; // Developers
 
             chai.request(app)
                 .post(`/api/groups/${groupId}/removeUser`)
@@ -154,10 +154,10 @@ describe('Group API Tests', function() {
     // Test for allowing a user to join a group
     describe('/POST api/groups/:groupId/allowUserToJoin', () => {
         it('it should ALLOW a user to join the group', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba3f40c4b8f9d5f9f9d'; // Using existing user ID (alice_jones)
 
             // Replace with valid group ID
-            const groupId = '615c1bdee7a1f123a4a85c34'; 
+            const groupId = '64e09ba4f40c4b8f9d5f9f9f'; // Project Management
 
             chai.request(app)
                 .post(`/api/groups/${groupId}/allowUserToJoin`)
@@ -170,4 +170,5 @@ describe('Group API Tests', function() {
                 });
         });
     });
+
 });

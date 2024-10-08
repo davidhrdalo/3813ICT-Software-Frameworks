@@ -37,7 +37,7 @@ describe('Channel API Tests', function() {
                 .send({
                     name: 'New Channel',
                     description: 'This is a test channel',
-                    groupId: '615c1bdee7a1f123a4a85c34' // Ensure this groupId exists
+                    groupId: '64e09ba4f40c4b8f9d5f9f9f' // Updated to an existing groupId (Project Management)
                 })
                 .end((err, res) => {
                     res.should.have.status(201);
@@ -57,8 +57,8 @@ describe('Channel API Tests', function() {
                 description: 'Updated Description'
             };
 
-            // Replace this with a valid channel ID from your database
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            // Using an existing channel ID: '78909ba4f40c4b8f9d5f9f9e' (General Discussion)
+            const channelId = '78909ba4f40c4b8f9d5f9f9e'; 
 
             chai.request(app)
                 .put(`/api/channels/${channelId}`)
@@ -76,8 +76,8 @@ describe('Channel API Tests', function() {
     // Test for deleting a channel
     describe('/DELETE api/channels/:id', () => {
         it('it should DELETE a channel given the id', (done) => {
-            // Replace this with a valid channel ID from your database
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            // Using an existing channel ID: '64ebc0f4f40c4b8f9d5f9f9e' (QA Testing)
+            const channelId = '64ebc0f4f40c4b8f9d5f9f9e'; 
 
             chai.request(app)
                 .delete(`/api/channels/${channelId}`)
@@ -93,10 +93,10 @@ describe('Channel API Tests', function() {
     // Test for adding a user to a channel
     describe('/POST api/channels/:id/addMember', () => {
         it('it should ADD a user to the channel', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba1f40c4b8f9d5f9f9b'; // Using existing user ID (john_doe)
 
-            // Replace with valid channel ID
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            // Using an existing channel ID: '64e09ba4f40c4b8f9d5f9f8d' (Design Critiques)
+            const channelId = '64e09ba4f40c4b8f9d5f9f8d'; 
 
             chai.request(app)
                 .post(`/api/channels/${channelId}/addMember`)
@@ -113,10 +113,10 @@ describe('Channel API Tests', function() {
     // Test for removing a user from a channel
     describe('/POST api/channels/:id/removeMember', () => {
         it('it should REMOVE a user from the channel', (done) => {
-            const userId = '615c1bdee7a1f123a4a85c34'; // Replace with valid user ID
+            const userId = '64e09ba1f40c4b8f9d5f9f9b'; // Using existing user ID (john_doe)
 
-            // Replace with valid channel ID
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            // Using an existing channel ID: '64e09ba4f40c4b8f9d5f9f8d' (Design Critiques)
+            const channelId = '64e09ba4f40c4b8f9d5f9f8d'; 
 
             chai.request(app)
                 .post(`/api/channels/${channelId}/removeMember`)

@@ -20,7 +20,7 @@ describe('Chat API Tests', function() {
     describe('/GET api/chat/:channelId', () => {
         it('it should GET all chat messages for a given channel', (done) => {
             // Replace this with a valid channel ID from your database
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            const channelId = '78909ba4f40c4b8f9d5f9f9e'; 
 
             chai.request(app)
                 .get(`/api/chat/${channelId}`)
@@ -36,15 +36,15 @@ describe('Chat API Tests', function() {
     describe('/POST api/chat/:channelId', () => {
         it('it should POST a new chat message', (done) => {
             const messageData = {
-                userId: '615c1bdee7a1f123a4a85c34', // Replace with valid user ID
-                username: 'testUser',
+                userId: '64e09ba1f40c4b8f9d5f9f9b', // Using existing user ID (john_doe)
+                username: 'john_doe',
                 message: 'Hello, this is a test message',
-                profilePic: 'http://example.com/profilePic.jpg',
+                profilePic: 'http://localhost:3000/data/images/profileImages/37.jpg', // Using existing profile image
                 imageUrl: 'http://example.com/image.jpg'
             };
 
             // Replace this with a valid channel ID from your database
-            const channelId = '615c1bdee7a1f123a4a85c34'; 
+            const channelId = '78909ba4f40c4b8f9d5f9f9e'; 
 
             chai.request(app)
                 .post(`/api/chat/${channelId}`)
@@ -52,9 +52,9 @@ describe('Chat API Tests', function() {
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('username').eql('testUser');
+                    res.body.should.have.property('username').eql('john_doe');
                     res.body.should.have.property('message').eql('Hello, this is a test message');
-                    res.body.should.have.property('channelId');
+                    res.body.should.have.property('channelId').eql(channelId);
                     done();
                 });
         });
@@ -64,7 +64,7 @@ describe('Chat API Tests', function() {
     describe('/POST api/chat/:channelId/upload', () => {
         it('it should UPLOAD an image and create a chat message', (done) => {
             // Replace this with a valid channel ID from your database
-            const channelId = '615c1bdee7a1f123a4a85c34';
+            const channelId = '78909ba4f40c4b8f9d5f9f9e';
 
             chai.request(app)
                 .post(`/api/chat/${channelId}/upload`)
