@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import io from 'socket.io-client';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActiveUserService } from '../activeUser/activeUser.service';
 
 const SERVER_URL = 'http://localhost:3000';
@@ -46,7 +47,8 @@ export class SocketService {
     this.socket.emit('channelMessage', messageData);
 
     // Also send the message to the server via HTTP POST
-    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData);
+    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData)
+      .pipe(catchError(this.handleError));
   }
 
   // Listen for "channelMessage" events from the socket server
@@ -60,7 +62,8 @@ export class SocketService {
 
   // Get chat history for a specific channel
   getChatHistory(channelId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${SERVER_URL}/api/chat/${channelId}`);
+    return this.http.get<any[]>(`${SERVER_URL}/api/chat/${channelId}`)
+      .pipe(catchError(this.handleError));
   }
 
   // Join a specific channel
@@ -123,7 +126,7 @@ export class SocketService {
     return this.http.post(
       `${SERVER_URL}/api/chat/${channelId}/upload`,
       formData
-    );
+    ).pipe(catchError(this.handleError));
   }
 
   sendImageMessage(channelId: string, imageUrl: string): Observable<any> {
@@ -146,7 +149,8 @@ export class SocketService {
     this.socket.emit('channelMessage', messageData);
 
     // Send the message to the server via HTTP POST and return the Observable
-    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData);
+    return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData)
+      .pipe(catchError(this.handleError));
   }
 
   // Peer video support below
@@ -160,5 +164,37 @@ export class SocketService {
         observer.next(data);
       });
     });
+  }
+
+  // Error handling method
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Backend error
+      switch (error.status) {
+        case 400:
+          errorMessage = `Bad Request: ${error.error.message || 'Invalid input'}`;
+          break;
+        case 401:
+          errorMessage = 'Unauthorized: Please log in again.';
+          break;
+        case 403:
+          errorMessage = 'Forbidden: You do not have permission to perform this action.';
+          break;
+        case 404:
+          errorMessage = 'Not Found: The requested resource does not exist.';
+          break;
+        case 500:
+          errorMessage = 'Server Error: Please try again later.';
+          break;
+        default:
+          errorMessage = `Error ${error.status}: ${error.error.message || 'Unknown error'}`;
+      }
+    }
+    console.error('Socket operation failed:', errorMessage);
+    return throwError(errorMessage);
   }
 }

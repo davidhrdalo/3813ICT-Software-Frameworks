@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { ActiveUserService } from '../activeUser/activeUser.service';
 import { UserService } from '../user/user.service';
 
@@ -22,7 +22,9 @@ export class GroupService {
 
   // Fetch all groups from the backend API
   getGroups(): Observable<any[]> {
-    return this.http.get<any[]>(BACKEND_URL);
+    return this.http.get<any[]>(BACKEND_URL).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get all groups (this is the same as getGroups, could be extended for future use)
@@ -153,12 +155,16 @@ export class GroupService {
     };
 
     // Send the new group data to the backend
-    return this.http.post(BACKEND_URL, newGroup, httpOptions);
+    return this.http.post(BACKEND_URL, newGroup, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Delete a group by its ID
   deleteGroup(groupId: string): Observable<any> {
-    return this.http.delete(`${BACKEND_URL}/${groupId}`, httpOptions);
+    return this.http.delete(`${BACKEND_URL}/${groupId}`, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Update an existing group by sending the updated data to the backend
@@ -167,6 +173,8 @@ export class GroupService {
       `${BACKEND_URL}/${groupId}`,
       updatedGroupData,
       httpOptions
+    ).pipe(
+      catchError(this.handleError)
     );
   }
 
@@ -176,6 +184,8 @@ export class GroupService {
       `${BACKEND_URL}/${groupId}/interested`,
       { userId }, // Send user ID in the request body
       httpOptions
+    ).pipe(
+      catchError(this.handleError)
     );
   }
 
@@ -185,6 +195,8 @@ export class GroupService {
       `${BACKEND_URL}/${groupId}/unregister-interest`,
       { userId }, // Send user ID in the request body
       httpOptions
+    ).pipe(
+      catchError(this.handleError)
     );
   }
 
@@ -194,6 +206,8 @@ export class GroupService {
       `${BACKEND_URL}/${groupId}/removeUser`,
       { userId }, // Send user ID in the request body
       httpOptions
+    ).pipe(
+      catchError(this.handleError)
     );
   }
 
@@ -203,11 +217,47 @@ export class GroupService {
       `${BACKEND_URL}/${groupId}/allowUserToJoin`,
       { userId }, // Send user ID in the request body
       httpOptions
+    ).pipe(
+      catchError(this.handleError)
     );
   }
   
   // Handle group profile images
   imgupload(groupId: string, fd: any) {
-    return this.http.post<any>(`${BACKEND_URL}/${groupId}/upload`, fd);
+    return this.http.post<any>(`${BACKEND_URL}/${groupId}/upload`, fd).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Error handling method
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Backend error
+      switch (error.status) {
+        case 400:
+          errorMessage = `Bad Request: ${error.error.message || 'Invalid input'}`;
+          break;
+        case 401:
+          errorMessage = 'Unauthorized: Please log in again.';
+          break;
+        case 403:
+          errorMessage = 'Forbidden: You do not have permission to perform this action.';
+          break;
+        case 404:
+          errorMessage = 'Not Found: The requested group does not exist.';
+          break;
+        case 500:
+          errorMessage = 'Server Error: Please try again later.';
+          break;
+        default:
+          errorMessage = `Error ${error.status}: ${error.error.message || 'Unknown error'}`;
+      }
+    }
+    console.error('Group operation failed:', errorMessage);
+    return throwError(errorMessage);
   }
 }

@@ -3,6 +3,12 @@
   <div class="row">
     <!-- Full row -->
     <div style="padding-top: 2em; padding-bottom: 2em" class="col-12">
+    
+      <!-- Popup Message -->
+      <div *ngIf="popupMessage" class="alert" [ngClass]="{'alert-success': popupMessage.type === 'success', 'alert-danger': popupMessage.type === 'error'}" role="alert">
+        {{ popupMessage.message }}
+      </div>
+
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome to {{ group?.name }}</h1>
         <p class="lead" *ngIf="userData.roles.includes('super')">
@@ -55,6 +61,7 @@
           <button class="btn btn-primary ml-3" type="button" (click)="onUpload()">Submit</button>
         </div>
       </form>
+      <div *ngIf="imageUploadError" class="text-danger">{{ imageUploadError }}</div>
     </div>
 
     <!-- 2/3 row -->
@@ -84,6 +91,8 @@
           class="form-control"
         />
       </p>
+
+      <div *ngIf="groupError" class="text-danger">{{ groupError }}</div>
 
       <!-- Buttons -->
       <button
@@ -168,6 +177,7 @@
                   class="form-control"
                 />
               </p>
+              <div *ngIf="channelError" class="text-danger">{{ channelError }}</div>
               <div class="button-group">
                 <button class="btn btn-outline-primary" (click)="saveChannel()">
                   Save
@@ -224,6 +234,8 @@
               [(ngModel)]="channelDescription"
             />
           </p>
+
+          <div *ngIf="channelError" class="text-danger">{{ channelError }}</div>
 
           <button
             type="button"
@@ -285,6 +297,7 @@
       <!-- Full row - Content for superuser -->
       <hr />
       <h3>Active Members</h3>
+      <div *ngIf="userError" class="text-danger">{{ userError }}</div>
       <div class="row" *ngIf="activeMembers.length > 0; else noActiveMembers">
         <div class="col-3 card" *ngFor="let user of activeMembers">
           <img

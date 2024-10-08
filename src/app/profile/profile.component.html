@@ -7,6 +7,9 @@
       class="col-12"
       *ngIf="userData"
     >
+    <div *ngIf="popupMessage" class="alert" [ngClass]="{'alert-success': popupMessage.type === 'success', 'alert-danger': popupMessage.type === 'error'}" role="alert">
+      {{ popupMessage.message }}
+    </div>
       <div class="jumbotron jumbotron-fluid">
         <h1 class="display-4">Welcome {{ userData.firstName }}</h1>
         <!-- Conditional Rendering based on roles -->
@@ -134,6 +137,8 @@
           class="form-control"
         />
       </p>
+      
+      <div *ngIf="profileError" class="text-danger mt-2">{{ profileError }}</div>
 
       <!-- Buttons -->
       <button
@@ -173,6 +178,7 @@
       <div class="col-8">
         
         <h3>User Management</h3>
+        <div *ngIf="userManagementError" class="text-danger mb-2">{{ userManagementError }}</div>
         <div class="row" *ngIf="allUsers?.length > 0; else noUsersTemplate">
           <div class="col-md-6 col-lg-4 card mb-3" *ngFor="let user of allUsers">
             <img
@@ -237,6 +243,7 @@
             <strong>User Password: </strong>
             <input type="text" class="form-control" [(ngModel)]="password" />
           </p>
+          <div *ngIf="createUserError" class="text-danger mt-2">{{ createUserError }}</div>
           <button
             type="button"
             style="width: 120px; margin-bottom: 20px; margin-right: 10px"
@@ -263,6 +270,7 @@
 
       <div class="col-8">
         <h3>Group Management</h3>
+        <div *ngIf="groupManagementError" class="text-danger mb-2">{{ groupManagementError }}</div>
         <div class="row" *ngIf="(userData.roles.includes('super') ? allGroups.length : adminGroups.length) > 0; else noGroupsTemplate">
           <div
             class="col-md-6 col-lg-4 card mb-3"
@@ -314,6 +322,7 @@
               [(ngModel)]="groupDescription"
             />
           </p>
+          <div *ngIf="createGroupError" class="text-danger mt-2">{{ createGroupError }}</div>
           <button
             type="button"
             style="width: 120px; margin-bottom: 20px; margin-right: 10px"
@@ -387,6 +396,7 @@
 
         <div class="col-12">
             <h3>Groups you're not in</h3>
+            <div *ngIf="interestError" class="text-danger mb-2">{{ interestError }}</div>
             <div class="row" *ngIf="notInGroups.length > 0; else noNonGroups">
               <div
                 class="col-md-2 col-lg-3 card mb-3"
