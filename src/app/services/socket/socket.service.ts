@@ -7,7 +7,7 @@ import { ActiveUserService } from '../activeUser/activeUser.service';
 const SERVER_URL = 'http://localhost:3000';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
   private socket: any;
@@ -16,12 +16,14 @@ export class SocketService {
   constructor(
     private http: HttpClient,
     private activeUserService: ActiveUserService
-  ) { }
+  ) {}
 
   // Setup Connection to socket server
   initSocket() {
     this.socket = io(SERVER_URL);
-    return () => { this.socket.disconnect(); }
+    return () => {
+      this.socket.disconnect();
+    };
   }
 
   // Emit a message to the socket server for a specific channel
@@ -37,7 +39,7 @@ export class SocketService {
       userId: userData._id,
       username: userData.username,
       message,
-      profilePic: userData.profileImg
+      profilePic: userData.profileImg,
     };
 
     // Emit the message via socket
@@ -49,7 +51,7 @@ export class SocketService {
 
   // Listen for "channelMessage" events from the socket server
   getMessages(channelId: string): Observable<any> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.socket.on(`channelMessage:${channelId}`, (data: any) => {
         observer.next(data);
       });
@@ -65,7 +67,11 @@ export class SocketService {
   joinChannel(channelId: string) {
     const userData = this.activeUserService.getUserData();
     if (userData) {
-      this.socket.emit('joinChannel', { channelId, userId: userData._id, username: userData.username });
+      this.socket.emit('joinChannel', {
+        channelId,
+        userId: userData._id,
+        username: userData.username,
+      });
     } else {
       console.error('No active user found when joining channel');
     }
@@ -75,7 +81,11 @@ export class SocketService {
   leaveChannel(channelId: string) {
     const userData = this.activeUserService.getUserData();
     if (userData) {
-      this.socket.emit('leaveChannel', { channelId, userId: userData._id, username: userData.username });
+      this.socket.emit('leaveChannel', {
+        channelId,
+        userId: userData._id,
+        username: userData.username,
+      });
     } else {
       console.error('No active user found when leaving channel');
     }
@@ -99,12 +109,18 @@ export class SocketService {
     });
   }
 
-  // Send an image message
+  uploadImage(channelId: string, formData: FormData): Observable<any> {
+    return this.http.post(
+      `${SERVER_URL}/api/chat/${channelId}/upload`,
+      formData
+    );
+  }
+
   sendImageMessage(channelId: string, imageUrl: string): Observable<any> {
     const userData = this.activeUserService.getUserData();
     if (!userData) {
       console.error('No active user found');
-      return new Observable(); // Return an empty observable
+      return new Observable();
     }
 
     const messageData = {
@@ -113,19 +129,14 @@ export class SocketService {
       username: userData.username,
       message: '', // No text message
       profilePic: userData.profileImg,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
     };
 
     // Emit the message via socket
     this.socket.emit('channelMessage', messageData);
 
-    // Also send the message to the server via HTTP POST
+    // Send the message to the server via HTTP POST and return the Observable
     return this.http.post(`${SERVER_URL}/api/chat/${channelId}`, messageData);
-  }
-
-  // Upload image to the server
-  uploadImage(channelId: string, formData: FormData): Observable<any> {
-    return this.http.post(`${SERVER_URL}/api/chat/${channelId}/upload`, formData)
   }
 
   // Peer video support below
@@ -134,7 +145,7 @@ export class SocketService {
   }
 
   getPeerID() {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.socket.on('peerID', (data: string) => {
         observer.next(data);
       });

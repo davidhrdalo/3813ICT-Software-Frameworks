@@ -222,7 +222,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     if (this.selectedFile && this.channelId) {
       const fd = new FormData();
       fd.append('file', this.selectedFile, this.selectedFile.name);
-
       this.socketService.uploadImage(this.channelId, fd).subscribe(
         (response: any) => {
           console.log('Image upload successful:', response);
@@ -232,30 +231,25 @@ export class ChannelComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.error('Error uploading image:', error);
-          // Optionally, show an error message to the user
-          // alert('Failed to upload image. Please try again.');
         }
       );
     } else {
       console.error('No file selected or channel ID is undefined');
-      // Optionally, show an error message to the user
-      // alert('Please select an image file first.');
     }
   }
 
-  // Send a chat message containing the image URL
   sendImageMessage(imageUrl: string) {
     if (this.channelId) {
-      this.socketService
-        .sendImageMessage(this.channelId, imageUrl)
-        .subscribe(
-          () => {
-            // Image message sent successfully
-          },
-          (error) => {
-            console.error('Error sending image message', error);
-          }
-        );
+      this.socketService.sendImageMessage(this.channelId, imageUrl).subscribe(
+        (response) => {
+          console.log('Image message sent successfully', response);
+          // Optionally, you can update your local messages array here
+          // this.messages.push(response);
+        },
+        (error) => {
+          console.error('Error sending image message', error);
+        }
+      );
     }
   }
 }

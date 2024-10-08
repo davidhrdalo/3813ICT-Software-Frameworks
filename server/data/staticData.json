@@ -138,17 +138,6 @@
   ],
   "channels": [
     {
-      "_id": "78909ba4f40c4b8f9d5f9f9e",
-      "name": "General Discussion",
-      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "General chat for all members",
-      "members": [
-        "64e09ba0f40c4b8f9d5f9f9a",
-        "64e09ba1f40c4b8f9d5f9f9b",
-        "64e09ba2f40c4b8f9d5f9f9c"
-      ]
-    },
-    {
       "_id": "64ebc0f4f40c4b8f9d5f9f9f",
       "name": "Project Updates",
       "groupId": "64e09ba4f40c4b8f9d5f9f9f",
@@ -180,10 +169,10 @@
       ]
     },
     {
-      "_id": "6704a6a639427b2cffeb0eb8",
-      "name": "s",
+      "_id": "6704b3dd395388632a5ae1d4",
+      "name": "t",
       "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "s",
+      "description": "t",
       "members": []
     }
   ]

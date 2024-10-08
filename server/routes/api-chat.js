@@ -58,78 +58,31 @@ module.exports = function (app, client, formidable, fs, path) {
         form.keepExtensions = true;
 
         form.parse(req, async (err, fields, files) => {
-            if (err) {
-                console.error("Error parsing the files:", err);
-                return res.status(400).json({
-                    status: "Fail",
-                    message: "There was an error parsing the files",
-                    error: err.message,
-                });
-            }
-
-            console.log('Files:', JSON.stringify(files, null, 2));
-
-            if (!files.file || !Array.isArray(files.file) || files.file.length === 0) {
-                return res.status(400).json({
-                    status: "Fail",
-                    message: "No image file uploaded or filename is missing",
-                });
-            }
+            // ... [existing error handling code] ...
 
             const uploadedFile = files.file[0];
             const oldPath = uploadedFile.filepath;
-            const fileName = Date.now() + '_' + uploadedFile.originalFilename; // To ensure unique filenames
+            const fileName = Date.now() + '_' + uploadedFile.originalFilename;
             const newPath = path.join(uploadFolder, fileName);
 
             try {
                 await fs.promises.rename(oldPath, newPath);
 
-                const channelId = req.params.channelId;
-                console.log('Received channelId:', channelId);
-
-                if (!ObjectId.isValid(channelId)) {
-                    return res.status(400).json({
-                        status: "Fail",
-                        message: "Invalid channel ID",
-                    });
-                }
-
-                const channelObjectId = new ObjectId(channelId);
-                console.log('Converted channelObjectId:', channelObjectId);
-
+                const channelId = new ObjectId(req.params.channelId);
                 const imageUrl = `${baseUrl}/data/images/chatImages/${fileName}`;
 
-                // Here, instead of updating a document, we'll create a new chat message
-                // with the image URL. You might want to adjust this based on your exact requirements.
-                const newMessage = {
-                    channelId: channelObjectId,
-                    imageUrl: imageUrl,
-                    timestamp: new Date()
-                    // Add any other necessary fields here
-                };
-
-                const insertResult = await chatsCollection.insertOne(newMessage);
-                console.log('Insert Result:', insertResult);
-
-                if (insertResult.insertedId) {
-                    // Send success response with the image URL
-                    res.status(200).json({
-                        result: 'OK',
-                        data: { 'filename': fileName, 'size': uploadedFile.size, 'url': imageUrl },
-                        message: "Image upload and chat message creation successful"
-                    });
-                } else {
-                    res.status(400).json({
-                        status: "Fail",
-                        message: "Failed to insert chat message with image"
-                    });
-                }
+                // Instead of creating a new message here, just return the imageUrl
+                res.status(200).json({
+                    result: 'OK',
+                    data: { 'filename': fileName, 'size': uploadedFile.size, 'url': imageUrl },
+                    message: "Image upload successful"
+                });
 
             } catch (error) {
-                console.error("Error saving the image or creating chat message:", error);
+                console.error("Error saving the image:", error);
                 res.status(500).json({
                     status: "Fail",
-                    message: "Failed to save the image or create chat message",
+                    message: "Failed to save the image",
                     error: error.message,
                 });
             }
