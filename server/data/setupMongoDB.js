@@ -26,7 +26,7 @@ async function main() {
         email: "superadmin@example.com",
         password: "123",
         roles: ["super", "group", "chat"],
-        profileImg: "assets/images/defaultProfile.jpg",
+        profileImg: "http://localhost:3000/data/images/profileImages/defaultProfile.jpg",
         firstName: "Super",
         lastName: "Admin",
         dob: "1980-01-01",
@@ -38,7 +38,7 @@ async function main() {
         email: "john.doe@example.com",
         password: "pw",
         roles: ["super", "group", "chat"],
-        profileImg: "assets/images/37.jpg",
+        profileImg: "http://localhost:3000/data/images/profileImages/37.jpg",
         firstName: "John",
         lastName: "Doe",
         dob: "1990-08-17",
@@ -50,7 +50,7 @@ async function main() {
         email: "jane.smith@example.com",
         password: "pw",
         roles: ["chat"],
-        profileImg: "assets/images/58.jpg",
+        profileImg: "http://localhost:3000/data/images/profileImages/58.jpg",
         firstName: "Jane",
         lastName: "Smith",
         dob: "1992-03-26",
@@ -62,7 +62,7 @@ async function main() {
         email: "alice.jones@example.com",
         password: "pw",
         roles: ["chat"],
-        profileImg: "assets/images/430.jpg",
+        profileImg: "http://localhost:3000/data/images/profileImages/430.jpg",
         firstName: "Alice",
         lastName: "Jones",
         dob: "1998-06-10",
@@ -74,7 +74,7 @@ async function main() {
         email: "robert.brown@example.com",
         password: "pw",
         roles: ["group", "chat"],
-        profileImg: "assets/images/550.jpg",
+        profileImg: "http://localhost:3000/data/images/profileImages/550.jpg",
         firstName: "Robert",
         lastName: "Brown",
         dob: "1985-11-20",
@@ -95,7 +95,7 @@ async function main() {
         members: [userIdMap.super_admin, userIdMap.john_doe, userIdMap.jane_smith],
         interested: [],
         description: "Group for software developers",
-        groupImg: "assets/images/473.jpg"
+        groupImg: "http://localhost:3000/data/images/groupImages/473.jpg"
       },
       {
         _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9f"),
@@ -104,7 +104,7 @@ async function main() {
         members: [userIdMap.robert_brown, userIdMap.super_admin],
         interested: [],
         description: "Group for project management discussions",
-        groupImg: "assets/images/430.jpg"
+        groupImg: "http://localhost:3000/data/images/groupImages/430.jpg"
       },
       {
         _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9d"),
@@ -113,7 +113,7 @@ async function main() {
         members: [userIdMap.john_doe, userIdMap.jane_smith, userIdMap.alice_jones],
         interested: [],
         description: "Group for creative design",
-        groupImg: "assets/images/58.jpg"
+        groupImg: "http://localhost:3000/data/images/groupImages/58.jpg"
       },
       {
         _id: new ObjectId("64e09ba4f40c4b8f9d5f9f9c"),
@@ -122,7 +122,7 @@ async function main() {
         members: [userIdMap.jane_smith, userIdMap.robert_brown],
         interested: [],
         description: "Group for testing and quality assurance",
-        groupImg: "assets/images/37.jpg"
+        groupImg: "http://localhost:3000/data/images/groupImages/37.jpg"
       }
     ];
 

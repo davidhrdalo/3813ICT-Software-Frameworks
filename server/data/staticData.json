@@ -13,7 +13,7 @@
       ],
       "interested": [],
       "description": "Group for software developers",
-      "groupImg": "assets/images/473.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/473.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9f",
@@ -27,7 +27,7 @@
       ],
       "interested": [],
       "description": "Group for project management discussions",
-      "groupImg": "assets/images/430.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/430.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9d",
@@ -42,21 +42,7 @@
       ],
       "interested": [],
       "description": "Group for creative design",
-      "groupImg": "assets/images/58.jpg"
-    },
-    {
-      "_id": "64e09ba4f40c4b8f9d5f9f9c",
-      "name": "Testers",
-      "admins": [
-        "64e09ba2f40c4b8f9d5f9f9c"
-      ],
-      "members": [
-        "64e09ba2f40c4b8f9d5f9f9c",
-        "64e09ba4f40c4b8f9d5f9f9e"
-      ],
-      "interested": [],
-      "description": "Group for testing and quality assurance",
-      "groupImg": "assets/images/37.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/58.jpg"
     }
   ],
   "users": [
@@ -70,7 +56,7 @@
         "group",
         "chat"
       ],
-      "profileImg": "assets/images/defaultProfile.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/defaultProfile.jpg",
       "firstName": "Super",
       "lastName": "Admin",
       "dob": "1980-01-01",
@@ -86,7 +72,7 @@
         "group",
         "chat"
       ],
-      "profileImg": "assets/images/37.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/37.jpg",
       "firstName": "John",
       "lastName": "Doe",
       "dob": "1990-08-17",
@@ -100,7 +86,7 @@
       "roles": [
         "chat"
       ],
-      "profileImg": "assets/images/58.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/58.jpg",
       "firstName": "Jane",
       "lastName": "Smith",
       "dob": "1992-03-26",
@@ -114,7 +100,7 @@
       "roles": [
         "chat"
       ],
-      "profileImg": "assets/images/430.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/430.jpg",
       "firstName": "Alice",
       "lastName": "Jones",
       "dob": "1998-06-10",
@@ -129,7 +115,7 @@
         "group",
         "chat"
       ],
-      "profileImg": "assets/images/550.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/550.jpg",
       "firstName": "Robert",
       "lastName": "Brown",
       "dob": "1985-11-20",
