@@ -2,17 +2,19 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
   username = ''; // Model to hold username input
   password = ''; // Model to hold password input
+  errorMessage = ''; // New property to hold error messages
 
   constructor(
     private router: Router,
@@ -28,13 +30,13 @@ export class LoginComponent {
           // Navigate to the profile page if login is successful
           this.router.navigateByUrl('/profile');
         } else {
-          // Show an alert if login credentials are invalid
-          alert('Invalid username or password');
+          // Show an error message if login credentials are invalid
+          this.errorMessage = 'Invalid username or password';
         }
       },
-      (error) => {
+      (error: string) => {
         // Handle any errors that occur during the login process
-        alert('An error occurred during login. Please try again.');
+        this.errorMessage = error;
       }
     );
   }

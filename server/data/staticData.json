@@ -134,6 +134,20 @@
       "lastName": "Brown",
       "dob": "1985-11-20",
       "status": "Active"
+    },
+    {
+      "_id": "6704c3fca5c88fa294323c0a",
+      "firstName": "s",
+      "lastName": "s",
+      "username": "john_do",
+      "email": "s",
+      "password": "pw",
+      "dob": "2024-10-17",
+      "roles": [
+        "chat"
+      ],
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "status": "Active"
     }
   ],
   "channels": [
