@@ -66,5 +66,4 @@ describe('Profile Page', () => {
       });
     });
   
-  });
-  
+});

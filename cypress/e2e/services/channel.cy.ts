@@ -2,7 +2,7 @@ describe('Channel Functionality Tests', () => {
 
     beforeEach(() => {
       // Adjust the group ID and channel ID as needed
-      cy.visit('/group/12345/channel/67890'); 
+      cy.visit('/group/64e09ba4f40c4b8f9d5f9f9e/channel/78909ba4f40c4b8f9d5f9f9e'); 
     });
   
     // Test creating a new channel
@@ -22,7 +22,7 @@ describe('Channel Functionality Tests', () => {
     // Test deleting a channel
     it('should delete a channel', () => {
       // Locate the channel and delete it
-      cy.get('p').contains('Existing Channel').parent().within(() => {
+      cy.get('p').contains('QA Testing').parent().within(() => { // Changed 'Existing Channel' to 'QA Testing'
         cy.get('button').contains('Remove').click();  // Assuming the button text is "Remove"
       });
   
@@ -33,19 +33,19 @@ describe('Channel Functionality Tests', () => {
       });
   
       // Assert the channel is no longer listed
-      cy.get('p').contains('Existing Channel').should('not.exist');
+      cy.get('p').contains('QA Testing').should('not.exist');
     });
   
     // Test adding a member to the channel
     it('should add a member to the channel', () => {
       // Select a non-member and add to the channel
       cy.get('h4').contains('Non-Members').parent().within(() => {
-        cy.get('li').first().contains('Add').click();  // Assuming there's a "Add" button next to non-members
+        cy.get('li').contains('Add').click();  // Click the "Add" button for the first non-member
       });
   
       // Assert the member is added to the channel
       cy.get('h4').contains('Members').parent().within(() => {
-        cy.get('li').should('contain.text', 'UserNameOfAddedMember');
+        cy.get('li').should('contain.text', 'jane_smith'); // Replaced 'UserNameOfAddedMember' with 'jane_smith'
       });
     });
   
@@ -53,14 +53,13 @@ describe('Channel Functionality Tests', () => {
     it('should remove a member from the channel', () => {
       // Remove a member from the channel
       cy.get('h4').contains('Members').parent().within(() => {
-        cy.get('li').first().contains('Remove').click();  // Assuming there's a "Remove" button next to members
+        cy.get('li').contains('Remove').click();  // Click the "Remove" button for the first member
       });
   
       // Assert the member is removed from the channel
       cy.get('h4').contains('Members').parent().within(() => {
-        cy.get('li').should('not.contain.text', 'UserNameOfRemovedMember');
+        cy.get('li').should('not.contain.text', 'john_doe'); // Replaced 'UserNameOfRemovedMember' with 'john_doe'
       });
     });
   
-  });
-  
+});

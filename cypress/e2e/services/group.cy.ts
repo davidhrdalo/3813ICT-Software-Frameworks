@@ -1,5 +1,5 @@
 describe('Group Functionality Tests', () => {
-
+  
   beforeEach(() => {
     cy.visit('/groups');  // Adjust the URL to the page where groups are managed
   });
@@ -24,7 +24,7 @@ describe('Group Functionality Tests', () => {
   // Test deleting a group
   it('should delete a group', () => {
     // Locate the group and click "Delete"
-    cy.get('h3').contains('Existing Group').parent().within(() => {
+    cy.get('h3').contains('Developers').parent().within(() => { // Changed 'Existing Group' to 'Developers'
       cy.get('button').contains('Delete').click();
     });
 
@@ -35,13 +35,13 @@ describe('Group Functionality Tests', () => {
     });
 
     // Assert the group is no longer listed
-    cy.get('h3').contains('Existing Group').should('not.exist');
+    cy.get('h3').contains('Developers').should('not.exist');
   });
 
   // Test adding a user to a group's interested list
   it('should allow a user to express interest in a group', () => {
     // Locate the group and click "Interested"
-    cy.get('h3').contains('Some Group').parent().within(() => {
+    cy.get('h3').contains('Designers').parent().within(() => { // Changed 'Some Group' to 'Designers'
       cy.get('button').contains('Interested').click();
     });
 
@@ -57,7 +57,7 @@ describe('Group Functionality Tests', () => {
   // Test removing a user from a group's interested list
   it('should remove a user from the interested list of a group', () => {
     // Locate the group and click "Unregister Interest"
-    cy.get('h3').contains('Some Group').parent().within(() => {
+    cy.get('h3').contains('Designers').parent().within(() => { // Changed 'Some Group' to 'Designers'
       cy.get('button').contains('Unregister Interest').click();
     });
 
@@ -73,28 +73,28 @@ describe('Group Functionality Tests', () => {
   // Test adding a member to a group
   it('should add a member to the group', () => {
     // Locate the group, click "Add Member" and select a user
-    cy.get('h3').contains('Some Group').parent().within(() => {
+    cy.get('h3').contains('Developers').parent().within(() => { // Changed 'Some Group' to 'Developers'
       cy.get('button').contains('Add Member').click();
     });
 
     // Select the user from a list or enter their details
-    cy.get('select').select('UserToAdd');
+    cy.get('select').select('jane_smith'); // Changed 'UserToAdd' to 'jane_smith'
 
     // Submit the form to add the member
     cy.get('button').contains('Submit').click();
 
     // Assert the member is added
     cy.get('h4').contains('Members').parent().within(() => {
-      cy.get('li').contains('UserToAdd').should('be.visible');
+      cy.get('li').contains('jane_smith').should('be.visible'); // Changed 'UserToAdd' to 'jane_smith'
     });
   });
 
   // Test removing a member from a group
   it('should remove a member from the group', () => {
     // Locate the group, and in the members list, click "Remove" for a user
-    cy.get('h3').contains('Some Group').parent().within(() => {
+    cy.get('h3').contains('Developers').parent().within(() => { // Changed 'Some Group' to 'Developers'
       cy.get('h4').contains('Members').parent().within(() => {
-        cy.get('li').contains('UserToRemove').parent().within(() => {
+        cy.get('li').contains('john_doe').parent().within(() => { // Changed 'UserToRemove' to 'john_doe'
           cy.get('button').contains('Remove').click();
         });
       });
@@ -102,14 +102,14 @@ describe('Group Functionality Tests', () => {
 
     // Assert the member is removed
     cy.get('h4').contains('Members').parent().within(() => {
-      cy.get('li').contains('UserToRemove').should('not.exist');
+      cy.get('li').contains('john_doe').should('not.exist'); // Changed 'UserToRemove' to 'john_doe'
     });
   });
 
   // Test updating a group
   it('should update the group details', () => {
     // Locate the group and click "Edit"
-    cy.get('h3').contains('Some Group').parent().within(() => {
+    cy.get('h3').contains('Developers').parent().within(() => { // Changed 'Some Group' to 'Developers'
       cy.get('button').contains('Edit').click();
     });
 

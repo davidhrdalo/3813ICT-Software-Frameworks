@@ -2,7 +2,7 @@ describe('Group Page', () => {
 
     beforeEach(() => {
       // Assume the user is logged in and visits the group page with a specific group ID
-      cy.visit('/group/12345');  // Change the group ID as needed
+      cy.visit('/group/64e09ba4f40c4b8f9d5f9f9e');  // Changed the group ID to "Developers"
     });
   
     // Test the group details are displayed correctly
@@ -87,7 +87,7 @@ describe('Group Page', () => {
       cy.on('window:confirm', () => true);
   
       // Verify that the channel is no longer listed
-      cy.get('p').contains('Deleted Channel Name').should('not.exist');
+      cy.get('p').contains('QA Testing').should('not.exist'); // Assuming "QA Testing" is the channel being deleted
     });
   
     // Test removing a user from the group
@@ -99,7 +99,7 @@ describe('Group Page', () => {
       cy.on('window:confirm', () => true);
   
       // Verify that the user is no longer listed in active members
-      cy.get('p').contains('Username of removed user').should('not.exist');
+      cy.get('p').contains('john_doe').should('not.exist'); // Assuming "john_doe" is the user being removed
     });
   
     // Test allowing a user to join from interested members
@@ -108,8 +108,7 @@ describe('Group Page', () => {
       cy.get('button').contains('Allow').first().click();
   
       // Verify that the user is moved from interested to active members
-      cy.get('p').contains('Username of allowed user').should('exist');
+      cy.get('p').contains('jane_smith').should('exist'); // Assuming "jane_smith" is the user being allowed
     });
   
   });
-  

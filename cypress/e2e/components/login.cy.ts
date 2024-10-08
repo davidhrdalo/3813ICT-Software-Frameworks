@@ -30,8 +30,8 @@ describe('Login Page', () => {
 
   it('should successfully login with valid credentials', () => {
     // Enter a valid username and password
-    cy.get('input#username').type('valid_user');
-    cy.get('input#password').type('valid_password');
+    cy.get('input#username').type('john_doe'); // Using existing username
+    cy.get('input#password').type('pw'); // Using existing password
 
     // Click the submit button
     cy.get('button[type="submit"]').click();
@@ -48,8 +48,8 @@ describe('Login Page', () => {
     });
 
     // Enter valid credentials but trigger the error
-    cy.get('input#username').type('valid_user');
-    cy.get('input#password').type('valid_password');
+    cy.get('input#username').type('john_doe'); // Using existing username
+    cy.get('input#password').type('pw'); // Using existing password
     
     // Click the submit button
     cy.get('button[type="submit"]').click();

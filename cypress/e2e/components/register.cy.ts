@@ -22,7 +22,7 @@ describe('Register', () => {
     // Input valid fields except for the email
     cy.get('input#firstName').type('John');
     cy.get('input#lastName').type('Doe');
-    cy.get('input#username').type('john_doe');
+    cy.get('input#username').type('john_doe'); // Existing username; consider changing to 'testUser' if conflicts arise
     cy.get('input#email').type('invalid-email'); // Invalid email format
     cy.get('input#dob').type('1990-01-01'); // Enter date of birth
     cy.get('input#password').type('valid_password');
@@ -41,8 +41,8 @@ describe('Register', () => {
     // Input valid registration details
     cy.get('input#firstName').type('John');
     cy.get('input#lastName').type('Doe');
-    cy.get('input#username').type('john_doe');
-    cy.get('input#email').type('john.doe@example.com');
+    cy.get('input#username').type('testUser'); // Changed to 'testUser' to avoid conflict with existing 'john_doe'
+    cy.get('input#email').type('testuser@example.com'); // Changed to a unique email
     cy.get('input#dob').type('1990-01-01'); // Enter date of birth
     cy.get('input#password').type('valid_password');
 
@@ -64,7 +64,7 @@ describe('Register', () => {
     // Input valid registration details
     cy.get('input#firstName').type('John');
     cy.get('input#lastName').type('Doe');
-    cy.get('input#username').type('john_doe');
+    cy.get('input#username').type('john_doe'); // Existing username; consider changing to 'testUser' if conflicts arise
     cy.get('input#email').type('john.doe@example.com');
     cy.get('input#dob').type('1990-01-01');
     cy.get('input#password').type('valid_password');

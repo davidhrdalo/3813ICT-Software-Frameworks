@@ -2,7 +2,7 @@ describe('Channel Page', () => {
 
     beforeEach(() => {
       // Assume the user is logged in and visiting a specific channel page with group and channel IDs
-      cy.visit('/group/12345/channel/67890');  // Adjust group and channel IDs as needed
+      cy.visit('/group/64e09ba4f40c4b8f9d5f9f9e/channel/78909ba4f40c4b8f9d5f9f9e');  // Adjusted group and channel IDs
     });
   
     // Test the channel details are displayed correctly
@@ -48,7 +48,7 @@ describe('Channel Page', () => {
     it('should display a system message when a user joins the channel', () => {
       // Simulate a user joining the channel via socket
       cy.window().then((win) => {
-        win.socketService.joinChannel('67890'); // Simulate joining the channel
+        win.socketService.joinChannel('78909ba4f40c4b8f9d5f9f9e'); // Simulate joining the channel
       });
       cy.get('.system-message').contains('has joined the channel').should('be.visible');
     });
@@ -57,7 +57,7 @@ describe('Channel Page', () => {
     it('should display a system message when a user leaves the channel', () => {
       // Simulate a user leaving the channel via socket
       cy.window().then((win) => {
-        win.socketService.leaveChannel('67890'); // Simulate leaving the channel
+        win.socketService.leaveChannel('78909ba4f40c4b8f9d5f9f9e'); // Simulate leaving the channel
       });
       cy.get('.system-message').contains('has left the channel').should('be.visible');
     });
@@ -68,4 +68,3 @@ describe('Channel Page', () => {
     });
   
   });
-  
