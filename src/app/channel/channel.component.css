@@ -26,7 +26,8 @@
 }
 
 .input-container {
-  padding: 20px;
+  flex-shrink: 0; /* Prevent shrinking */
+  padding: 10px; /* Adjusted padding */
   border-top: 1px solid #dee2e6;
 }
 

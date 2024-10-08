@@ -39,7 +39,7 @@ export class GroupComponent implements OnInit {
     private channelService: ChannelService,
     private activeUserService: ActiveUserService,
     private userService: UserService,
-    private router: Router,
+    private router: Router
   ) {}
 
   // Lifecycle hook for initializing component
@@ -306,7 +306,6 @@ export class GroupComponent implements OnInit {
     this.selectedfile = event.target.files[0];
   }
 
-  // group Image Upload
   onUpload() {
     if (this.selectedfile && this.group) {
       const fd = new FormData();
@@ -314,9 +313,21 @@ export class GroupComponent implements OnInit {
 
       const groupId = this.group._id;
 
-      this.groupService.imgupload(groupId, fd).subscribe((res) => {
-        console.log('Image changed')
-      });
+      this.groupService.imgupload(groupId, fd).subscribe(
+        (res: any) => {
+          // Check if the result is OK and the image URL is returned
+          if (res && res.result === 'OK' && res.data && res.data.url) {
+            // Update group image path with the new image URL
+            this.group.groupImg = res.data.url;
+            console.log('Image updated successfully with URL:', res.data.url);
+          } else {
+            console.error('Unexpected response format:', res);
+          }
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        }
+      );
     } else {
       console.error('No file selected or group data is missing!');
     }

@@ -13,7 +13,7 @@
       ],
       "interested": [],
       "description": "Group for software developers",
-      "groupImg": "http://localhost:3000/data/images/groupImages/473.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/Cat03.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9f",
@@ -178,6 +178,13 @@
         "64e09ba2f40c4b8f9d5f9f9c",
         "64e09ba4f40c4b8f9d5f9f9e"
       ]
+    },
+    {
+      "_id": "6704a6a639427b2cffeb0eb8",
+      "name": "s",
+      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
+      "description": "s",
+      "members": []
     }
   ]
 }

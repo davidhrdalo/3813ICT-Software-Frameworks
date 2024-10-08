@@ -1,54 +1,63 @@
-<div class="container-fluid">
-    <div class="row p-2">
+<div class="container-fluid h-100 d-flex flex-column">
+  <!-- Scrollable video grid section -->
+  <div class="row flex-grow-1">
+    <div class="col-12">
+      <h3 class="text-center">Video Chat</h3>
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let peerId of peerList" (click)="calling(peerId)" class="list-group-item">
+          <span>{{ peerId }}</span>
+        </li>
+      </ul>
+
+      <div class="video-grid" style="max-height: 400px; overflow-y: auto;">
+        <div *ngFor="let video of videos" class="mb-3">
+          <span *ngIf="video.userId !== ownID; else currentUserVideoLabel">
+            Peer: {{ video.userId }}
+          </span>
+          <ng-template #currentUserVideoLabel>
+            <span>You: {{ video.userId }}</span>
+          </ng-template>
+          <video
+            [srcObject]="video.srcObject"
+            controls
+            autoplay
+            [muted]="video.muted"
+            style="width: 100%; height: auto; margin-top: 10px"
+          ></video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons at the bottom -->
+  <div class="row bg-white" style="position: absolute; bottom: 0; padding: 10px 0; margin-bottom: 40px;">
+    <div class="col-12 d-flex justify-content-center mb-2">
+      <!-- Stream buttons side by side -->
       <button
-        mat-raised-button
-        color="primary"
-        class="m-2"
+        class="btn btn-warning m-2"
         [disabled]="isCallStarted"
         (click)="streamCamera()"
       >
         Stream with Camera
       </button>
       <button
-        mat-raised-button
-        class="m-2"
+        class="btn btn-warning m-2"
         [disabled]="isCallStarted"
         (click)="streamScreen()"
       >
         Stream with Screen
       </button>
+    </div>
+    <!-- End Call button below -->
+    <div class="col-12 d-flex justify-content-center">
       <button
-        mat-raised-button
-        color="warn"
-        class="m-2"
+        class="btn btn-danger m-2"
         [disabled]="!isCallStarted"
         (click)="endCall()"
+        style="width: 92%;"
       >
         End Call
       </button>
     </div>
-  
-    <h2>Peers</h2>
-    <ul>
-      <li *ngFor="let peerId of peerList" (click)="calling(peerId)">
-        <span>{{ peerId }}</span>
-      </li>
-    </ul>
-    <div class="video-grid">
-      <div *ngFor="let video of videos">
-        <span *ngIf="video.userId !== ownID; else currentUserVideoLabel"
-          >Peer: {{ video.userId }}</span
-        >
-        <ng-template #currentUserVideoLabel>
-          <span>You: {{ video.userId }}</span>
-        </ng-template>
-        <video
-          [srcObject]="video.srcObject"
-          controls
-          autoplay
-          [muted]="video.muted"
-        ></video>
-      </div>
-    </div>
   </div>
-  
+</div>

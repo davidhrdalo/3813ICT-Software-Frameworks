@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Channel Header -->
-    <div class="col-12" *ngIf="channel" style="padding: 1em 0;">
+    <div class="col-12" *ngIf="channel" style="padding: 1em 0">
       <div class="jumbotron jumbotron-fluid p-3">
         <h1 class="display-5">Welcome to {{ channel.name }}</h1>
         <p class="lead mb-0">{{ channel.description }}</p>
@@ -13,16 +13,19 @@
     <div class="col-md-2">
       <!-- Channel Members -->
       <div class="mb-3">
-        <h4>Members</h4>
+        <h4 class="text-center">Members</h4>
         <ul class="list-group">
           <li
             *ngFor="let member of channelMembers"
-            class="list-group-item d-flex justify-content-between align-items-center p-2 member-item"
+            class="list-group-item p-2 member-item text-center"
           >
-            {{ member.username }}
+            <div>{{ member.username }}</div>
             <button
-              *ngIf="userData.roles.includes('super') || group.admins.includes(userData._id)"
-              class="btn btn-danger btn-sm"
+              *ngIf="
+                userData.roles.includes('super') ||
+                group.admins.includes(userData._id)
+              "
+              class="btn btn-danger btn-sm w-100 mt-2"
               (click)="removeMemberFromChannel(member._id)"
             >
               Remove
@@ -33,17 +36,23 @@
 
       <!-- Non-Members -->
       <div
-        *ngIf="userData.roles.includes('super') || group.admins.includes(userData._id)"
+        *ngIf="
+          userData.roles.includes('super') ||
+          group.admins.includes(userData._id)
+        "
         class="mb-3"
       >
-        <h4>Non-Members</h4>
+        <h4 class="text-center">Non-Members</h4>
         <ul class="list-group">
           <li
             *ngFor="let nonMember of nonChannelMembers"
-            class="list-group-item d-flex justify-content-between align-items-center p-2 member-item"
+            class="list-group-item p-2 member-item text-center"
           >
-            {{ nonMember.username }}
-            <button class="btn btn-warning btn-sm" (click)="addMemberToChannel(nonMember._id)">
+            <div>{{ nonMember.username }}</div>
+            <button
+              class="btn btn-warning btn-sm w-100 mt-2"
+              (click)="addMemberToChannel(nonMember._id)"
+            >
               Add
             </button>
           </li>
@@ -54,8 +63,16 @@
     <!-- Chat and Video Section -->
     <div class="col-md-10">
       <div class="row">
-        <!-- Chat Container (Reduced Size) -->
-        <div class="col-md-7 chat-container">
+        <!-- Chat Container (Reduced Size with Borders) -->
+        <div
+          class="col-md-7 chat-container"
+          style="
+            border-left: 2px solid #dee2e6;
+            border-right: 2px solid #dee2e6;
+            padding-left: 10px;
+            padding-right: 10px;
+          "
+        >
           <div class="messages-container mb-3">
             <ng-container *ngIf="messages.length > 0; else noMessages">
               <ul>
@@ -64,9 +81,20 @@
                     <em>{{ message.message }}</em>
                   </div>
                   <div *ngIf="!message.system" class="chat-message">
-                    <img [src]="message.profilePic" alt="{{ message.username }}'s profile picture" class="profile-pic" />
-                    <p *ngIf="message.message" class="chat-bubble p-2"><strong>{{ message.username }}</strong>: {{ message.message }}</p>
-                    <img *ngIf="message.imageUrl" [src]="message.imageUrl" class="chat-image" />
+                    <img
+                      [src]="message.profilePic"
+                      alt="{{ message.username }}'s profile picture"
+                      class="profile-pic"
+                    />
+                    <p *ngIf="message.message" class="chat-bubble p-2">
+                      <strong>{{ message.username }}</strong
+                      >: {{ message.message }}
+                    </p>
+                    <img
+                      *ngIf="message.imageUrl"
+                      [src]="message.imageUrl"
+                      class="chat-image"
+                    />
                   </div>
                 </div>
               </ul>
@@ -89,7 +117,12 @@
                 />
               </div>
               <div class="form-group d-flex justify-content-between">
-                <button type="button" (click)="chat()" class="btn btn-primary flex-grow-1">
+                <button
+                  type="button"
+                  (click)="chat()"
+                  class="btn btn-primary flex-grow-1"
+                  style="margin-right: 10px"
+                >
                   Send Message
                 </button>
                 <form>
@@ -102,11 +135,17 @@
                       id="uploadfile"
                     />
                   </div>
-                  <button class="btn btn-primary" type="button" (click)="uploadImage()">Submit</button>
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    (click)="uploadImage()"
+                  >
+                    Submit
+                  </button>
                 </form>
               </div>
             </form>
-          </div>          
+          </div>
         </div>
 
         <!-- Video Component (Increased Size) -->
