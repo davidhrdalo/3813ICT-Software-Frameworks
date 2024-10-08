@@ -2,17 +2,18 @@
   "groups": [
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9e",
-      "name": "Developerss",
+      "name": "Developers",
       "admins": [
         "64e09ba0f40c4b8f9d5f9f9a"
       ],
       "members": [
         "64e09ba0f40c4b8f9d5f9f9a",
-        "64e09ba1f40c4b8f9d5f9f9b"
+        "64e09ba1f40c4b8f9d5f9f9b",
+        "64e09ba2f40c4b8f9d5f9f9c"
       ],
       "interested": [],
       "description": "Group for software developers",
-      "groupImg": "http://localhost:3000/data/images/groupImages/images.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/473.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9f",
@@ -27,6 +28,21 @@
       "interested": [],
       "description": "Group for project management discussions",
       "groupImg": "http://localhost:3000/data/images/groupImages/430.jpg"
+    },
+    {
+      "_id": "64e09ba4f40c4b8f9d5f9f9d",
+      "name": "Designers",
+      "admins": [
+        "64e09ba1f40c4b8f9d5f9f9b"
+      ],
+      "members": [
+        "64e09ba1f40c4b8f9d5f9f9b",
+        "64e09ba2f40c4b8f9d5f9f9c",
+        "64e09ba3f40c4b8f9d5f9f9d"
+      ],
+      "interested": [],
+      "description": "Group for creative design",
+      "groupImg": "http://localhost:3000/data/images/groupImages/58.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9c",
@@ -122,6 +138,17 @@
   ],
   "channels": [
     {
+      "_id": "78909ba4f40c4b8f9d5f9f9e",
+      "name": "General Discussion",
+      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
+      "description": "General chat for all members",
+      "members": [
+        "64e09ba0f40c4b8f9d5f9f9a",
+        "64e09ba1f40c4b8f9d5f9f9b",
+        "64e09ba2f40c4b8f9d5f9f9c"
+      ]
+    },
+    {
       "_id": "64ebc0f4f40c4b8f9d5f9f9f",
       "name": "Project Updates",
       "groupId": "64e09ba4f40c4b8f9d5f9f9f",
@@ -151,20 +178,6 @@
         "64e09ba2f40c4b8f9d5f9f9c",
         "64e09ba4f40c4b8f9d5f9f9e"
       ]
-    },
-    {
-      "_id": "6704cca316532fe0d7703838",
-      "name": "fffss",
-      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "ffd",
-      "members": []
-    },
-    {
-      "_id": "6704cd0b01f04510ff848ad6",
-      "name": "fggg",
-      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "ggg",
-      "members": []
     }
   ]
 }

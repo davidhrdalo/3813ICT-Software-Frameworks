@@ -1,6 +1,17 @@
 describe('Profile Page', () => {
 
     beforeEach(() => {
+      // Log in before visiting the group page
+      cy.visit('/login'); // Visit the login page
+
+      // Perform the login
+      cy.get('input#username').type('john_doe'); // Use a valid username
+      cy.get('input#password').type('pw'); // Use a valid password
+      cy.get('button[type="submit"]').click(); // Click the login button
+
+      // Ensure we are logged in by checking the redirect
+      cy.url().should('include', '/profile');
+
       // Assume the user is logged in and visiting the profile page
       cy.visit('/profile');  // Navigate to the profile page
     });
