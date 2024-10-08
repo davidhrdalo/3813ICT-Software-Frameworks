@@ -2,18 +2,17 @@
   "groups": [
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9e",
-      "name": "Developers",
+      "name": "Developerss",
       "admins": [
         "64e09ba0f40c4b8f9d5f9f9a"
       ],
       "members": [
         "64e09ba0f40c4b8f9d5f9f9a",
-        "64e09ba1f40c4b8f9d5f9f9b",
-        "64e09ba2f40c4b8f9d5f9f9c"
+        "64e09ba1f40c4b8f9d5f9f9b"
       ],
       "interested": [],
       "description": "Group for software developers",
-      "groupImg": "http://localhost:3000/data/images/groupImages/Cat03.jpg"
+      "groupImg": "http://localhost:3000/data/images/groupImages/images.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9f",
@@ -28,21 +27,6 @@
       "interested": [],
       "description": "Group for project management discussions",
       "groupImg": "http://localhost:3000/data/images/groupImages/430.jpg"
-    },
-    {
-      "_id": "64e09ba4f40c4b8f9d5f9f9d",
-      "name": "Designers",
-      "admins": [
-        "64e09ba1f40c4b8f9d5f9f9b"
-      ],
-      "members": [
-        "64e09ba1f40c4b8f9d5f9f9b",
-        "64e09ba2f40c4b8f9d5f9f9c",
-        "64e09ba3f40c4b8f9d5f9f9d"
-      ],
-      "interested": [],
-      "description": "Group for creative design",
-      "groupImg": "http://localhost:3000/data/images/groupImages/58.jpg"
     },
     {
       "_id": "64e09ba4f40c4b8f9d5f9f9c",
@@ -134,20 +118,6 @@
       "lastName": "Brown",
       "dob": "1985-11-20",
       "status": "Active"
-    },
-    {
-      "_id": "6704c3fca5c88fa294323c0a",
-      "firstName": "s",
-      "lastName": "s",
-      "username": "john_do",
-      "email": "s",
-      "password": "pw",
-      "dob": "2024-10-17",
-      "roles": [
-        "chat"
-      ],
-      "profileImg": "assets/images/defaultProfile.jpg",
-      "status": "Active"
     }
   ],
   "channels": [
@@ -183,24 +153,17 @@
       ]
     },
     {
-      "_id": "6704b3dd395388632a5ae1d4",
-      "name": "t",
+      "_id": "6704cca316532fe0d7703838",
+      "name": "fffss",
       "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "t",
+      "description": "ffd",
       "members": []
     },
     {
-      "_id": "6704ba05eb2a7c23d335706b",
-      "name": "fgff",
+      "_id": "6704cd0b01f04510ff848ad6",
+      "name": "fggg",
       "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "fff",
-      "members": []
-    },
-    {
-      "_id": "6704baf2a079217a5a38695b",
-      "name": "fff",
-      "groupId": "64e09ba4f40c4b8f9d5f9f9e",
-      "description": "fff",
+      "description": "ggg",
       "members": []
     }
   ]
