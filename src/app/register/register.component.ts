@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ActiveUserService } from '../services/activeUser/activeUser.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -18,6 +19,7 @@ export class RegisterComponent {
   email = '';
   password = '';
   dob = '';
+  errorMessage = ''; // New property to hold error messages
 
   constructor(
     private router: Router,
@@ -35,7 +37,7 @@ export class RegisterComponent {
       !this.password ||
       !this.dob
     ) {
-      alert('Please fill in all required fields.');
+      this.errorMessage = 'Please fill in all required fields.';
       return;
     }
 
@@ -56,12 +58,12 @@ export class RegisterComponent {
           // Navigate to the profile page if signup is successful
           this.router.navigateByUrl('/profile');
         } else {
-          alert('Signup failed. Please try again.');
+          this.errorMessage = 'Signup failed. Please try again.';
         }
       },
-      (error) => {
+      (error: string) => {
         // Handle any errors during signup
-        alert('An error occurred during signup. Please try again.');
+        this.errorMessage = error;
       }
     );
   }

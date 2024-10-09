@@ -4,7 +4,11 @@
   "description": "node express backend for 3813-ict-software-frameworks assignment",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "authTest": "mocha ./tests/authTest.js",
+    "channelTest": "mocha ./tests/channelTest.js",
+    "groupTest": "mocha ./tests/groupTest.js",
+    "userTest": "mocha ./tests/userTest.js",
+    "chatTest": "mocha ./tests/chatTest.js",
     "start": "node server.js"
   },
   "repository": {
@@ -19,6 +23,15 @@
   "homepage": "https://github.com/davidhrdalo/3813ICT-Software-Frameworks#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "formidable": "^3.5.1",
+    "mongodb": "^6.9.0",
+    "peer": "^1.0.2",
+    "peerjs": "^1.5.4"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "mocha": "^10.7.3"
   }
 }

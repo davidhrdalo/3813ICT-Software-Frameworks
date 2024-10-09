@@ -3,8 +3,14 @@
   <div class="row">
     <!-- Full row -->
     <div style="padding-top: 2em; padding-bottom: 2em" class="col-12">
+    
+      <!-- Popup Message -->
+      <div *ngIf="popupMessage" class="alert" [ngClass]="{'alert-success': popupMessage.type === 'success', 'alert-danger': popupMessage.type === 'error'}" role="alert">
+        {{ popupMessage.message }}
+      </div>
+
       <div class="jumbotron jumbotron-fluid">
-        <h1 class="display-4">Welcome to {{ group.name }}</h1>
+        <h1 class="display-4">Welcome to {{ group?.name }}</h1>
         <p class="lead" *ngIf="userData.roles.includes('super')">
           As a <strong>Super Admin</strong> you can edit users groups or chats
           from here!
@@ -37,21 +43,25 @@
     <div class="col-4 d-flex flex-column align-items-center" *ngIf="group">
       <h3 style="margin-bottom: 20px">Group Picture</h3>
       <img
-        src="{{ group.groupImg }}"
+        [src]="group.groupImg"
         class="rounded-circle"
         style="width: 150px; height: 150px; margin-bottom: 15px"
         alt="Avatar"
       />
-      <button
-        type="button"
-        style="margin-bottom: 20px"
-        class="btn btn-primary mt-auto"
-        *ngIf="
-          userData.roles.includes('super') || group.admins.includes(userData.id)
-        "
-      >
-        Upload Profile
-      </button>
+    
+      <form style="margin-bottom: 20px;">
+        <div class="form-group d-flex align-items-center">
+          <input
+            type="file"
+            class="form-control"
+            (change)="onFileSelected($event)"
+            name="uploadfile"
+            id="uploadfile"
+          />
+          <button class="btn btn-primary ml-3" type="button" (click)="onUpload()">Submit</button>
+        </div>
+      </form>
+      <div *ngIf="imageUploadError" class="text-danger">{{ imageUploadError }}</div>
     </div>
 
     <!-- 2/3 row -->
@@ -61,7 +71,7 @@
       <!-- Name -->
       <p>
         <strong>Group Name: </strong>
-        <span *ngIf="!isEditMode">{{ group.name }}</span>
+        <span *ngIf="!isEditMode">{{ group?.name }}</span>
         <input
           *ngIf="isEditMode"
           type="text"
@@ -73,7 +83,7 @@
       <!-- Description -->
       <p>
         <strong>Group Description: </strong>
-        <span *ngIf="!isEditMode">{{ group.description }}</span>
+        <span *ngIf="!isEditMode">{{ group?.description }}</span>
         <input
           *ngIf="isEditMode"
           type="text"
@@ -82,11 +92,13 @@
         />
       </p>
 
+      <div *ngIf="groupError" class="text-danger">{{ groupError }}</div>
+
       <!-- Buttons -->
       <button
         *ngIf="
           (!isEditMode && userData.roles.includes('super')) ||
-          group.admins.includes(userData.id)
+          group.admins.includes(userData._id)
         "
         type="button"
         style="width: 110px; margin-bottom: 20px"
@@ -99,12 +111,12 @@
       <button
         *ngIf="
           (!isEditMode && userData.roles.includes('super')) ||
-          group.admins.includes(userData.id)
+          group.admins.includes(userData._id)
         "
         type="button"
         style="width: 110px; margin-bottom: 20px"
         class="btn btn-danger"
-        (click)="deleteGroup(group.id)"
+        (click)="deleteGroup(group._id)"
       >
         Delete
       </button>
@@ -134,7 +146,7 @@
     <div
       class="row"
       *ngIf="
-        userData.roles.includes('super') || group.admins.includes(userData.id);
+        userData.roles.includes('super') || group.admins.includes(userData._id);
         else nonAdminChannels
       "
     >
@@ -148,7 +160,7 @@
           </div>
 
           <div class="col-4 card" *ngFor="let channel of channels">
-            <div *ngIf="editChannelData && editChannelData.id === channel.id">
+            <div *ngIf="editChannelData && editChannelData._id === channel._id">
               <p>
                 <strong>Channel Name: </strong>
                 <input
@@ -165,6 +177,7 @@
                   class="form-control"
                 />
               </p>
+              <div *ngIf="channelError" class="text-danger">{{ channelError }}</div>
               <div class="button-group">
                 <button class="btn btn-outline-primary" (click)="saveChannel()">
                   Save
@@ -177,10 +190,10 @@
                 </button>
               </div>
             </div>
-            <div *ngIf="!editChannelData || editChannelData.id !== channel.id">
+            <div *ngIf="!editChannelData || editChannelData._id !== channel._id">
               <p>
                 <strong
-                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                  [routerLink]="['/group', group._id, 'channel', channel._id]"
                   >{{ channel.name }}</strong
                 >
               </p>
@@ -194,7 +207,7 @@
                 </button>
                 <button
                   class="btn btn-outline-danger"
-                  (click)="deleteChannel(channel.id)"
+                  (click)="deleteChannel(channel._id)"
                 >
                   Remove
                 </button>
@@ -221,6 +234,8 @@
               [(ngModel)]="channelDescription"
             />
           </p>
+
+          <div *ngIf="channelError" class="text-danger">{{ channelError }}</div>
 
           <button
             type="button"
@@ -257,10 +272,10 @@
             </div>
 
             <ng-container *ngFor="let channel of channels">
-              <div class="col-4 card" *ngIf="channel.members.includes(userData.id)">
+              <div class="col-4 card" *ngIf="channel.members.includes(userData._id)">
                 <div
-                  *ngIf="!editChannelData || editChannelData.id !== channel.id"
-                  [routerLink]="['/group', group.id, 'channel', channel.id]"
+                  *ngIf="!editChannelData || editChannelData._id !== channel._id"
+                  [routerLink]="['/group', group._id, 'channel', channel._id]"
                 >
                   <p>
                     <strong>{{ channel.name }}</strong>
@@ -276,12 +291,13 @@
 
     <div
       *ngIf="
-        userData.roles.includes('super') || group.admins.includes(userData.id)
+        userData.roles.includes('super') || group.admins.includes(userData._id)
       "
     >
       <!-- Full row - Content for superuser -->
       <hr />
       <h3>Active Members</h3>
+      <div *ngIf="userError" class="text-danger">{{ userError }}</div>
       <div class="row" *ngIf="activeMembers.length > 0; else noActiveMembers">
         <div class="col-3 card" *ngFor="let user of activeMembers">
           <img
@@ -294,7 +310,7 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="removeUserFromGroup(user.id)"
+              (click)="removeUserFromGroup(user._id)"
               class="btn btn-outline-danger"
             >
               Remove
@@ -327,13 +343,13 @@
           <p><strong>Email: </strong>{{ user.email }}</p>
           <div class="button-group">
             <button
-              (click)="allowUserToJoin(user.id)"
+              (click)="allowUserToJoin(user._id)"
               class="btn btn-outline-success"
             >
               Allow
             </button>
             <button
-              (click)="removeUserFromGroup(user.id)"
+              (click)="removeUserFromGroup(user._id)"
               class="btn btn-outline-danger"
             >
               Remove

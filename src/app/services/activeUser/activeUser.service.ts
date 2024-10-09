@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -39,10 +39,7 @@ export class ActiveUserService {
             this.userDataSubject.next(data); // Emit new user data
           }
         }),
-        catchError((error) => {
-          console.error('Signup failed:', error);
-          return throwError(error); // Return an observable error
-        })
+        catchError(this.handleError)
       );
   }
 
@@ -56,16 +53,39 @@ export class ActiveUserService {
           this.userDataSubject.next(data); // Emit new user data
         }
       }),
-      catchError((error) => {
-        console.error('Login failed:', error);
-        return throwError(error); // Return an observable error
-      })
+      catchError(this.handleError)
     );
+  }
+
+  // New method to handle errors
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Backend error
+      switch (error.status) {
+        case 401:
+          errorMessage = 'Invalid username or password';
+          break;
+        case 404:
+          errorMessage = 'User not found';
+          break;
+        case 500:
+          errorMessage = 'Server error. Please try again later.';
+          break;
+        default:
+          errorMessage = `Error: ${error.message}`;
+      }
+    }
+    console.error('Login failed:', errorMessage);
+    return throwError(errorMessage);
   }
 
   // Store user data in session storage
   private setSessionStorage(userData: any): void {
-    sessionStorage.setItem('id', userData.id.toString());
+    sessionStorage.setItem('_id', userData._id);
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('roles', userData.roles);
@@ -98,7 +118,7 @@ export class ActiveUserService {
   private getUserDataFromStorage(): any {
     if (this.isLoggedIn()) {
       return {
-        id: sessionStorage.getItem('id'),
+        _id: sessionStorage.getItem('_id'),
         username: sessionStorage.getItem('username'),
         email: sessionStorage.getItem('email'),
         roles: sessionStorage.getItem('roles'),
@@ -114,7 +134,7 @@ export class ActiveUserService {
 
   // Update user data and store it in session storage
   updateUserData(userData: any): void {
-    sessionStorage.setItem('id', userData.id.toString());
+    sessionStorage.setItem('_id', userData._id);
     sessionStorage.setItem('username', userData.username);
     sessionStorage.setItem('email', userData.email);
     sessionStorage.setItem('roles', userData.roles);

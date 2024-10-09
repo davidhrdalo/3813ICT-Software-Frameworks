@@ -82,6 +82,10 @@
           required
         />
       </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
   
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
