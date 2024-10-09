@@ -2,8 +2,9 @@ const { ObjectId } = require('mongodb');
 const { updateStaticFile, readStaticFile } = require('../data/staticDataHandler');
 
 module.exports = function (app, client) {
-    const db = client.db('softwareFrameworks');
-    const usersCollection = db.collection('users');
+    // Commenting out MongoDB initialization
+    // const db = client.db('softwareFrameworks');
+    // const usersCollection = db.collection('users');
 
     // Route to handle user signup
     app.post('/api/auth/signup', async (req, res) => {
@@ -11,14 +12,14 @@ module.exports = function (app, client) {
             const { firstName, lastName, username, email, password, dob } = req.body;
             
             // Check if the username already exists in the system
-            // Uncomment the next line to read from static file instead of MongoDB
-            // const users = await readStaticFile('users');
-            // const userExists = users.find(user => user.username === username);
-            const userExists = await usersCollection.findOne({ username });
+            const users = await readStaticFile('users');
+            const userExists = users.find(user => user.username === username);
+            // const userExists = await usersCollection.findOne({ username });
             
             if (userExists) {
                 return res.status(400).json({ error: 'Username is already taken' });
             }
+
             // Create a new user if the username is unique
             const newUser = {
                 _id: new ObjectId(),
@@ -32,12 +33,13 @@ module.exports = function (app, client) {
                 profileImg: 'assets/images/defaultProfile.jpg',
                 status: 'Active',
             };
-            // Add the new user to the users collection
-            await usersCollection.insertOne(newUser);
+
+            // Add the new user to the users list
+            users.push(newUser);
+            // await usersCollection.insertOne(newUser);
 
             // Update static file
-            const allUsers = await usersCollection.find({}).toArray();
-            await updateStaticFile(allUsers, 'users');
+            await updateStaticFile(users, 'users');
 
             // Send back the new user's data (excluding the password)
             res.json({
@@ -60,12 +62,11 @@ module.exports = function (app, client) {
     app.post('/api/auth', async (req, res) => {
         try {
             const { username, password } = req.body;
-            
+
             // Find the user with the matching username and password
-            // Uncomment the next lines to read from static file instead of MongoDB
-            // const users = await readStaticFile('users');
-            // const user = users.find(u => u.username === username && u.password === password);
-            const user = await usersCollection.findOne({ username, password });
+            const users = await readStaticFile('users');
+            const user = users.find(u => u.username === username && u.password === password);
+            // const user = await usersCollection.findOne({ username, password });
             
             if (user) {
                 // If credentials match, return the user data (excluding the password)

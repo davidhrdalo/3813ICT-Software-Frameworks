@@ -7,9 +7,7 @@
         "64e09ba0f40c4b8f9d5f9f9a"
       ],
       "members": [
-        "64e09ba0f40c4b8f9d5f9f9a",
-        "64e09ba1f40c4b8f9d5f9f9b",
-        "64e09ba2f40c4b8f9d5f9f9c"
+        "64e09ba1f40c4b8f9d5f9f9b"
       ],
       "interested": [],
       "description": "Group for software developers",
@@ -30,21 +28,6 @@
       "groupImg": "http://localhost:3000/data/images/groupImages/430.jpg"
     },
     {
-      "_id": "64e09ba4f40c4b8f9d5f9f9d",
-      "name": "Designers",
-      "admins": [
-        "64e09ba1f40c4b8f9d5f9f9b"
-      ],
-      "members": [
-        "64e09ba1f40c4b8f9d5f9f9b",
-        "64e09ba2f40c4b8f9d5f9f9c",
-        "64e09ba3f40c4b8f9d5f9f9d"
-      ],
-      "interested": [],
-      "description": "Group for creative design",
-      "groupImg": "http://localhost:3000/data/images/groupImages/58.jpg"
-    },
-    {
       "_id": "64e09ba4f40c4b8f9d5f9f9c",
       "name": "Testers",
       "admins": [
@@ -57,6 +40,17 @@
       "interested": [],
       "description": "Group for testing and quality assurance",
       "groupImg": "http://localhost:3000/data/images/groupImages/37.jpg"
+    },
+    {
+      "_id": "6705f4496379465844d5762b",
+      "name": "s",
+      "admins": [
+        "64e09ba1f40c4b8f9d5f9f9b"
+      ],
+      "members": [],
+      "interested": [],
+      "description": "s",
+      "groupImg": "assets/images/defaultGroup.jpg"
     }
   ],
   "users": [
@@ -86,7 +80,7 @@
         "group",
         "chat"
       ],
-      "profileImg": "http://localhost:3000/data/images/profileImages/37.jpg",
+      "profileImg": "http://localhost:3000/data/images/profileImages/Cat03.jpg",
       "firstName": "John",
       "lastName": "Doe",
       "dob": "1990-08-17",
@@ -127,12 +121,27 @@
       "password": "pw",
       "roles": [
         "group",
-        "chat"
+        "chat",
+        "super"
       ],
       "profileImg": "http://localhost:3000/data/images/profileImages/550.jpg",
       "firstName": "Robert",
       "lastName": "Brown",
       "dob": "1985-11-20",
+      "status": "Active"
+    },
+    {
+      "_id": "6705f4432263684f15aa0b42",
+      "username": "s",
+      "email": "s",
+      "password": "s",
+      "roles": [
+        "chat"
+      ],
+      "profileImg": "assets/images/defaultProfile.jpg",
+      "firstName": "",
+      "lastName": "",
+      "dob": "",
       "status": "Active"
     }
   ],
