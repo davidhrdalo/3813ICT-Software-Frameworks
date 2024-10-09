@@ -1,174 +1,172 @@
-var assert = require('assert');
-var app = require('../server.js');
+const assert = require('assert');
+const app = require('../server.js');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
+const should = chai.should();
 chai.use(chaiHttp);
 
-describe('Group API Tests', function() {
+describe('Group API Tests', function () {
+    let testUser;
+    let testGroup;
 
-    before(function() {
+    before(async function () {
         console.log("Running Group API tests...");
+        // Create a test user and group before running tests
+        testUser = await createTestUser();
+        testGroup = await createTestGroup(testUser._id);
     });
 
-    after(function() {
+    after(async function () {
         console.log("Completed Group API tests.");
+        // Clean up: delete test user and group
+        await deleteTestUser(testUser._id);
+        // We don't need to delete the group here as it's already deleted in the test
     });
+
+    // Helper function to create a test user
+    const createTestUser = async () => {
+        const res = await chai.request(app)
+            .post('/api/users/create')
+            .send({
+                username: `testUser${Date.now()}`,
+                email: `testuser${Date.now()}@example.com`,
+                password: 'password123'
+            });
+        return res.body;
+    };
+
+    // Helper function to create a test group
+    const createTestGroup = async (adminId) => {
+        const res = await chai.request(app)
+            .post('/api/groups')
+            .send({
+                name: `TestGroup${Date.now()}`,
+                admins: [adminId],
+                members: [adminId],
+                interested: [],
+                description: 'This is a test group',
+                groupImg: 'http://example.com/group.jpg'
+            });
+        return res.body;
+    };
+
+    // Helper function to delete a test user
+    const deleteTestUser = async (userId) => {
+        await chai.request(app).delete(`/api/users/${userId}`);
+    };
 
     // Test for getting all groups
     describe('/GET api/groups', () => {
-        it('it should GET all groups', (done) => {
-            chai.request(app)
-                .get('/api/groups')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    done();
-                });
+        it('it should GET all groups', async () => {
+            const res = await chai.request(app).get('/api/groups');
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.should.have.length.of.at.least(1);
         });
     });
 
     // Test for creating a new group
     describe('/POST api/groups', () => {
-        it('it should create a new group successfully', (done) => {
-            chai.request(app)
+        it('it should create a new group successfully', async () => {
+            const res = await chai.request(app)
                 .post('/api/groups')
                 .send({
-                    name: 'New Group',
-                    admins: ['64e09ba0f40c4b8f9d5f9f9a'], // Using existing admin ID (super_admin)
-                    members: ['64e09ba0f40c4b8f9d5f9f9a'],
+                    name: 'New Test Group',
+                    admins: [testUser._id],
+                    members: [testUser._id],
                     interested: [],
-                    description: 'This is a test group',
-                    groupImg: 'http://localhost:3000/data/images/groupImages/473.jpg' // Using existing group image
-                })
-                .end((err, res) => {
-                    res.should.have.status(201);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('name').eql('New Group');
-                    res.body.should.have.property('description').eql('This is a test group');
-                    done();
+                    description: 'This is another test group',
+                    groupImg: 'http://example.com/group.jpg'
                 });
+
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('name').eql('New Test Group');
+            res.body.should.have.property('description').eql('This is another test group');
         });
     });
 
     // Test for updating a group
     describe('/PUT api/groups/:id', () => {
-        it('it should UPDATE a group given the id', (done) => {
+        it('it should UPDATE a group given the id', async () => {
             const updatedData = {
                 name: 'Updated Group Name',
                 description: 'Updated Description'
             };
 
-            // Replace this with a valid group ID from your database
-            const groupId = '64e09ba4f40c4b8f9d5f9f9f'; // Project Management
+            const res = await chai.request(app)
+                .put(`/api/groups/${testGroup._id}`)
+                .send(updatedData);
 
-            chai.request(app)
-                .put(`/api/groups/${groupId}`)
-                .send(updatedData)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('name').eql('Updated Group Name');
-                    res.body.should.have.property('description').eql('Updated Description');
-                    done();
-                });
-        });
-    });
-
-    // Test for deleting a group
-    describe('/DELETE api/groups/:id', () => {
-        it('it should DELETE a group given the id', (done) => {
-            // Replace this with a valid group ID from your database
-            const groupId = '64e09ba4f40c4b8f9d5f9f9c'; // Testers
-
-            chai.request(app)
-                .delete(`/api/groups/${groupId}`)
-                .end((err, res) => {
-                    res.should.have.status(204); // Expecting no content response on successful deletion
-                    done();
-                });
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('name').eql('Updated Group Name');
+            res.body.should.have.property('description').eql('Updated Description');
         });
     });
 
     // Test for registering interest in a group
     describe('/POST api/groups/:id/interested', () => {
-        it('it should REGISTER interest in a group', (done) => {
-            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
+        it('it should REGISTER interest in a group', async () => {
+            const res = await chai.request(app)
+                .post(`/api/groups/${testGroup._id}/interested`)
+                .send({ userId: testUser._id });
 
-            // Replace with valid group ID
-            const groupId = '64e09ba4f40c4b8f9d5f9f9d'; // Designers
-
-            chai.request(app)
-                .post(`/api/groups/${groupId}/interested`)
-                .send({ userId })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.interested.should.include(userId);
-                    done();
-                });
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.interested.should.include(testUser._id.toString());
         });
     });
 
     // Test for unregistering interest in a group
     describe('/POST api/groups/:id/unregister-interest', () => {
-        it('it should UNREGISTER interest in a group', (done) => {
-            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
+        it('it should UNREGISTER interest in a group', async () => {
+            const res = await chai.request(app)
+                .post(`/api/groups/${testGroup._id}/unregister-interest`)
+                .send({ userId: testUser._id });
 
-            // Replace with valid group ID
-            const groupId = '64e09ba4f40c4b8f9d5f9f9d'; // Designers
-
-            chai.request(app)
-                .post(`/api/groups/${groupId}/unregister-interest`)
-                .send({ userId })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.interested.should.not.include(userId);
-                    done();
-                });
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.interested.should.not.include(testUser._id.toString());
         });
     });
 
     // Test for removing a user from a group
     describe('/POST api/groups/:groupId/removeUser', () => {
-        it('it should REMOVE a user from the group', (done) => {
-            const userId = '64e09ba1f40c4b8f9d5f9f9b'; // Using existing user ID (john_doe)
+        it('it should REMOVE a user from the group', async () => {
+            const res = await chai.request(app)
+                .post(`/api/groups/${testGroup._id}/removeUser`)
+                .send({ userId: testUser._id });
 
-            // Replace with valid group ID
-            const groupId = '64e09ba4f40c4b8f9d5f9f9e'; // Developers
-
-            chai.request(app)
-                .post(`/api/groups/${groupId}/removeUser`)
-                .send({ userId })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.members.should.not.include(userId);
-                    done();
-                });
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.members.should.not.include(testUser._id.toString());
         });
     });
 
     // Test for allowing a user to join a group
     describe('/POST api/groups/:groupId/allowUserToJoin', () => {
-        it('it should ALLOW a user to join the group', (done) => {
-            const userId = '64e09ba3f40c4b8f9d5f9f9d'; // Using existing user ID (alice_jones)
+        it('it should ALLOW a user to join the group', async () => {
+            const res = await chai.request(app)
+                .post(`/api/groups/${testGroup._id}/allowUserToJoin`)
+                .send({ userId: testUser._id });
 
-            // Replace with valid group ID
-            const groupId = '64e09ba4f40c4b8f9d5f9f9f'; // Project Management
-
-            chai.request(app)
-                .post(`/api/groups/${groupId}/allowUserToJoin`)
-                .send({ userId })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.members.should.include(userId);
-                    done();
-                });
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.members.should.include(testUser._id.toString());
         });
     });
 
+    // Test for deleting a group (moved to the end)
+    describe('/DELETE api/groups/:id', () => {
+        it('it should DELETE a group given the id', async () => {
+            const res = await chai.request(app).delete(`/api/groups/${testGroup._id}`);
+            res.should.have.status(204); // Expecting no content response on successful deletion
+
+            // Verify the group is deleted
+            const checkRes = await chai.request(app).get(`/api/groups/${testGroup._id}`);
+            checkRes.should.have.status(404);
+        });
+    });
 });

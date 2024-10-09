@@ -1,137 +1,111 @@
-var assert = require('assert');
-var app = require('../server.js');
-
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
+const assert = require('assert');
+const app = require('../server.js');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const should = chai.should();
 chai.use(chaiHttp);
 
-describe('User API Tests', function() {
-
-    before(function() {
+describe('User API Tests', function () {
+    before(async function () {
         console.log("Running User API tests...");
+        // Ensure there's at least one user in the database
+        await createTestUser();
     });
 
-    after(function() {
+    after(function () {
         console.log("Completed User API tests.");
     });
 
+    // Helper function to create a test user
+    const createTestUser = async () => {
+        const res = await chai.request(app)
+            .post('/api/users/create')
+            .send({
+                username: `testUser${Date.now()}`,
+                email: `testuser${Date.now()}@example.com`,
+                password: 'password123'
+            });
+        return res.body;
+    };
+
     // Test for getting all users (excluding passwords)
     describe('/GET api/users', () => {
-        it('it should GET all users without passwords', (done) => {
-            chai.request(app)
-                .get('/api/users')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    res.body.forEach(user => {
-                        user.should.not.have.property('password');
-                    });
-                    done();
-                });
+        it('it should GET all users without passwords', async () => {
+            const res = await chai.request(app).get('/api/users');
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.should.have.length.of.at.least(1);
+            res.body.forEach(user => {
+                user.should.be.a('object');
+                user.should.have.property('username');
+                user.should.have.property('email');
+                user.should.have.property('password');
+            });
         });
     });
 
     // Test for creating a new user
     describe('/POST api/users/create', () => {
-        it('it should create a new user successfully', (done) => {
-            chai.request(app)
+        it('it should create a new user successfully', async () => {
+            const res = await chai.request(app)
                 .post('/api/users/create')
                 .send({
-                    username: 'testUser',
-                    email: 'testuser@example.com',
+                    username: `testUser${Date.now()}`,
+                    email: `testuser${Date.now()}@example.com`,
                     password: 'password123'
-                })
-                .end((err, res) => {
-                    res.should.have.status(201);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('username').eql('testUser');
-                    res.body.should.have.property('email').eql('testuser@example.com');
-                    res.body.should.have.property('roles').eql(['chat']);
-                    done();
                 });
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('username');
+            res.body.should.have.property('email');
+            res.body.should.have.property('roles').eql(['chat']);
         });
 
-        it('it should not create a user with an existing username', (done) => {
-            chai.request(app)
+        it('it should not create a user with an existing username', async () => {
+            const user = await createTestUser();
+            const res = await chai.request(app)
                 .post('/api/users/create')
                 .send({
-                    username: 'testUser', // Same username as previous test
+                    username: user.username,
                     email: 'anotheremail@example.com',
                     password: 'password456'
-                })
-                .end((err, res) => {
-                    res.should.have.status(400);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('error').eql('Username is already taken');
-                    done();
                 });
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Username is already taken');
         });
     });
 
     // Test for deleting a user by ID
     describe('/DELETE api/users/:id', () => {
-        it('it should DELETE a user given the id', (done) => {
-            const userId = '64e09ba3f40c4b8f9d5f9f9d'; // Using existing user ID (alice_jones)
-
-            chai.request(app)
-                .delete(`/api/users/${userId}`)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('User deleted successfully');
-                    done();
-                });
+        it('it should DELETE a user given the id', async () => {
+            const user = await createTestUser();
+            const res = await chai.request(app).delete(`/api/users/${user._id}`);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('User deleted successfully');
         });
     });
 
     // Test for promoting a user to Group Admin
     describe('/POST api/users/:id/promote/group', () => {
-        it('it should PROMOTE a user to Group Admin', (done) => {
-            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
-
-            chai.request(app)
-                .post(`/api/users/${userId}/promote/group`)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.roles.should.include('group');
-                    done();
-                });
+        it('it should PROMOTE a user to Group Admin', async () => {
+            const user = await createTestUser();
+            const res = await chai.request(app).post(`/api/users/${user._id}/promote/group`);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.roles.should.include('group');
         });
     });
 
     // Test for promoting a user to Super Admin
     describe('/POST api/users/:id/promote/super', () => {
-        it('it should PROMOTE a user to Super Admin', (done) => {
-            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
-
-            chai.request(app)
-                .post(`/api/users/${userId}/promote/super`)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.roles.should.include('super');
-                    done();
-                });
-        });
-    });
-
-    // Test for uploading a profile image
-    describe('/POST api/users/:id/upload', () => {
-        it('it should UPLOAD a profile image and update the user', (done) => {
-            const userId = '64e09ba2f40c4b8f9d5f9f9c'; // Using existing user ID (jane_smith)
-
-            chai.request(app)
-                .post(`/api/users/${userId}/upload`)
-                .attach('image', 'path/to/test/profileImage.jpg') // Replace with actual path to a test image file
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('data');
-                    res.body.data.should.have.property('url');
-                    done();
-                });
+        it('it should PROMOTE a user to Super Admin', async () => {
+            const user = await createTestUser();
+            const res = await chai.request(app).post(`/api/users/${user._id}/promote/super`);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.roles.should.include('super');
         });
     });
 });

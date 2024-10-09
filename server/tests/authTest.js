@@ -1,97 +1,105 @@
-var assert = require('assert');
-var app = require('../server.js');
+const assert = require('assert');
+const app = require('../server.js');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
+const should = chai.should();
 chai.use(chaiHttp);
 
-describe('User API Tests', function() {
+describe('User API Tests', function () {
+    let testUser;
 
-    before(function() {
+    before(function () {
         console.log("Running User API tests...");
     });
 
-    after(function() {
+    after(async function () {
         console.log("Completed User API tests.");
+        // Clean up: delete test user
+        if (testUser && testUser._id) {
+            await deleteTestUser(testUser._id);
+        }
     });
+
+    // Helper function to delete a test user
+    const deleteTestUser = async (userId) => {
+        try {
+            await chai.request(app).delete(`/api/users/${userId}`);
+        } catch (error) {
+            console.error(`Error deleting test user: ${error.message}`);
+        }
+    };
 
     // Test for signup route
     describe('/POST api/auth/signup', () => {
-        it('it should create a new user successfully', (done) => {
-            chai.request(app)
+        it('it should create a new user successfully', async () => {
+            const res = await chai.request(app)
                 .post('/api/auth/signup')
                 .send({
                     firstName: 'John',
                     lastName: 'Doe',
-                    username: 'johndoe', // Ensure username does not already exist!
-                    email: 'johndoe@example.com',
+                    username: `testuser${Date.now()}`,
+                    email: `testuser${Date.now()}@example.com`,
                     password: 'password123',
                     dob: '1990-01-01'
-                })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('username').eql('johndoe'); // Same here!!
-                    res.body.should.have.property('email').eql('johndoe@example.com');
-                    res.body.should.have.property('roles').eql(['chat']);
-                    done();
                 });
+
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('_id');
+            res.body.should.have.property('username');
+            res.body.should.have.property('email');
+            res.body.should.have.property('roles').eql(['chat']);
+
+            testUser = res.body; // Save the created user for later use and cleanup
         });
 
-        it('it should not create a user with an existing username', (done) => {
-            chai.request(app)
+        it('it should not create a user with an existing username', async () => {
+            const res = await chai.request(app)
                 .post('/api/auth/signup')
                 .send({
                     firstName: 'Jane',
                     lastName: 'Doe',
-                    username: 'johndoe', // Same username as the previous test
+                    username: testUser.username, // Use the username from the previous test
                     email: 'janedoe@example.com',
                     password: 'password456',
                     dob: '1992-05-15'
-                })
-                .end((err, res) => {
-                    res.should.have.status(400);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('error').eql('Username is already taken');
-                    done();
                 });
+
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Username is already taken');
         });
     });
 
     // Test for login route
     describe('/POST api/auth', () => {
-        it('it should log in an existing user successfully', (done) => {
-            chai.request(app)
+        it('it should log in the newly created user successfully', async () => {
+            const res = await chai.request(app)
                 .post('/api/auth')
                 .send({
-                    username: 'john_doe', // Updated to use existing username
-                    password: 'pw'         // Updated to use existing password
-                })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('username').eql('john_doe');
-                    res.body.should.have.property('email').eql('john.doe@example.com');
-                    res.body.should.have.property('roles').eql(['super', 'group', 'chat']);
-                    done();
+                    username: testUser.username,
+                    password: 'password123'
                 });
+
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('username').eql(testUser.username);
+            res.body.should.have.property('email').eql(testUser.email);
+            res.body.should.have.property('roles').that.includes('chat');
         });
 
-        it('it should return an error for invalid credentials', (done) => {
-            chai.request(app)
+        it('it should return an error for invalid credentials', async () => {
+            const res = await chai.request(app)
                 .post('/api/auth')
                 .send({
-                    username: 'john_doe',     // Updated to use existing username
+                    username: testUser.username,
                     password: 'wrongpassword'
-                })
-                .end((err, res) => {
-                    res.should.have.status(401);
-                    res.body.should.have.property('valid').eql(false);
-                    res.body.should.have.property('message').eql('Invalid credentials');
-                    done();
                 });
+
+            res.should.have.status(401);
+            res.body.should.have.property('valid').eql(false);
+            res.body.should.have.property('message').eql('Invalid credentials');
         });
     });
-
 });
